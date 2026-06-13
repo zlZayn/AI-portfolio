@@ -1,0 +1,270 @@
+projects:
+- id: decision-maker
+  name: AI-decision-maker
+  tagline: AI 驱动的数据分析框架，AI 决策 + 程序执行
+  quote: AI 输出是'建议'，验证层决定最终值。
+  description: >-
+    AI 只在两处调用，每次只输出一个字符。核心洞察：语义识别需要 AI，
+    一旦识别完成，所有清洗操作都是确定性的——脚本查表、校验、执行，
+    零额外 token。缓存命中时整个流程归零，相同结构的数据 10ms 完成。<br><br>
+    另一条链路处理分类变量分析：LLM 筛选变量 → 判断有序/无序 →
+    R 根据变量类型组合自动选统计方法（\(\rho\) / \(V\) / \(H\) / \(\chi^2\)）。
+
+
+    校验层：场景码非法→S0，信号码非法→X，字段不存在→丢弃。每次 Prompt 末尾
+    以"输出："约束格式。温度 \(t = 0\)，thinking = off（分类任务不需要深度推
+    理，省 50% 费用、4 倍速度）。
+  ai_role: 识别字段类型（每字段 1 字符）
+  code_role: 执行清洗操作
+  metric: < 100 tokens
+  grid_overview: >-
+    两条链路一条原则：AI 只做语义识别，输出 1 字符信号码后全部由代码执行。
+    缓存命中时零 token。适合数据结构已知但字段命名不统一的 CSV 清洗场景。
+  github_url: "https://github.com/zlZayn/AI-decision-maker"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - Structured Output Parser
+      - Atomic Tool
+      - Permission & Security
+      - Business / Third-Party API
+    technology:
+      - Python
+      - pandas
+      - R
+    delivery:
+      - CLI
+  highlights:
+  - title: 信号码系统 + 校验层
+    text: 单字符编码（G=性别 A=年龄 D=科室），同时是类型标签和操作路由键。AI 输出经三层校验后落地。非法码回退安全默认值，防止幻觉传播。
+    metric: < 100 tokens/run
+  - title: MD5 指纹 + 代码哈希双重缓存
+    text: 指纹 = \(\text{MD5}(\text{字段名排序} + \sum \text{样本MD5}[:8])\)。缓存附带 \(\text{code\_hash} = \text{SHA256}(\text{路由表} + \text{注册表})\)，代码变更自动全量失效。
+    metric: 0 tokens on hit
+  - title: 可扩展 Operation 注册
+    text: 新增字段类型只需创建 Operation 子类注册到 OPERATION_REGISTRY，无需改 AI prompt。支持 1:N 分列操作（CurrencySplitter 把一列金额拆为数值+币种两列）。
+  - title: 两层 AI + R 自动选统计方法
+    text: LLM 粗筛分类变量 → 细判有序/无序 → R 根据变量组合自动选 \(\rho\) / \(V\) / \(H\) / \(\chi^2\)，输出 report.xlsx（4 Sheet）。
+
+- id: rag-embed
+  name: AI-RAG-embed
+  tagline: 本地 RAG 检索增强系统，专注"怎么切"和"怎么问"
+  quote: RAG 失败在两个边界：怎么切，怎么问。其余都是边际收益的复合。
+  description: >-
+    RAG 的失败只有两种：切块切得烂和问得差。其余都是边际收益的复合。
+    此系统不堆砌技术，专注在这两个边界——按 heading 分块让每个片段承载完整语义，
+    代码块和表格永不切割。查询增强器将问题重写为检索优化的段落，但 LLM 始终接收
+    原始问题，互不污染。<br><br>
+    四模型插槽各自独立开关，禁用即不加载。BM25-only 模式跳过 12 秒 torch 导入，
+    加载零本地模型。混合检索 + RRF 融合 + 可选交叉编码器重排序。
+    集成 MCP Server，三个工具供 Agent 框架直接调用。
+  ai_role: 改写查询用于检索
+  code_role: 分块、索引、融合、排序
+  metric: 查询增强是核心差异化
+  grid_overview: >-
+    专注 RAG 的两个失效边界：怎么切和怎么问。智能分块让每个片段承载完整语义，
+    查询增强让检索问对问题。混合检索 + 可插拔模型槽，BM25-only 模式零模型加载。
+  github_url: "https://github.com/zlZayn/AI-RAG-embed"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - RAG
+      - MCP
+      - Atomic Tool
+      - Business / Third-Party API
+    technology:
+      - Python
+      - Sentence-Transformer
+      - ChromaDB
+      - Flask
+    delivery:
+      - CLI
+      - Web
+  highlights:
+  - title: 查询增强分离设计
+    text: 增强查询生成检索优化段落，仅用于向量检索；答案 LLM 始终接收原始问题。支持 LLM 生成（密集段落）和 MarianMT 翻译两种后端，遵循同样的分离原则。
+  - title: 智能分块 + 增量构建
+    text: 不同类型文件不同分块策略（Markdown 按 heading，纯文本按段落，代码块/表格永不切割）。MD5 哈希变更检测，--build 只处理变更文件，模型或分块配置变更自动告警。
+  - title: RRF 混合检索 + 可选重排序
+    text: 向量（ChromaDB）+ BM25（jieba）经 \(\text{score} = \sum 1/(60+\text{rank})\) 融合。交叉编码器从 \(4k\) 候选重排序到 top-\(k\)。支持 vector-only / BM25-only / 混合三种模式。
+  - title: 四模型插槽懒加载
+    text: embedding / enhancer / reranker / LLM 各自独立开关。BM25-only 模式加载零本地模型，跳过 ~12s torch 导入。每个插槽只在对应功能启用时才导入依赖。
+
+- id: schema-mapper
+  name: AI-schema-mapper
+  tagline: 医疗数据智能清洗，AI 生成规则一次，代码执行 N 次
+  quote: AI 看一次，代码执行 N 次。AI 不看完整数据，只看有多少个唯一值。
+  description: >-
+    150 行数据和 150 万行数据，AI 消耗不变。清洗的复杂度不是 O(行数)，
+    而是 O(唯一值)。LLM 只看去重后的几十个值，生成映射规则后本地批量替换——
+    这才是 AI 该干的事：理解模式，而非逐行苦力。<br><br>
+    两轮 AI 生成规则，四优先级防静默丢失，跨字段推理一次生成永久零 token。
+    双哈希缓存（唯一值 + Schema）任一变化自动刷新。
+  ai_role: 从去重唯一值生成映射规则
+  code_role: 大规模应用规则
+  metric: 节省 78% Token
+  grid_overview: >-
+    数据清洗的复杂度是 O(唯一值) 不是 O(行数)。AI 只看模式，生成映射规则后
+    全部本地执行。两轮 AI + 跨字段推理 + 四优先级防静默丢失。150 行和 150 万行，
+    AI 消耗不变。
+  github_url: "https://github.com/zlZayn/AI-schema-mapper"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - Structured Output Parser
+      - Permission & Security
+      - Business / Third-Party API
+    technology:
+      - Python
+      - pandas
+    delivery:
+      - CLI
+  highlights:
+  - title: \(O(\text{唯一值})\) 不是 \(O(\text{行数})\)
+    text: 150 行数据：传统逐行方案 \(\sim 30000\) tokens，本系统只传 \(\sim 100\) 个唯一值 \(\sim 1000\) tokens。100 行和 100 万行，AI 消耗不变。
+    metric: 节省 78%
+  - title: 双轮 AI + 跨字段推理
+    text: 首轮映射规则，次轮（可选）处理边缘。跨字段推理（"妇产科→女性"）一次生成后永久零 Token 本地执行。模块命名 llm_ / local_ 前缀一目了然。
+  - title: 双哈希缓存 + 4 优先级查找
+    text: 数据哈希 + Schema 哈希，任一变化自动刷新。查找链路：映射表 \(\to\) 标准值 \(\to\) 保留原值 \(\to\) 置空，防止静默丢失。
+  - title: 质量报告 + 费用跟踪
+    text: 自动计算每字段完整率和合规率，运行结束时输出费用汇总表。
+
+- id: tool-calling
+  name: AI-tool-calling
+  tagline: 极简 Tool Calling + MCP 双模式框架
+  quote: 框架提供工具，客户端提供智能。
+  description: >-
+    工具定义的代码应该只写一次。同一套 registerTool() + Zod schema 同时服务
+    MCP 和 OpenAI Function Calling 两种协议——协议是传输层的问题，不是工具
+    定义的问题。<br><br>
+    Agent 模式下用 Map&lt;index, Accumulator&gt; 处理流式 tool_call 分段到达，
+    消息压缩降低多轮 token 浪费。MCP 模式下拆为两个独立 Server，通过 .mcp.json
+    零配置接入。9 个工具覆盖代码执行（30s 超时 + 危险命令黑名单）和系统环境
+    检测（150+ 运行时，两阶段批量 Promise.allSettled）。
+  ai_role: 决定调用哪个工具
+  code_role: 执行工具返回结果
+  metric: 同一套代码双模式
+  grid_overview: >-
+    同一套 registerTool() 同时服务 MCP 和 Function Calling 两种协议。
+    Zod schema → JSON Schema 桥接，一套定义两套消费。沙箱执行 + 危险命令
+    黑名单，30s 超时保护。9 个工具覆盖代码执行和系统检测。
+  github_url: "https://github.com/zlZayn/AI-tool-calling"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - MCP
+      - Function Calling
+      - Tool Calling
+      - Atomic Tool
+      - Sandbox
+      - Timeout & Retry
+      - Permission & Security
+      - Business / Third-Party API
+    technology:
+      - TypeScript
+      - Zod
+      - JSON Schema
+    delivery:
+      - CLI
+  highlights:
+  - title: 双模式单代码库
+    text: 同一 registerTool() + toJsonSchema() 桥接，一套 Zod 定义同时服务 MCP JSON-RPC 和 OpenAI Tool Calling API。注册表与 barrel import 分离，避免循环依赖。
+  - title: 流式 Tool Call 累积器
+    text: Map<index, Accumulator> 按索引重组分块到达的 tool 名称/参数/ID。消息压缩裁剪冗余文本保留 tool_call 元数据，降低多轮 token 浪费。
+  - title: 沙箱执行 + 危险命令防护
+    text: Python / R / PowerShell 代码执行，30s 超时 + 5000 字符截断。Shell 工具内置危险命令黑名单（Remove-Item -Recurse -Force、shutdown 等）。
+  - title: 自注册 + 150+ 运行时检测
+    text: 模块导入时 registerTool() 自注册。两阶段检测：首轮环境变量检查（零进程），次轮 PATH 批量 Promise.allSettled。
+
+- id: collaborate
+  name: AI-collaborate
+  tagline: 多 Agent 编排框架，自动规划、并行分发、桥接上下文
+  quote: 所有 prompt 使用人的称谓——同事，不是 AI Agent。Agent 收到任务时不知道发送者是另一个模型。
+  description: >-
+    LLM 规划器自主决定分几个阶段、每阶段几个 Agent——不设硬编码上限。这才是
+    多 Agent 该有的灵活性：框架不替模型做决定，只提供并发执行和上下文桥接
+    的骨架。<br><br>
+    阶段内所有 Agent 在独立线程并发，阶段间用轻量 LLM 提炼摘要（非暴力拼接），
+    最终综合所有输出生成统一回复。单 Agent 失败不影响同级和下游。prompt 全程
+    用"同事"称谓，Agent 不知发送者是另一个模型，防止元推理污染。Web 界面
+    基于 Python stdlib + SSE，零第三方依赖。state.json 单一真相源，刷新恢复。
+  ai_role: 规划分解为阶段
+  code_role: 并行分发、桥接、综合
+  metric: LLM 自主决定阶段数
+  grid_overview: >-
+    LLM 规划器自主决定分几个阶段、每阶段几个 Agent，不设硬编码上限。阶段内并行，
+    阶段间桥接。全部 prompt 用"同事"称谓，防止元推理污染。Web 界面基于
+    Python stdlib + SSE，零第三方依赖。
+  github_url: "https://github.com/zlZayn/AI-collaborate"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - Task Planner
+      - Multi-Agent
+      - Structured Output Parser
+      - Business / Third-Party API
+    technology:
+      - Python
+      - SSE
+    delivery:
+      - CLI
+      - Web
+  highlights:
+  - title: 无约束自主规划
+    text: LLM 规划器自主决定阶段数和每阶段 Agent 数，不设硬编码上限。计划输出经 JSON Schema 校验，3 次重试含错误回传。
+  - title: 桥接 + 人性化框架
+    text: 阶段间用轻量 LLM 提炼摘要（非暴力拼接）。prompt 全程用"同事"称谓，Agent 不知发送者是另一个模型，防止元推理污染。
+  - title: 并行分发 + 错误隔离
+    text: 同阶段 Agent 在线程池并发执行。单 Agent 失败标记 error，不影响同级和下游。仅当阶段内全部失败时终止管线。
+  - title: stdlib-only Web + 持久化
+    text: 零第三方依赖 HTTP 服务器 + SSE 实时流式。state.json 单一真相源，页面刷新恢复，支持历史浏览和后续追问。
+
+- id: tier-guardian
+  name: AI-tier-guardian
+  tagline: 三庭二审 AI 内容审核引擎
+  quote: AI 只做极窄的语义判断；程序做所有仲裁和执行。
+  description: >-
+    90% 的内容是正常的，不应该每次都走完整审核链路。核心洞察是漏斗——浅层
+    快速放行绝大多数内容，只有边缘 case 才消耗昂贵的大模型推理。两处路由
+    （pre_filter、deep_judge）是 6 行纯 Python，零 token。<br><br>
+    Layer 1 并行扫描意图，\(\approx 90\%\) 正常内容在此 PASS。Layer 2 深度
+    语境判断，处理反讽、黑话、"老六""666"等中文网络表达。Layer 3 仅当需要
+    人工复核时汇编证据。四节点互不知情，只与编排器通信，JSON 修复器跟踪括号
+    堆栈恢复截断输出。每 500 次人工判断触发模式库更新，零模型重训练。
+  ai_role: 判断语义意图/违规（4 次 LLM 调用）
+  code_role: 路由、仲裁、缓存（纯 Python，零 Token）
+  metric: 路由零 Token
+  grid_overview: >-
+    三庭二审漏斗架构：90% 正常内容在浅层直接放行，仅边缘 case 走完整审核链路。
+    两层路由（pre_filter / deep_judge）是 6 行纯 Python，零 token。Node C 可
+    处理反讽、黑话等中文网络表达。
+  github_url: "https://github.com/zlZayn/AI-tier-guardian"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - Chain-of-Thought (CoT)
+      - Structured Output Parser
+      - Permission & Security
+      - Business / Third-Party API
+    technology:
+      - Python
+      - pytest
+      - diskcache
+    delivery:
+      - CLI
+  highlights:
+  - title: 三庭四节点 + 零 Token 仲裁
+    text: Layer 1 (A+B, 2 次 LLM) → pre_filter (Python, 0 token) → Layer 2 (C, 1 次 LLM with thinking) → deep_judge (Python, 0 token) → Layer 3 (D, 1 次 LLM, 仅 REVIEW)。AI 节点正常消耗 token，层间路由 0 token。
+    metric: 路由 0 tokens
+  - title: AI 铁律 + JSON 修复
+    text: 4 个 AI 节点互不知情、只与编排器通信、必须返回预定义 JSON Schema。修复器跟踪括号堆栈恢复截断输出。每节点独立 thinking/temperature/max_tokens 配置。
+  - title: 两层缓存 + 渐进阈值
+    text: 请求级 (text+scene+locale SHA256) + 节点级缓存。auto_block 阈值 0.9、human_review 阈值 0.7 可配置。Normal 内容预层零思考放行。
+  - title: 中文文化感知 + 反馈进化
+    text: Node C 专门处理讽刺、自嘲、"老六""666"、朋友间"你个憨憨哈哈哈"。每 500 次人工判断触发模式库更新，零模型重训练。
+
+
+
+
+

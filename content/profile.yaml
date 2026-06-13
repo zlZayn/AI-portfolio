@@ -1,0 +1,4 @@
+title: "AI 项目作品集"
+subtitle: "AI 做理解，代码做执行"
+description: "这六个项目围绕同一个问题展开：如何让 AI 只做它擅长的事——语义理解，而把一切确定性工作交给代码。每个项目都是这个理念的落地实践：从数据清洗到内容审核，从单 Agent 到多 Agent 编排，试图在 AI 调用次数和执行效率之间找到最优解。所有项目没有使用 LangChain 等框架，全部从零构建，以精确控制每一 token 的流向。"
+github_url: "https://github.com/zlZayn"

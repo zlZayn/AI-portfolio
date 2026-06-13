@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ profile.title }}</title>
+<meta name="description" content="{{ profile.description }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+{{ inline_css }}
+</style>
+</head>
+<body>
+
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="#" class="header-logo">{{ profile.title }}</a>
+    <nav class="header-nav">
+      {% for project in projects %}
+      <a href="#{{ project.id }}" class="header-link">{{ project.name }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</header>
+
+<main>
+{{ content }}
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p><a href="{{ profile.github_url }}">GitHub</a></p>
+  </div>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters:[{left:'\\(',right:'\\)',display:false},{left:'$$',right:'$$',display:true}]});"></script>
+<script>{{ inline_js }}</script>
+</body>
+</html>
