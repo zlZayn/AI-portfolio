@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 项目作品集</title>
-<meta name="description" content="这六个项目围绕同一个问题展开：如何让 AI 只做它擅长的事——语义理解，而把一切确定性工作交给代码。每个项目都是这个理念的落地实践：从数据清洗到内容审核，从单 Agent 到多 Agent 编排，试图在 AI 调用次数和执行效率之间找到最优解。所有项目没有使用 LangChain 等框架，全部从零构建，以精确控制每一 token 的流向。">
+<meta name="description" content="六个项目覆盖数据处理、知识检索、Agent 编排、内容审核。每一条管线从 Prompt 工程到运行时沙箱全部自建——协议层、工具层、编排层、安全与权限控制，不依赖 LangChain 等任何框架。">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <style>
 /* === Reset & Base === */
@@ -68,19 +68,31 @@ a:hover { text-decoration: underline; }
 img { max-width: 100%; height: auto; display: block; }
 
 /* === Header / Nav === */
+@property --dot-scale {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 .header {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
+  --dot-scale: 1;
   background: transparent;
+  transition: --dot-scale 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   /* Dots — page background color, large→small top→bottom, dense */
   background-image:
-    radial-gradient(circle at 50% 10px, #faf6ef 3px, transparent 3px),
-    radial-gradient(circle at 50% 22px, #faf6ef 2.5px, transparent 2.5px),
-    radial-gradient(circle at 50% 34px, #faf6ef 2px, transparent 2px),
-    radial-gradient(circle at 50% 48px, #faf6ef 1.5px, transparent 1.5px);
+    radial-gradient(circle at 50% 10px, #faf6ef calc(3px * var(--dot-scale)), transparent calc(3px * var(--dot-scale))),
+    radial-gradient(circle at 50% 22px, #faf6ef calc(2.5px * var(--dot-scale)), transparent calc(2.5px * var(--dot-scale))),
+    radial-gradient(circle at 50% 34px, #faf6ef calc(2px * var(--dot-scale)), transparent calc(2px * var(--dot-scale))),
+    radial-gradient(circle at 50% 48px, #faf6ef calc(1.5px * var(--dot-scale)), transparent calc(1.5px * var(--dot-scale)));
   background-size: 10px 60px;
   background-repeat: repeat-x;
+}
+
+.header.scroll-up {
+  --dot-scale: 1.7;
 }
 
 .header-inner {
@@ -99,6 +111,26 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 1.15rem;
   color: #2d2b55;
   text-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  display: inline-flex;
+  align-items: center;
+}
+
+.typing-text {
+  white-space: nowrap;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  background: #2d2b55;
+  margin-left: 2px;
+  animation: blink-cursor 0.8s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink-cursor {
+  50% { opacity: 0; }
 }
 
 .header-nav {
@@ -154,16 +186,20 @@ img { max-width: 100%; height: auto; display: block; }
 
 .hero-phrase-ai {
   display: block;
-  font-size: 5.5rem;
+  font-size: 4.5rem;
   font-weight: 800;
   color: #2d2b55;
+  animation: hero-slide-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0s;
 }
 
 .hero-phrase-code {
   display: block;
-  font-size: 5.5rem;
+  font-size: 4.5rem;
   font-weight: 800;
   color: #f97316;
+  animation: hero-slide-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
 }
 
 .hero-bar {
@@ -172,6 +208,9 @@ img { max-width: 100%; height: auto; display: block; }
   background: linear-gradient(90deg, #f97316, #fbbf24);
   border-radius: 3px;
   margin: 28px 0 24px;
+  animation: hero-scale-x 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.3s;
+  transform-origin: left;
 }
 
 .hero-desc {
@@ -180,6 +219,8 @@ img { max-width: 100%; height: auto; display: block; }
   max-width: 640px;
   line-height: 1.7;
   margin-bottom: 24px;
+  animation: hero-slide-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.45s;
 }
 
 .hero-footer {
@@ -188,6 +229,8 @@ img { max-width: 100%; height: auto; display: block; }
   gap: 8px;
   font-size: 0.875rem;
   color: #9ca3af;
+  animation: hero-fade-in 0.8s ease both;
+  animation-delay: 0.7s;
 }
 
 .hero-dot {
@@ -201,23 +244,8 @@ img { max-width: 100%; height: auto; display: block; }
   text-align: center;
   padding: 32px 28px;
   border-left: 2px solid rgba(249,115,22,0.2);
-}
-
-.hero-deco-num {
-  display: block;
-  font-size: 6rem;
-  font-weight: 800;
-  color: #f97316;
-  line-height: 0.9;
-  letter-spacing: -4px;
-}
-
-.hero-deco-line {
-  width: 36px;
-  height: 3px;
-  background: #f97316;
-  border-radius: 2px;
-  margin: 14px auto;
+  animation: hero-slide-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.2s;
 }
 
 .hero-deco-label {
@@ -226,6 +254,57 @@ img { max-width: 100%; height: auto; display: block; }
   color: #6c757d;
   font-weight: 600;
   letter-spacing: 6px;
+}
+
+/* === Hero entrance animations (play once on load) === */
+@keyframes hero-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-scale-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hero-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-phrase-ai,
+  .hero-phrase-code,
+  .hero-bar,
+  .hero-desc,
+  .hero-footer,
+  .hero-deco {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* === Section Titles === */
@@ -572,14 +651,69 @@ img { max-width: 100%; height: auto; display: block; }
 /* === Footer === */
 .footer {
   padding: 36px 28px;
-  text-align: center;
-  border-top: 1px solid #e5e7eb;
-  color: #6c757d;
-  font-size: 0.9375rem;
   background: #faf6ef;
+  border-top: none;
+  position: relative;
 }
-.footer a { color: #f97316; }
-.footer-time { font-size: 0.75rem; color: #9ca3af; margin-top: 4px; }
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f97316, #fbbf24, #f97316, transparent);
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-link {
+  font-size: 0.8125rem;
+  color: #f97316;
+  font-weight: 500;
+}
+
+.footer-link:hover { text-decoration: underline; }
+
+.footer-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+
+.footer-count {
+  font-size: 0.8125rem;
+  color: #9ca3af;
+}
+
+.footer-time {
+  font-size: 0.75rem;
+  color: #d1d5db;
+}
+
+@media (max-width: 768px) {
+  .footer-row {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
 
 /* === Responsive === */
 @media (max-width: 900px) {
@@ -591,7 +725,6 @@ img { max-width: 100%; height: auto; display: block; }
   .hero-phrase-ai { font-size: 3.5rem; }
   .hero-phrase-code { font-size: 3.5rem; }
   .hero-deco { border-left: none; padding: 20px 0; }
-  .hero-deco-num { font-size: 3.5rem; }
 }
 
 @media (max-width: 768px) {
@@ -610,7 +743,6 @@ img { max-width: 100%; height: auto; display: block; }
 @media (max-width: 480px) {
   .hero-phrase-ai { font-size: 2rem; }
   .hero-phrase-code { font-size: 2rem; }
-  .hero-deco-num { font-size: 2.8rem; }
   .project-section { padding: 20px 12px; }
   .grid-section { padding: 40px 16px; }
   .project-inner { padding: 24px 16px; border-radius: 12px; }
@@ -656,7 +788,10 @@ img { max-width: 100%; height: auto; display: block; }
 
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="#" class="header-logo">AI 项目作品集</a>
+    <a href="#" class="header-logo">
+      <span class="typing-text" id="typingText"></span>
+      <span class="typing-cursor"></span>
+    </a>
     <nav class="header-nav">
       
       <a href="#decision-maker" class="header-link">AI-decision-maker</a>
@@ -681,11 +816,11 @@ img { max-width: 100%; height: auto; display: block; }
     <div class="hero-main">
       <div class="hero-text">
         <h1 class="hero-phrase">
-          <span class="hero-phrase-ai">AI 做理解</span>
-          <span class="hero-phrase-code">代码做执行</span>
+          <span class="hero-phrase-ai">Harness 全栈自建</span>
+          <span class="hero-phrase-code">零框架 AI 工程</span>
         </h1>
         <div class="hero-bar"></div>
-        <p class="hero-desc">这六个项目围绕同一个问题展开：如何让 AI 只做它擅长的事——语义理解，而把一切确定性工作交给代码。每个项目都是这个理念的落地实践：从数据清洗到内容审核，从单 Agent 到多 Agent 编排，试图在 AI 调用次数和执行效率之间找到最优解。所有项目没有使用 LangChain 等框架，全部从零构建，以精确控制每一 token 的流向。</p>
+        <p class="hero-desc">六个项目覆盖数据处理、知识检索、Agent 编排、内容审核。每一条管线从 Prompt 工程到运行时沙箱全部自建——协议层、工具层、编排层、安全与权限控制，不依赖 LangChain 等任何框架。</p>
         <div class="hero-footer">
           <span class="hero-footer-item">6 个项目</span>
           <span class="hero-dot">·</span>
@@ -695,9 +830,24 @@ img { max-width: 100%; height: auto; display: block; }
         </div>
       </div>
       <div class="hero-deco">
-        <span class="hero-deco-num">6</span>
-        <div class="hero-deco-line"></div>
-        <span class="hero-deco-label">项目</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m10.852 14.772-.383.923"/>
+          <path d="m10.852 9.228-.383-.923"/>
+          <path d="m13.148 14.772.382.924"/>
+          <path d="m13.531 8.305-.383.923"/>
+          <path d="m14.772 10.852.923-.383"/>
+          <path d="m14.772 13.148.923.383"/>
+          <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 0 0-5.63-1.446 3 3 0 0 0-.368 1.571 4 4 0 0 0-2.525 5.771"/>
+          <path d="M17.998 5.125a4 4 0 0 1 2.525 5.771"/>
+          <path d="M19.505 10.294a4 4 0 0 1-1.5 7.706"/>
+          <path d="M4.032 17.483A4 4 0 0 0 11.464 20c.18-.311.892-.311 1.072 0a4 4 0 0 0 7.432-2.516"/>
+          <path d="M4.5 10.291A4 4 0 0 0 6 18"/>
+          <path d="M6.002 5.125a3 3 0 0 0 .4 1.375"/>
+          <path d="m9.228 10.852-.923-.383"/>
+          <path d="m9.228 13.148-.923.383"/>
+          <circle cx="12" cy="12" r="3"/>
+          <circle cx="12" cy="12" r="1" fill="#f97316" fill-opacity="0.5"/>
+        </svg>
       </div>
     </div>
   </div>
@@ -2011,8 +2161,14 @@ img { max-width: 100%; height: auto; display: block; }
 
 <footer class="footer">
   <div class="footer-inner">
-    <p><a href="https://github.com/zlZayn">GitHub</a></p>
-    <p class="footer-time">June 13, 2026 13:58</p>
+    <div class="footer-row">
+      <div class="footer-left">
+        <a href="https://github.com/zlZayn" class="footer-link" target="_blank">Owner: zlZayn</a>
+        <span class="footer-dot"></span>
+        <span class="footer-count">6 projects</span>
+      </div>
+      <span class="footer-time">June 13, 2026 23:08</span>
+    </div>
   </div>
 </footer>
 
@@ -2063,11 +2219,65 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+/* === Typewriter effect for header logo === */
+(function () {
+  var cn = "AI 项目作品集";
+  var en = "AI Project Portfolio";
+  var texts = [cn, en];
+  var display = document.getElementById('typingText');
+  if (!display) return;
+
+  var textIdx = 0, pos = 0, deleting = false;
+  var TYPE_MS = 80, DELETE_MS = 35;
+  var PAUSE_AFTER_TYPE = 2000, PAUSE_AFTER_DELETE = 500;
+
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  async function step() {
+    while (true) {
+      var current = texts[textIdx % texts.length];
+      if (!deleting) {
+        if (pos < current.length) {
+          pos++;
+          display.textContent = current.slice(0, pos);
+          await sleep(TYPE_MS);
+        } else {
+          await sleep(PAUSE_AFTER_TYPE);
+          deleting = true;
+        }
+      } else {
+        if (pos > 0) {
+          pos--;
+          display.textContent = current.slice(0, pos);
+          await sleep(DELETE_MS);
+        } else {
+          await sleep(PAUSE_AFTER_DELETE);
+          deleting = false;
+          textIdx++;
+        }
+      }
+    }
+  }
+  step();
+})();
+
+var header = document.querySelector('.header');
 var headerInner = document.querySelector('.header .header-inner');
-if (headerInner) {
+if (header && headerInner) {
   var lastScroll = 0;
   window.addEventListener('scroll', function () {
     var sy = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+
+    /* Direction-based dot scaling: scroll up → dots enlarge, scroll down → recover */
+    if (sy < 20) {
+      header.classList.remove('scroll-up');
+    } else if (sy < lastScroll) {
+      header.classList.add('scroll-up');
+    } else if (sy > lastScroll) {
+      header.classList.remove('scroll-up');
+    }
+
+    /* Show/hide nav text based on scroll direction */
     if (sy < 50) {
       headerInner.style.opacity = '1';
     } else if (sy > lastScroll) {

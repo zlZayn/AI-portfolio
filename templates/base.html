@@ -14,7 +14,10 @@
 
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="#" class="header-logo">{{ profile.title }}</a>
+    <a href="#" class="header-logo">
+      <span class="typing-text" id="typingText"></span>
+      <span class="typing-cursor"></span>
+    </a>
     <nav class="header-nav">
       {% for project in projects %}
       <a href="#{{ project.id }}" class="header-link">{{ project.name }}</a>
@@ -29,8 +32,14 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <p><a href="{{ profile.github_url }}">GitHub</a></p>
-    <p class="footer-time">{{ build_time }}</p>
+    <div class="footer-row">
+      <div class="footer-left">
+        <a href="{{ profile.github_url }}" class="footer-link" target="_blank">Owner: zlZayn</a>
+        <span class="footer-dot"></span>
+        <span class="footer-count">{{ projects|length }} projects</span>
+      </div>
+      <span class="footer-time">{{ build_time }}</span>
+    </div>
   </div>
 </footer>
 
