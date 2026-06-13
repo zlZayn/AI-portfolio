@@ -2,4 +2,4 @@
 
 <https://zlzayn.github.io/AI-portfolio/>
 
-This repository serves as the hosting portal for the aforementioned individual AI portfolio website.
+Static portfolio site generated from YAML project data, Mermaid diagrams, and Jinja2 templates. See [ARCHITECTURE.md](ARCHITECTURE.md) for how it works.

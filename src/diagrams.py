@@ -16,7 +16,7 @@ import tempfile
 import os
 from pathlib import Path
 
-PUPPETEER_CONFIG = Path(__file__).parent / "puppeteer-config.json"
+PUPPETEER_CONFIG = Path(__file__).resolve().parent.parent / "config" / "puppeteer.json"
 MMDC_CMD = "mmdc.cmd"
 
 
@@ -38,7 +38,9 @@ flowchart LR
 
 
 def decision_maker() -> str:
-    return _HEAD + """
+    return (
+        _HEAD
+        + """
     subgraph EXT["External Interface"]
         A[CSV Input]:::input
     end
@@ -64,10 +66,13 @@ def decision_maker() -> str:
     F --> G[Clean Output]:::ok
     B -->|Hit| G
 """
+    )
 
 
 def rag_embed() -> str:
-    return _HEAD + """
+    return (
+        _HEAD
+        + """
     subgraph BLD["Build Phase"]
         direction LR
         D1[Documents<br/>.txt / .md / .typ]:::proc --> D2[Smart Chunk<br/>Boundary Aware]:::proc
@@ -91,10 +96,13 @@ def rag_embed() -> str:
     B25 --> RET
     MCP -.-> Q1
 """
+    )
 
 
 def schema_mapper() -> str:
-    return _HEAD + """
+    return (
+        _HEAD
+        + """
     subgraph EXT["External Interface"]
         A[Dirty CSV]:::input
     end
@@ -116,10 +124,13 @@ def schema_mapper() -> str:
     A -.->|Raw bypass| E
     E --> F[Clean CSV]:::ok
 """
+    )
 
 
 def tool_calling() -> str:
-    return _HEAD + """
+    return (
+        _HEAD
+        + """
     subgraph AGE["Agent Entity"]
         U[Host: Claude Code<br/>Codex Desktop]:::input
     end
@@ -143,10 +154,13 @@ def tool_calling() -> str:
     S --> V
     V --> OUT[Tool Result]:::ok
 """
+    )
 
 
 def collaborate() -> str:
-    return _HEAD + """
+    return (
+        _HEAD
+        + """
     subgraph PLAN["Planning (Autonomous)"]
         direction LR
         G[User Goal]:::input
@@ -171,10 +185,13 @@ def collaborate() -> str:
     G --> P --> D --> C --> V
     V --> S1 --> B1 --> S2 --> SN --> SM --> CT --> OUT
 """
+    )
 
 
 def tier_guardian() -> str:
-    return _HEAD + """
+    return (
+        _HEAD
+        + """
     T[Input Text<br/>scene + locale]:::input
 
     subgraph L1["Layer 1 - Parallel"]
@@ -209,6 +226,7 @@ def tier_guardian() -> str:
     DJ -->|REVIEW| D
     D --> HR
 """
+    )
 
 
 DIAGRAMS = {
@@ -230,11 +248,16 @@ def render_mermaid(mmd_text: str) -> str:
 
     cmd = [
         MMDC_CMD,
-        "-i", str(mmd_file),
-        "-o", str(svg_file),
-        "-b", "transparent",
-        "--width", "960",
-        "--height", "320",
+        "-i",
+        str(mmd_file),
+        "-o",
+        str(svg_file),
+        "-b",
+        "transparent",
+        "--width",
+        "960",
+        "--height",
+        "320",
     ] + _puppeteer_flag()
 
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
@@ -244,7 +267,6 @@ def render_mermaid(mmd_text: str) -> str:
 
     svg = svg_file.read_text(encoding="utf-8")
 
-    # Post-process: match SVG font to web page system font
     svg = svg.replace(
         'font-family:"trebuchet ms",verdana,arial,sans-serif',
         'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
@@ -266,13 +288,3 @@ def render_all() -> dict[str, str]:
         result[pid] = svg
         print(f"  [{pid}] diagram rendered ({len(svg)} bytes)")
     return result
-
-
-if __name__ == "__main__":
-    from pathlib import Path
-    os.chdir(Path(__file__).parent)
-    svgs = render_all()
-    for pid, svg in svgs.items():
-        out = Path("output") / f"{pid}.svg"
-        out.write_text(svg, encoding="utf-8")
-        print(f"  saved {out}")

@@ -570,6 +570,7 @@ img { max-width: 100%; height: auto; display: block; }
   background: #faf6ef;
 }
 .footer a { color: #f97316; }
+.footer-time { font-size: 0.75rem; color: #9ca3af; margin-top: 4px; }
 
 /* === Responsive === */
 @media (max-width: 900px) {
