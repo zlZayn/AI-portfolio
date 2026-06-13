@@ -2,13 +2,13 @@
 Mermaid diagram definitions for all 6 AI projects.
 Renders .mmd files to SVG using mmdc (Mermaid CLI).
 
-Design system — matches portfolio warm theme:
-  input   warm-cream  / gray border   (#faf6ef / #d1d5db)
-  proc    warm-orange / orange border  (#fff7ed / #f97316)
-  ai      light-purple/ indigo border  (#f5f3ff / #6366f1)
-  dec     warm-amber   / amber border   (#fef3c7 / #d97706)
-  ok      light-green  / green border   (#f0fdf4 / #16a34a)
-  stop    light-red    / red border     (#fef2f2 / #dc2626)
+Color semantics (matching portfolio warm theme):
+  input  External Interface       (#faf6ef / #d1d5db)
+  proc   Runtime / Orchestration  (#fff7ed / #f97316)
+  ai     Reasoning / Agent / KE   (#f5f3ff / #6366f1)
+  dec    Router / Decision        (#fef3c7 / #d97706)
+  ok     Result / Cache Hit       (#f0fdf4 / #16a34a)
+  stop   Block / Halt             (#fef2f2 / #dc2626)
 """
 
 import subprocess
@@ -39,15 +39,30 @@ flowchart LR
 
 def decision_maker() -> str:
     return _HEAD + """
-    A[CSV Input]:::input --> B[Profile<br/>fingerprint]:::proc
-    B --> C{Cache?}:::dec
-    C -->|Hit| H[Execute<br/>Stages 4-5]:::ok
-    H --> I[Clean Output]:::input
-    C -->|Miss| D[Scene AI<br/>1 char code]:::ai
-    D --> E[Route<br/>assemble prompt]:::proc
-    E --> F[Field AI<br/>signal sequence]:::ai
-    F --> G[Assemble<br/>operation chain]:::proc
-    G --> H
+    subgraph EXT["External Interface"]
+        A[CSV Input]:::input
+    end
+    subgraph GOV["Runtime Governance"]
+        B[Cache Router<br/>MD5 Fingerprint]:::dec
+    end
+    subgraph REA["Reasoning Layer"]
+        C[Field Type<br/>Structured Output]:::ai
+        D[Scene & Signal<br/>Code Classification]:::ai
+    end
+    subgraph ORC["Orchestration Logic"]
+        E[Operation Chain<br/>Dispatch & Exec]:::proc
+    end
+    subgraph GOV2["Runtime Governance"]
+        F[3-layer Code<br/>Validator]:::proc
+    end
+
+    A --> B
+    B -->|Miss| C
+    C --> D
+    D --> E
+    E --> F
+    F --> G[Clean Output]:::ok
+    B -->|Hit| G
 """
 
 
@@ -55,73 +70,144 @@ def rag_embed() -> str:
     return _HEAD + """
     subgraph BLD["Build Phase"]
         direction LR
-        D1[Documents]:::proc --> D2[Chunk<br/>smart boundaries]:::proc
-        D2 --> D3[Embed]:::ai
-        D3 --> D4[(Vector DB)]:::ok
+        D1[Documents<br/>.txt / .md / .typ]:::proc --> D2[Smart Chunk<br/>Boundary Aware]:::proc
+        D2 --> D3[Embedding<br/>Vector Index]:::ai
+        D2 -.-> B25[BM25 Index<br/>jieba + rank-bm25]:::proc
+        D3 --> D4[(Vector DB<br/>Long-Term Memory)]:::ok
+    end
+    subgraph PROTO["Protocol Layer"]
+        MCP[MCP Server<br/>stdio transport]:::ai
     end
     subgraph QRY["Query Phase"]
         direction LR
-        Q1[Question]:::input --> Q2{Enhance?}:::ai
-        Q2 -->|rewritten| Q3[Retrieve<br/>Hybrid + RRF]:::proc
-        Q3 --> Q4[Answer LLM]:::ai
-        Q1 -.->|original| Q4
+        Q1[Question]:::input --> EN{Query<br/>Enhancer}:::dec
+        EN -->|enhanced| RET[Hybrid Retrieval<br/>Vector + BM25<br/>RRF Fusion]:::proc
+        EN -.->|original| LLM
+        RET --> RR[Cross-Encoder<br/>Reranker]:::ai
+        RR --> LLM[Answer Gen<br/>Remote LLM]:::ai
+        LLM --> Q2[Answer]:::ok
     end
-    D4 --> Q3
+    D4 --> RET
+    B25 --> RET
+    MCP -.-> Q1
 """
 
 
 def schema_mapper() -> str:
     return _HEAD + """
-    A[Dirty CSV<br/>rows]:::input --> B[Extract<br/>unique values]:::proc
-    B --> C{AI Rule Gen<br/>1-2 calls}:::ai
-    C --> D[""" + '"' + r"""JSON Rules"""+ '"' + """]:::ok
-    A --> E[Local Exec<br/>0 tokens]:::ok
+    subgraph EXT["External Interface"]
+        A[Dirty CSV]:::input
+    end
+    subgraph TK["Core: Tool Ecosystem"]
+        B[Unique Value<br/>Extractor]:::proc
+        C[Atomic Tool<br/>AI Rule Gen]:::ai
+    end
+    subgraph ORC["Orchestration Logic"]
+        D[Priority Mapping<br/>4-level Fallback]:::proc
+    end
+    subgraph RUNT["Runtime Base"]
+        E[Bulk Replace<br/>Local Exec Engine]:::proc
+    end
+
+    A --> B
+    B --> C
+    C -->|JSON Rules| D
     D --> E
-    E --> F[Polish]:::proc --> G[Clean CSV]:::input
+    A -.->|Raw bypass| E
+    E --> F[Clean CSV]:::ok
 """
 
 
 def tool_calling() -> str:
     return _HEAD + """
-    subgraph TC["Direct Mode"]
-        direction LR
-        U[User]:::input --> A[Agent<br/>streaming loop]:::proc
-        A --> L[OpenAI API]:::ai
-        L --> T1[Execute Tool]:::ok
+    subgraph AGE["Agent Entity"]
+        U[Host: Claude Code<br/>Codex Desktop]:::input
     end
-    subgraph MP["MCP Mode"]
+    subgraph PROTO["Protocol Layer"]
         direction LR
-        MC[MCP Client]:::input --> MS[MCP Server<br/>stdio]:::proc
-        MS --> T2[Use Tool]:::ok
+        MCP[MCP: JSON-RPC<br/>Tool Discovery]:::proc
+        FC[Function Calling<br/>Direct API]:::proc
     end
-    Shared[[registerTool<br/>one codebase]]:::proc
-    T1 -.-> Shared
-    T2 -.-> Shared
+    subgraph TK["Core: Tool Ecosystem"]
+        REG[Atomic Tool<br/>Registry]:::ai
+    end
+    subgraph RUNT["Runtime Base"]
+        S[Sandbox Exec<br/>30s Timeout]:::proc
+        V[Dangerous Cmd<br/>Blocklist]:::stop
+    end
+
+    U --> MCP & FC
+    MCP --> REG
+    FC --> REG
+    REG --> S
+    S --> V
+    V --> OUT[Tool Result]:::ok
 """
 
 
 def collaborate() -> str:
     return _HEAD + """
-    Goal[Goal]:::input --> Plan[Plan<br/>LLM Planner]:::ai
-    Plan --> D["Dispatch<br/>N Agents / Stage<br/>(parallel)"]:::ai
-    D --> B[Bridge<br/>summarize]:::ok
-    B --> S[Synthesize<br/>final answer]:::ai
-    S --> C[Continue<br/>follow-up]:::proc
-    C -.->|loop| Plan
+    subgraph PLAN["Planning (Autonomous)"]
+        direction LR
+        G[User Goal]:::input
+        P[Planner LLM]:::ai
+        D{Decides<br/>N Stages, M Agents}:::dec
+        C[Agent Config<br/>Role / Model / Prompt]:::ok
+        V[JSON Schema<br/>x3 Retries]:::proc
+    end
+
+    subgraph EXEC["Execution (Sequential Pipeline)"]
+        direction LR
+        S1[Stage 1<br/>K Agents Parallel]:::proc
+        B1[Bridge<br/>Context]:::ai
+        S2[Stage 2<br/>M Agents Parallel]:::proc
+        SN[.. N Stages<br/>Sequential]:::proc
+    end
+
+    SM[Final<br/>Summarizer]:::ai
+    CT[Continue<br/>Follow-up]:::proc
+    OUT[Answer]:::ok
+
+    G --> P --> D --> C --> V
+    V --> S1 --> B1 --> S2 --> SN --> SM --> CT --> OUT
 """
 
 
 def tier_guardian() -> str:
     return _HEAD + """
-    T[Input Text]:::input --> L1["Layer 1<br/>A + B parallel"]:::ai
-    L1 --> G1{pre_filter<br/>0 tokens}:::dec
-    G1 -->|PASS ≈90%| PASS[PASS]:::ok
-    G1 -->|escalate| L2["Layer 2<br/>C context judge"]:::ai
-    L2 --> G2{deep_judge<br/>0 tokens}:::dec
-    G2 -->|PASS| PASS
-    G2 -->|BLOCK| BLK[BLOCK]:::stop
-    G2 -->|REVIEW| L3["Layer 3<br/>D evidence"]:::ai
-    L3 --> HR[Human Review]:::dec
+    T[Input Text<br/>scene + locale]:::input
+
+    subgraph L1["Layer 1 - Parallel"]
+        direction LR
+        A[Surface Scanner<br/>Pattern + Risk]:::ai
+        B[Intent Probe<br/>Intent + Confidence]:::ai
+    end
+
+    PF{pre_filter<br/>0 token<br/>Pure Python}:::dec
+
+    subgraph L2["Layer 2 - Sequential"]
+        C[Context Judge<br/>CoT + Culture<br/>Thinking ON]:::ai
+    end
+
+    DJ{deep_judge<br/>0 token<br/>Pure Python}:::dec
+
+    subgraph L3["Layer 3 - On Demand"]
+        D[Evidence<br/>Summarizer<br/>Thinking OFF]:::ai
+    end
+
+    PASS[PASS<br/>Fast Release]:::ok
+    BLK[BLOCK<br/>Auto Block]:::stop
+    HR[Human<br/>Review]:::input
+
+    T --> A & B
+    A & B --> PF
+    PF -->|PASS| PASS
+    PF -->|ESCALATE| C
+    C --> DJ
+    DJ -->|PASS| PASS
+    DJ -->|BLOCK| BLK
+    DJ -->|REVIEW| D
+    D --> HR
 """
 
 
@@ -147,8 +233,8 @@ def render_mermaid(mmd_text: str) -> str:
         "-i", str(mmd_file),
         "-o", str(svg_file),
         "-b", "transparent",
-        "--width", "900",
-        "--height", "240",
+        "--width", "960",
+        "--height", "320",
     ] + _puppeteer_flag()
 
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)

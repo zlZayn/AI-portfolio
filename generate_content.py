@@ -25,6 +25,8 @@ def table_css() -> str:
 .data-table .changed-row { background:#fffbeb; }
 .data-table tr.changed-row:hover { background:#fef3c7; }
 .data-table .diff { background:#fffbeb; }
+.data-table tr:hover td.diff { background:#f8fafc; }
+.data-table tr.changed-row:hover td.diff { background:#fef3c7; }
 .compare-wrapper { display:flex; gap:24px; margin-bottom:24px; }
 .compare-wrapper .data-table { flex:1; }
 .compare-wrapper .data-table th:first-child { min-width:50px; }

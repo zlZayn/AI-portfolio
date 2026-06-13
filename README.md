@@ -2,4 +2,4 @@
 
 <https://zlzayn.github.io/AI-portfolio/>
 
-This repository only serves as the hosting entry point for the static site above.
+This repository serves as the hosting portal for the aforementioned individual AI portfolio website.

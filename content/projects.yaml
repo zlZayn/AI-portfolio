@@ -26,7 +26,7 @@ projects:
       - Prompt Engineering
       - Structured Output Parser
       - Atomic Tool
-      - Permission & Security
+      - Permission & Security Control
       - Business / Third-Party API
     technology:
       - Python
@@ -69,6 +69,7 @@ projects:
     architecture:
       - Prompt Engineering
       - RAG
+      - Long / Short Memory
       - MCP
       - Atomic Tool
       - Business / Third-Party API
@@ -112,7 +113,8 @@ projects:
     architecture:
       - Prompt Engineering
       - Structured Output Parser
-      - Permission & Security
+      - Atomic Tool
+      - Permission & Security Control
       - Business / Third-Party API
     technology:
       - Python
@@ -144,7 +146,7 @@ projects:
     检测（150+ 运行时，两阶段批量 Promise.allSettled）。
   ai_role: 决定调用哪个工具
   code_role: 执行工具返回结果
-  metric: 同一套代码双模式
+  metric: 同一套代码双协议
   grid_overview: >-
     同一套 registerTool() 同时服务 MCP 和 Function Calling 两种协议。
     Zod schema → JSON Schema 桥接，一套定义两套消费。沙箱执行 + 危险命令
@@ -152,14 +154,14 @@ projects:
   github_url: "https://github.com/zlZayn/AI-tool-calling"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - MCP
       - Function Calling
       - Tool Calling
       - Atomic Tool
+      - Single Agent
       - Sandbox
       - Timeout & Retry
-      - Permission & Security
+      - Permission & Security Control
       - Business / Third-Party API
     technology:
       - TypeScript
@@ -168,7 +170,7 @@ projects:
     delivery:
       - CLI
   highlights:
-  - title: 双模式单代码库
+  - title: 双协议单代码库
     text: 同一 registerTool() + toJsonSchema() 桥接，一套 Zod 定义同时服务 MCP JSON-RPC 和 OpenAI Tool Calling API。注册表与 barrel import 分离，避免循环依赖。
   - title: 流式 Tool Call 累积器
     text: Map<index, Accumulator> 按索引重组分块到达的 tool 名称/参数/ID。消息压缩裁剪冗余文本保留 tool_call 元数据，降低多轮 token 浪费。
@@ -201,8 +203,8 @@ projects:
     architecture:
       - Prompt Engineering
       - Task Planner
-      - Multi-Agent
       - Structured Output Parser
+      - Multi-Agent
       - Business / Third-Party API
     technology:
       - Python
@@ -245,7 +247,8 @@ projects:
       - Prompt Engineering
       - Chain-of-Thought (CoT)
       - Structured Output Parser
-      - Permission & Security
+      - Atomic Tool
+      - Permission & Security Control
       - Business / Third-Party API
     technology:
       - Python
@@ -263,8 +266,3 @@ projects:
     text: 请求级 (text+scene+locale SHA256) + 节点级缓存。auto_block 阈值 0.9、human_review 阈值 0.7 可配置。Normal 内容预层零思考放行。
   - title: 中文文化感知 + 反馈进化
     text: Node C 专门处理讽刺、自嘲、"老六""666"、朋友间"你个憨憨哈哈哈"。每 500 次人工判断触发模式库更新，零模型重训练。
-
-
-
-
-
