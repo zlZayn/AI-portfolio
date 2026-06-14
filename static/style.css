@@ -729,6 +729,16 @@ img { max-width: 100%; height: auto; display: block; }
   .project-inner { padding: 28px 20px; }
   .card-head { flex-direction: column; gap: 4px; }
   .card-metric-badge { align-self: flex-start; }
+
+  /* 数据表格：横向滚动防溢出 */
+  .compare-wrapper { flex-direction: column; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .compare-wrapper .data-table { min-width: 0; }
+  .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* 截图缩放到屏幕宽度 */
+  .screenshot { max-width: 100%; }
+  .screenshot-stack { max-width: 100%; }
+  .screenshot-stack img { max-width: 100%; height: auto; max-height: none; }
 }
 
 @media (max-width: 480px) {
