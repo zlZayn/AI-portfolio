@@ -1,0 +1,6 @@
+[project]
+name = "ai-portfolio"
+version = "0.1.0"
+description = "Self-contained HTML portfolio showcasing AI projects with data tables and Mermaid diagrams"
+requires-python = ">=3.12"
+dependencies = ["jinja2", "pyyaml"]
