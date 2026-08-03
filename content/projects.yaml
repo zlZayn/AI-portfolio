@@ -266,3 +266,93 @@ projects:
     text: 请求级 (text+scene+locale SHA256) + 节点级缓存。auto_block 阈值 0.9、human_review 阈值 0.7 可配置。Normal 内容预层零思考放行。
   - title: 中文文化感知 + 反馈进化
     text: Node C 专门处理讽刺、自嘲、"老六""666"、朋友间"你个憨憨哈哈哈"。每 500 次人工判断触发模式库更新，零模型重训练。
+
+- id: tablesnap
+  name: tablesnap
+  tagline: 截图 → XLSX，本地 4B VLM 秒级识别，视觉转表格的极简闭环
+  quote: VLM 直出，而不是 OCR 流水线。视觉识别本应只有一个环节。
+  description: >-
+    截一张图，表格就出来了。全局热键 → 拖拽框选 → 本地 qwen3-vl 识别 → XLSX
+    自动保存。没有 OCR 预处理、没有版面分析、没有多模型流水线——视觉模型
+    直接输出 CSV，零中间环节，单张截图识别通常在数秒内完成。<br><br>
+    模型只用本地 qwen3-vl:4b，权重约 2.5GB，普通笔记本即可流畅运行，无显存
+    压力。客户端只用 Python stdlib（urllib），零第三方 HTTP 依赖。识别全程
+    本地：无云端调用、无数据外泄、无 API 账单。批处理模式一行命令转换多张
+    图片，单元测试无需 Ollama，端到端测试按需运行。
+  ai_role: 直接识别截图中的表格结构并输出 CSV
+  code_role: 截图、框选、坐标、导出 XLSX、错误处理
+  metric: 秒级出表 / 4B 本地模型
+  grid_overview: >-
+    全局热键截屏 → 框选区域 → 本地 4B VLM 直接输出表格 → 自动导出 XLSX。
+    VLM 直出设计哲学，无 OCR 流水线中间环节。纯 stdlib 客户端，小模型低
+    负担，零云端零成本。
+  github_url: "https://github.com/zlZayn/tablesnap"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - Local-First
+      - Lightweight Model
+      - Atomic Tool
+      - Permission & Security Control
+    technology:
+      - Python
+      - Ollama (qwen3-vl)
+      - tkinter
+      - openpyxl
+    delivery:
+      - CLI
+      - Desktop
+  highlights:
+  - title: VLM 直出，而非 OCR 流水线
+    text: OCR 流水线需要预处理 → 版面分析 → 识别 → 结构化多环节，每环都是误差源。VLM 直接看整张截图输出 CSV，单一环节、单一误差面。设计哲学单独成文（docs/PHILOSOPHY.md）。
+  - title: 4B 小模型，压力不大
+    text: qwen3-vl:4b 权重约 2.5GB，普通笔记本 CPU 或轻量 GPU 即可跑，无需服务器。识别直接出表，单张数秒完成——本地小模型在桌面工具里完全够用。
+  - title: 纯 stdlib 客户端
+    text: urllib 直连 Ollama /api/generate，零第三方 HTTP 依赖。依赖面最小化：tkinter（选区）、mss（截图）、keyboard（热键）、openpyxl（导出）各司其职。
+  - title: 热键闭环 + 批处理双模式
+    text: Ctrl+Alt+S 拖拽框选即时导出，同时间戳截图与 XLSX 并存；main.py file a.png 批量转换多张图片。配置三优先级：环境变量 > config.json > 默认值。
+
+- id: raw-to-guide
+  name: ai-batch-raw-to-offline-guide
+  tagline: 素材丢给 AI，自动炼成规范数据 → 单文件离线攻略，不用写代码
+  quote: AI 生成内容不可信，但 Schema 校验后的内容可以。信任交给验证层，不是模型。
+  description: >-
+    小红书笔记、截图、口述——把碎片化素材丢给 AI，就能炼成一个可交互的离线
+    HTML 攻略：无需联网、无需服务器、打开即用。整个过程不用写代码，换主题
+    也只是换一份素材。<br><br>
+    便捷的背后是规范构建：schema.json 统一声明实体、字段与引用关系，13 个
+    JSON 数据文件遵循同一套命名与 ID 引用模式，验证器自动检查引用完整性
+    和双向一致性，漏了引用就报错。真实场景：北京环球影城，17 项目、15 演出、
+    40 菜品、101 评价、47 标签 11 分类，产物 350KB，微信可发。全域双向链接、
+    正反方观点并排、标签跨类型聚合，全部由规范数据自动生成。
+  ai_role: 把非结构化素材炼制成符合 Schema 的结构化 JSON
+  code_role: Schema 校验引用完整性、生成双向索引、渲染离线页面
+  metric: 素材 → 攻略，零代码
+  grid_overview: >-
+    素材 → AI 炼制结构化数据 → Schema 校验引用完整性 → 单文件离线 HTML。
+    不用写代码，换主题只换素材。数据与模板解耦，规范数据驱动一切。
+    北京环球影城真实落地，350KB 微信可发。
+  github_url: "https://github.com/zlZayn/ai-batch-raw-to-offline-guide"
+  tech_stack:
+    architecture:
+      - Prompt Engineering
+      - Schema-Driven Design
+      - Data Normalization
+      - Structured Output Parser
+      - Business / Third-Party API
+    technology:
+      - Python
+      - JSON Schema
+      - Jinja2
+      - Vanilla JS
+    delivery:
+      - Web
+  highlights:
+  - title: Schema 驱动，信任交给验证层
+    text: AI 生成内容不可信，但经过引用完整性 + 双向一致性校验的内容可以。schema.json 是唯一真相源，改 Schema 验证和生成自动适应，防静默遗漏。
+  - title: 数据规范构建
+    text: 所有实体统一字段命名、`{type}_ids` 数组式引用、标签唯一来源——13 个 JSON 遵守同一套规范，验证器自动校验，坏数据进不了页面。
+  - title: 单文件离线交付
+    text: 全部 CSS/JS/JSON 内嵌一个 HTML（350KB），无网络无服务器，微信/AirDrop 即开即用。23 个 hash 路由 SPA，Vanilla JS 零框架。
+  - title: 换主题不改代码
+    text: 数据与模板解耦，换主题只换素材。上海迪士尼攻略验证了复用性；docs/usage.md 提供"AI 工作规范"可直接复制给 AI，非技术用户也能生成新主题。

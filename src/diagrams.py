@@ -1,5 +1,5 @@
 """
-Mermaid diagram definitions for all 6 AI projects.
+Mermaid diagram definitions for all 8 AI projects.
 Renders .mmd files to SVG using mmdc (Mermaid CLI).
 
 Color semantics (matching portfolio warm theme):
@@ -229,6 +229,52 @@ def tier_guardian() -> str:
     )
 
 
+def tablesnap() -> str:
+    return (
+        _HEAD
+        + """
+    subgraph EXT["External Interface"]
+        U[User Press<br/>Ctrl+Alt+S]:::input
+        R[Drag Select<br/>Screen Region]:::input
+    end
+    subgraph AI["Reasoning Layer"]
+        V[Local VLM<br/>qwen3-vl 4b<br/>Ollama]:::ai
+    end
+    subgraph ORC["Orchestration Logic"]
+        E[Export XLSX<br/>openpyxl]:::proc
+    end
+    subgraph OUT["Output Layer"]
+        F[results/<br/>captures + xlsx]:::ok
+    end
+
+    U --> R --> V --> E --> F
+"""
+    )
+
+
+def raw_to_guide() -> str:
+    return (
+        _HEAD
+        + """
+    subgraph EXT["External Interface"]
+        M[碎片素材<br/>笔记 / 截图 / 口述]:::input
+    end
+    subgraph AI["AI Refinement"]
+        L[AI 炼制<br/>结构化 JSON]:::ai
+    end
+    subgraph ORC["Orchestration Logic"]
+        V{Schema 校验<br/>引用完整性}:::dec
+        G[Jinja2 生成<br/>23 路由 SPA]:::proc
+    end
+    subgraph OUT["Output Layer"]
+        H[单文件 HTML<br/>350KB 离线]:::ok
+    end
+
+    M --> L --> V --> G --> H
+"""
+    )
+
+
 DIAGRAMS = {
     "decision-maker": decision_maker,
     "rag-embed": rag_embed,
@@ -236,6 +282,8 @@ DIAGRAMS = {
     "tool-calling": tool_calling,
     "collaborate": collaborate,
     "tier-guardian": tier_guardian,
+    "tablesnap": tablesnap,
+    "raw-to-guide": raw_to_guide,
 }
 
 
@@ -280,7 +328,7 @@ def render_mermaid(mmd_text: str) -> str:
 
 
 def render_all() -> dict[str, str]:
-    """Render all 6 Mermaid diagrams, return {project_id: svg_string}."""
+    """Render all 8 Mermaid diagrams, return {project_id: svg_string}."""
     result = {}
     for pid, fn in DIAGRAMS.items():
         mmd = fn()

@@ -1,4 +1,4 @@
 title: "AI 项目作品集"
 subtitle: "Harness 全栈自建 · 零框架 AI 工程"
-description: "六个项目覆盖数据处理、知识检索、Agent 编排、内容审核。每一条管线从 Prompt 工程到运行时沙箱全部自建——协议层、工具层、编排层、安全与权限控制，不依赖 LangChain 等任何框架。"
+description: "八个项目覆盖数据处理、知识检索、Agent 编排、内容审核、本地视觉识别、离线内容生成。每一条管线从 Prompt 工程到运行时沙箱全部自建——协议层、工具层、编排层、安全与权限控制，不依赖 LangChain 等任何框架。"
 github_url: "https://github.com/zlZayn"
