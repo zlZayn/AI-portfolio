@@ -111,3 +111,43 @@ if (header && headerInner) {
     lastScroll = sy;
   });
 }
+
+/* === Floating nav toggle === */
+var navToggle = document.getElementById('navToggle');
+var siteNav = document.getElementById('siteNav');
+var navBackdrop = document.getElementById('navBackdrop');
+if (navToggle && siteNav) {
+  function setNav(open) {
+    siteNav.classList.toggle('open', open);
+    if (navBackdrop) navBackdrop.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+  }
+
+  navToggle.addEventListener('click', function () {
+    setNav(navToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  /* Close on backdrop click */
+  if (navBackdrop) {
+    navBackdrop.addEventListener('click', function () { setNav(false); });
+  }
+
+  /* Close on link click */
+  siteNav.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setNav(false);
+  });
+
+  /* Close on Escape */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && navToggle.getAttribute('aria-expanded') === 'true') {
+      setNav(false);
+    }
+  });
+
+  /* Scroll anywhere → collapse panel (page stays scrollable) */
+  var collapseOnScroll = function () {
+    if (navToggle.getAttribute('aria-expanded') === 'true') setNav(false);
+  };
+  window.addEventListener('scroll', collapseOnScroll, { passive: true });
+}

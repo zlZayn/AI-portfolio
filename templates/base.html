@@ -18,11 +18,20 @@
       <span class="typing-text" id="typingText"></span>
       <span class="typing-cursor"></span>
     </a>
-    <nav class="header-nav">
+    <nav class="header-nav" id="siteNav">
       {% for project in projects %}
       <a href="#{{ project.id }}" class="header-link">{{ project.name }}</a>
       {% endfor %}
     </nav>
+    <button type="button" class="nav-toggle" id="navToggle"
+            aria-label="打开菜单" aria-expanded="false" aria-controls="siteNav">
+      <svg class="nav-toggle-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+        <line class="nav-bar nav-bar-1" x1="3" y1="6" x2="21" y2="6" />
+        <line class="nav-bar nav-bar-2" x1="3" y1="12" x2="21" y2="12" />
+        <line class="nav-bar nav-bar-3" x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+    <div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
   </div>
 </header>
 
