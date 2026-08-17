@@ -26,12 +26,12 @@ Replace the eight Mermaid flowcharts with project-specific editorial SVG diagram
 | Project | Visual type | Architectural story | Focal idea |
 | --- | --- | --- | --- |
 | AI-decision-maker | Flowchart | Fingerprint cache branches to a zero-token hit or a constrained AI signal path followed by validation and local operations | AI proposes signals; code decides and executes |
-| AI-RAG-embed | Zoned data flow | Build rail creates semantic chunks and dual indexes; query rail separates the enhanced retrieval query from the original answer question | Query enhancement never contaminates the answer prompt |
-| AI-schema-mapper | Data flow | Full rows contract to unique values, AI emits reusable rules, and local code expands those rules across all rows | AI cost scales with unique values, not row count |
+| AI-RAG-embed | Architecture | Build and query zones connect semantic chunks, dual indexes, enhanced retrieval, and the original-question bypass | Query enhancement never contaminates the answer prompt |
+| AI-schema-mapper | Architecture | Full rows contract to unique values, AI emits a reusable rule asset, and local code applies it across all rows | AI cost scales with unique values, not row count |
 | AI-tool-calling | Architecture | MCP and direct Function Calling converge on one registry before entering a guarded execution boundary | One tool definition serves two protocols |
 | AI-collaborate | Process | A planner creates sequential stages; agents run in parallel inside each stage; bridge summaries carry focused context forward | Parallel within stages, bridged between stages |
 | AI-tier-guardian | Flowchart | Parallel shallow reviewers feed code arbitration; only uncertain cases reach deeper review and human evidence | Zero-token arbitration controls escalation |
-| tablesnap | Process | Hotkey capture and file input converge on one local VLM call, then PSV is exported to XLSX | Direct visual understanding without an OCR pipeline |
+| tablesnap | Architecture | Hotkey capture and file input converge on a shared local VLM and export core | Direct visual understanding without an OCR pipeline |
 | raw-to-guide | Structured data flow | Unstructured sources become records governed by one Schema contract, then indexes and templates produce an offline H5 | Schema constrains AI output and drives generation |
 
 ## Code Architecture
