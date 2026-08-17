@@ -2,105 +2,128 @@
 
 ## Overview
 
-Single-entry build pipeline that generates a self-contained HTML portfolio page from YAML project data, inline images, Mermaid diagrams, and Jinja2 templates.
+`build.py` generates one self-contained portfolio page from YAML content, inline images, generated data tables, editorial SVG diagrams, CSS, JavaScript, and Jinja2 templates.
 
-```
-build.py assemble() → src/diagrams.render_all()
-                    → src/data_tables.generate_all()
-                    → Jinja2 render → index.html
-```
+The build has no runtime diagram engine. Python renders deterministic SVG strings and Jinja2 embeds them directly in `index.html`.
 
 ## Build Pipeline
 
-`uv run python build.py` runs `assemble()` in build.py, in this order:
+`uv run python build.py` performs six steps:
 
-1. **Load YAML** — `content/profile.yaml` (site metadata) + `content/projects.yaml` (8 projects with descriptions, tech stack, highlights)
-2. **Inline images** — read screenshots from `images/{project_id}/`, encode as base64 data URIs, attach to project data
-3. **Generate data tables** — `src/data_tables.py` reads CSV/JSON from sibling project directories (`AI-decision-maker`, `AI-schema-mapper`, `AI-tier-guardian`) and produces HTML comparison tables (Before vs After, quality reports, test results)
-4. **Render diagrams** — `src/diagrams.py` calls Mermaid CLI (mmdc) to render 8 SVG flowcharts, post-processes fonts, returns SVG strings
-5. **Assemble HTML** — Jinja2 renders templates (`templates/`) with all data inlined: CSS, JS, images, diagrams, tables → single self-contained `index.html`
+1. Load `content/profile.yaml` and the eight entries in `content/projects.yaml`.
+2. Encode screenshots from `images/{project_id}/` as inline data URIs.
+3. Generate comparison tables from versioned snapshots in `content/data-tables/`.
+4. Render the eight accessible SVG diagrams through `src.diagrams.render_all()`.
+5. Render the page sections with Jinja2 and inline CSS/JavaScript.
+6. Normalize line endings and trailing whitespace, then write `index.html`.
 
-## Directory Layout
+## Directory Responsibilities
 
-```
-build.py            Entry point. Defines and calls assemble().
+| Path | Responsibility |
+| --- | --- |
+| `build.py` | Single build entry point and source assembly |
+| `content/` | Profile, project copy, and versioned data-table snapshots |
+| `images/` | Project screenshots |
+| `src/data_tables.py` | Generated project comparison tables |
+| `src/diagrams/` | Editorial SVG rendering package |
+| `static/` | CSS and browser behavior inlined at build time |
+| `templates/` | Jinja2 page structure |
+| `tests/` | SVG primitive and project-story contract tests |
+| `index.html` | Generated, self-contained site |
 
-config/             Build configuration.
-  puppeteer.json      Chrome path for Mermaid CLI (mmdc).
-  requirements.txt    Python dependencies.
+## Diagram Package
 
-content/            Source data.
-  profile.yaml        Site title, description, GitHub link.
-  projects.yaml       8 project entries with descriptions, tags, highlights.
+The public interface remains small:
 
-images/             Screenshots, one subdirectory per project.
-  collaborate/*.png
-  rag-embed/*.png
-  tool-calling/*.png
-  tablesnap/*.png
-  raw-to-guide/*.png
+```python
+from src.diagrams import render_all
 
-src/                Python modules.
-  diagrams.py         8 Mermaid diagram definitions + mmdc wrapper.
-  data_tables.py      CSV/JSON readers + HTML table generators.
-
-static/             Frontend source files (inlined into HTML at build time).
-  style.css           Design tokens (:root variables) + component styles.
-  script.js           Typewriter, nav toggle, lightbox, scroll behaviors.
-
-templates/          Jinja2 templates (flat, no subdirectories).
-  base.html           HTML skeleton with KaTeX CDN + header (logo, hamburger).
-  hero.html           Title + stat decoration.
-  grid.html           Project card grid.
-  project.html        Individual project detail section.
-
-index.html          Build output. Self-contained, double-clickable.
+diagrams: dict[str, str] = render_all()
 ```
 
-## Design Tokens & Header
+The package separates shared rules from project meaning:
 
-All colors, shadows, and motion curves are defined once in `:root` inside `static/style.css` — single source of truth. Change a token and every component that references it updates.
+| Module | Responsibility |
+| --- | --- |
+| `src/diagrams/__init__.py` | Project registry and `render_all()` contract |
+| `src/diagrams/theme.py` | Portfolio-aligned semantic color tokens |
+| `src/diagrams/svg.py` | Escaping, accessibility, paint order, nodes, zones, lanes, decisions, and orthogonal connectors |
+| `src/diagrams/projects/*.py` | One hand-tuned layout per project |
 
-The header never lists project links inline. It shows the logo plus a hamburger button (`button.nav-toggle`, SVG lines with round caps). Opening it reveals a floating panel (`nav.header-nav`) centered below the header — the page stays visible and scrollable behind a light dim (`div.nav-backdrop`). Any scroll collapses the panel. This keeps the top bar clean regardless of project count.
+Project modules describe content and geometry only. They do not define colors, markers, typography, or accessibility behavior.
 
-## Diagram Semantics (Mermaid)
+## Visual Grammar
 
-All 8 flowcharts share a consistent color scheme mapped to architecture layers:
+Diagram types follow `cathrynlavery/diagram-design` 2.4. Type selection reflects the dominant relationship, not visual variety.
 
-| Class | Color | Layer |
-|---|---|---|
-| `input` | Warm cream | External Interface — data in/out, user input |
-| `ai` | Purple | Reasoning / Agent / Knowledge Engine — LLM nodes |
-| `proc` | Warm orange | Orchestration / Runtime — deterministic execution |
-| `dec` | Amber | Router / Decision — zero-token branch points |
-| `ok` | Green | Result / Cache Hit — success terminal |
-| `stop` | Red | Block / Halt — rejection terminal |
+| Type | Projects | Why |
+| --- | --- | --- |
+| Flowchart | `decision-maker`, `tier-guardian` | Cache and arbitration decisions create real branches |
+| Architecture | `rag-embed`, `schema-mapper`, `tool-calling`, `tablesnap` | Components, shared cores, boundaries, and bypass paths carry the meaning |
+| Process | `collaborate` | Actor ownership changes across ordered stages |
+| Data flow | `raw-to-guide` | Payload shape changes across Author, AI, Build System, and Reader roles |
 
-Each diagram lives in its own function in `src/diagrams.py` and is rendered independently by `render_all()`.
+Each diagram emphasizes one architectural claim:
 
-## Data Flow
+- `decision-maker`: cache hits bypass AI; code validates and executes every write.
+- `rag-embed`: enhanced queries retrieve context while the original question reaches the answer model.
+- `schema-mapper`: AI cost scales with unique values, then local code applies reusable rules to all rows.
+- `tool-calling`: MCP and Function Calling share one tool registry and guarded runtime.
+- `collaborate`: stages are sequential; colleagues inside a stage run in parallel; bridge context connects stages.
+- `tier-guardian`: two zero-token code gates own release, block, and review decisions.
+- `tablesnap`: screen and file inputs share one local VLM call without an OCR reconstruction pipeline.
+- `raw-to-guide`: one Schema contract governs AI output and generator input.
 
+## Rendering Rules
+
+- Canvas geometry uses a 4 px grid and a fixed responsive `viewBox`.
+- Non-axis-aligned relationships use rounded orthogonal paths; diagonal segments raise `ValueError`.
+- Connectors render before nodes so opaque node masks keep paths readable.
+- Orange is editorial focus, limited to one or two primary mechanisms per diagram.
+- Human-readable names use the site sans-serif stack; technical tags use monospace.
+- Every SVG has a project-prefixed `<title>`, `<desc>`, marker IDs, `role="img"`, and resolving `aria-labelledby`.
+- XML text is escaped before insertion.
+- Diagrams are static. No browser JavaScript, remote assets, or animation are required.
+
+## Responsive Behavior
+
+Diagrams scale to the project column on desktop. On narrow screens the container permits horizontal scrolling at a minimum readable width instead of shrinking labels below legibility. The SVG remains unframed so it reads as part of the project section rather than a nested card.
+
+## Design Tokens
+
+Page colors, shadows, and motion remain in `static/style.css`. Diagram colors use matching semantic tokens in `src/diagrams/theme.py` because SVG is generated before CSS is inlined.
+
+When the portfolio palette changes, update both sources in the same change and run the visual checks. The current diagram roles are warm paper, white surface, deep ink, muted gray, orange focus, green success, and red block.
+
+## Verification
+
+Run automated contracts:
+
+```bash
+uv run python -m unittest discover -s tests -v
 ```
-                   ┌──────────────────┐
-                   │   content/*.yaml │
-                   └────────┬─────────┘
-                            ↓
-                   ┌──────────────────┐
-                   │  inline_images() │── images/{project_id}/*.png
-                   └────────┬─────────┘
-                            ↓
-            ┌───────────────┼───────────────┐
-            ↓               ↓               ↓
-    ┌────────────┐  ┌──────────────┐  ┌──────────┐
-    │data_tables │  │   diagrams   │  │static/*  │
-    │.generate() │  │ .render_all()│  │.css/.js  │
-    └──────┬─────┘  └──────┬───────┘  └─────┬────┘
-           ↓               ↓                ↓
-            ┌──────────────┼───────────────┐
-            │    Jinja2: templates/*.html  │
-            └──────────────┬───────────────┘
-                           ↓
-                    ┌──────────────┐
-                    │  index.html  │
-                    └──────────────┘
+
+The tests verify:
+
+- data-table snapshots produce all three showcase sections;
+- repeated builds are byte-identical;
+- all eight project IDs are registered;
+- required architectural phrases remain visible;
+- SVG metadata and project-prefixed IDs are present;
+- text escaping works;
+- diagonal connectors are rejected;
+- no Mermaid or `foreignObject` artifacts enter output.
+
+Then rebuild and inspect desktop and mobile layouts:
+
+```bash
+uv run python build.py
 ```
+
+## Dependencies
+
+The Python dependency set is Jinja2 and PyYAML. Diagram generation uses only the Python standard library. It does not require Mermaid CLI, Node.js, Chrome, Puppeteer, or a network connection.
+
+## Reproducible Data
+
+The build never reads outside this repository. Small, curated outputs from `AI-decision-maker`, `AI-schema-mapper`, and `AI-tier-guardian` are versioned under `content/data-tables/`; generated HTML therefore remains identical in the main checkout, Git worktrees, and standalone clones. Refresh snapshots explicitly from their source projects, review the data diff, then rebuild `index.html` in the same commit.

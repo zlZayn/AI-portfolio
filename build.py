@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
 Assemble all sources into a single self-contained HTML page.
-Orchestrates: YAML data --> inline images --> data tables --> Mermaid diagrams --> Jinja2 render
+Orchestrates: YAML data --> inline images --> data tables --> editorial SVG diagrams --> Jinja2 render
 """
 
 import yaml
 import base64
-from datetime import datetime
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
@@ -49,6 +48,12 @@ def _stack_key(name: str) -> int:
     return 0
 
 
+def _normalize_html(text: str) -> str:
+    """Use stable LF endings and remove template indentation on blank lines."""
+    lines = text.replace("\r\n", "\n").split("\n")
+    return "\n".join(line.rstrip() for line in lines)
+
+
 def _inline_images(projects: list) -> None:
     for project in projects:
         img_dir = IMAGES_DIR / project["id"]
@@ -78,7 +83,7 @@ def _inline_images(projects: list) -> None:
         project["screenshots"] = screenshots
 
 
-def assemble() -> None:
+def assemble(output_path: Path = OUTPUT_PATH) -> None:
     profile = _load_yaml("profile.yaml")
     projects = _load_yaml("projects.yaml")["projects"]
 
@@ -119,12 +124,11 @@ def assemble() -> None:
         content=content,
         inline_css=inline_css,
         inline_js=inline_js,
-        build_time=datetime.now().strftime("%B %d, %Y %H:%M"),
     )
 
-    with open(str(OUTPUT_PATH), "w", encoding="utf-8") as f:
-        f.write(full_html)
-    print(f"Built: {OUTPUT_PATH} ({OUTPUT_PATH.stat().st_size / 1024:.0f} KB)")
+    with open(str(output_path), "w", encoding="utf-8", newline="\n") as f:
+        f.write(_normalize_html(full_html))
+    print(f"Built: {output_path} ({output_path.stat().st_size / 1024:.0f} KB)")
 
 
 if __name__ == "__main__":

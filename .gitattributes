@@ -1,0 +1,2 @@
+content/data-tables/**/*.csv text eol=lf
+content/data-tables/**/*.json text eol=lf

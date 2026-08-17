@@ -709,11 +709,17 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* === Diagram === */
 .project-diagram {
+  width: 100%;
   margin-bottom: 36px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-light) transparent;
 }
 
 .project-diagram svg {
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  min-width: 960px;
   height: auto;
 }
 
@@ -831,11 +837,6 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-count {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
-}
-
-.footer-time {
-  font-size: 0.75rem;
-  color: var(--color-border-light);
 }
 
 @media (max-width: 768px) {
