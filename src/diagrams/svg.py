@@ -163,7 +163,7 @@ class Canvas:
             x, y = label_at or _label_position(points)
             self._check_grid(x, y)
             mask_width = max(40, _grid_ceil(len(label) * 7 + 16))
-            self._layers["connectors"].append(
+            self._layers["annotations"].append(
                 f'<g class="connector-label"><rect x="{x - mask_width // 2}" y="{y - 16}" '
                 f'width="{mask_width}" height="16" rx="4"/><text x="{x}" y="{y - 4}" '
                 f'text-anchor="middle">{escape(label.upper())}</text></g>'

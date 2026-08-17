@@ -26,7 +26,7 @@ def render() -> str:
     canvas.node(776, 492, 136, 64, "Quality report", "compliance", "REPORT", "store")
 
     canvas.connector(((216, 168), (288, 168)), "DEDUP", "accent", (252, 152))
-    canvas.connector(((456, 168), (528, 168)), "ONE AI READ", "accent", (492, 96))
+    canvas.connector(((456, 168), (528, 168)), "ONE AI READ", "accent", (492, 152))
     canvas.connector(((696, 168), (768, 168)))
     canvas.connector(((136, 208), (136, 348), (348, 348), (348, 372)), "FULL ROWS BYPASS AI", "dashed", (220, 304))
     canvas.connector(((840, 208), (840, 304), (400, 304), (400, 372)), "REUSABLE RULES", "accent", (620, 288))

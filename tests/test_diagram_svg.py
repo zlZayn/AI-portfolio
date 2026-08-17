@@ -35,6 +35,15 @@ class CanvasTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             canvas.connector(((40, 40), (80, 60)))
 
+    def test_connector_labels_render_above_nodes(self):
+        canvas = Canvas("sample", "Sample", "Sample description.")
+        canvas.connector(((40, 80), (240, 80)), "handoff")
+        canvas.node(80, 40, 120, 80, "Node", tag="CODE")
+
+        svg = canvas.render()
+
+        self.assertLess(svg.index('class="node-box"'), svg.index('class="connector-label"'))
+
     def test_small_text_tokens_meet_normal_text_contrast(self):
         self.assertGreaterEqual(contrast_ratio(THEME.muted, THEME.paper), 4.5)
         self.assertGreaterEqual(contrast_ratio(THEME.accent_strong, THEME.paper), 4.5)
