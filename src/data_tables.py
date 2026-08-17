@@ -1,14 +1,13 @@
 """
 Read project CSV/JSON data and produce HTML comparison tables.
-Each gen_* function reads from the corresponding sibling project directory
-(e.g. AI-decision-maker) and returns an HTML fragment.
+Each gen_* function reads a versioned showcase snapshot and returns an HTML fragment.
 """
 
 import csv
 import json
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+SNAPSHOT_DIR = Path(__file__).resolve().parent.parent / "content" / "data-tables"
 
 
 def read_csv(path: Path) -> list[dict]:
@@ -353,18 +352,17 @@ def gen_tier_guardian(project_dir: Path) -> str:
 
 
 def generate_all() -> dict[str, str]:
-    root = BASE_DIR.parent
     result = {}
 
-    dm = root / "AI-decision-maker"
+    dm = SNAPSHOT_DIR / "decision-maker"
     if dm.exists():
         result["decision-maker"] = gen_decision_maker(dm)
 
-    sm = root / "AI-schema-mapper"
+    sm = SNAPSHOT_DIR / "schema-mapper"
     if sm.exists():
         result["schema-mapper"] = gen_schema_mapper(sm)
 
-    tg = root / "AI-tier-guardian"
+    tg = SNAPSHOT_DIR / "tier-guardian"
     if tg.exists():
         result["tier-guardian"] = gen_tier_guardian(tg)
 

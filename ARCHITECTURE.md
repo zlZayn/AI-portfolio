@@ -12,7 +12,7 @@ The build has no runtime diagram engine. Python renders deterministic SVG string
 
 1. Load `content/profile.yaml` and the eight entries in `content/projects.yaml`.
 2. Encode screenshots from `images/{project_id}/` as inline data URIs.
-3. Generate comparison tables from selected sibling project outputs.
+3. Generate comparison tables from versioned snapshots in `content/data-tables/`.
 4. Render the eight accessible SVG diagrams through `src.diagrams.render_all()`.
 5. Render the page sections with Jinja2 and inline CSS/JavaScript.
 6. Normalize line endings and trailing whitespace, then write `index.html`.
@@ -22,7 +22,7 @@ The build has no runtime diagram engine. Python renders deterministic SVG string
 | Path | Responsibility |
 | --- | --- |
 | `build.py` | Single build entry point and source assembly |
-| `content/` | Profile and project copy |
+| `content/` | Profile, project copy, and versioned data-table snapshots |
 | `images/` | Project screenshots |
 | `src/data_tables.py` | Generated project comparison tables |
 | `src/diagrams/` | Editorial SVG rendering package |
@@ -105,6 +105,8 @@ uv run python -m unittest discover -s tests -v
 
 The tests verify:
 
+- data-table snapshots produce all three showcase sections;
+- repeated builds are byte-identical;
 - all eight project IDs are registered;
 - required architectural phrases remain visible;
 - SVG metadata and project-prefixed IDs are present;
@@ -121,3 +123,7 @@ uv run python build.py
 ## Dependencies
 
 The Python dependency set is Jinja2 and PyYAML. Diagram generation uses only the Python standard library. It does not require Mermaid CLI, Node.js, Chrome, Puppeteer, or a network connection.
+
+## Reproducible Data
+
+The build never reads outside this repository. Small, curated outputs from `AI-decision-maker`, `AI-schema-mapper`, and `AI-tier-guardian` are versioned under `content/data-tables/`; generated HTML therefore remains identical in the main checkout, Git worktrees, and standalone clones. Refresh snapshots explicitly from their source projects, review the data diff, then rebuild `index.html` in the same commit.

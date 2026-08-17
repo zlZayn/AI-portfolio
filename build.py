@@ -6,7 +6,6 @@ Orchestrates: YAML data --> inline images --> data tables --> editorial SVG diag
 
 import yaml
 import base64
-from datetime import datetime
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
@@ -84,7 +83,7 @@ def _inline_images(projects: list) -> None:
         project["screenshots"] = screenshots
 
 
-def assemble() -> None:
+def assemble(output_path: Path = OUTPUT_PATH) -> None:
     profile = _load_yaml("profile.yaml")
     projects = _load_yaml("projects.yaml")["projects"]
 
@@ -125,12 +124,11 @@ def assemble() -> None:
         content=content,
         inline_css=inline_css,
         inline_js=inline_js,
-        build_time=datetime.now().strftime("%B %d, %Y %H:%M"),
     )
 
-    with open(str(OUTPUT_PATH), "w", encoding="utf-8", newline="\n") as f:
+    with open(str(output_path), "w", encoding="utf-8", newline="\n") as f:
         f.write(_normalize_html(full_html))
-    print(f"Built: {OUTPUT_PATH} ({OUTPUT_PATH.stat().st_size / 1024:.0f} KB)")
+    print(f"Built: {output_path} ({output_path.stat().st_size / 1024:.0f} KB)")
 
 
 if __name__ == "__main__":

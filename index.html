@@ -848,11 +848,6 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--color-text-muted);
 }
 
-.footer-time {
-  font-size: 0.75rem;
-  color: var(--color-border-light);
-}
-
 @media (max-width: 768px) {
   .footer-row {
     flex-direction: column;
@@ -1624,6 +1619,107 @@ img { max-width: 100%; height: auto; display: block; }
 
 
 
+    <div class="project-generated">
+      <p style="color:#6c757d;font-size:13px;margin-bottom:12px;">同一份数据，左边是原始输入，右边是清洗后输出。AI 只识别字段类型（每次 1 字符），所有清洗操作由代码执行。切换三个数据集看效果。</p>
+<div class="section-label">Before vs After</div>
+<div class="tabs">
+<input type="radio" name="dm-tabs" id="tab-dm-med" checked>
+<input type="radio" name="dm-tabs" id="tab-dm-fin">
+<input type="radio" name="dm-tabs" id="tab-dm-user">
+<div class="tab-headers">
+<label class="tab-label" for="tab-dm-med">Medical Data</label>
+<label class="tab-label" for="tab-dm-fin">Finance Data</label>
+<label class="tab-label" for="tab-dm-user">User Data</label>
+</div>
+<div class="tab-panels">
+<div class="tab-panel" data-tab="med">
+<div class="compare-wrapper"><table class="data-table"><tr><th>#</th><th>SEX/Gender</th><th>AGE</th><th>DEPT</th><th>MED</th></tr><tr><td>P001</td><td>M</td><td>30</td><td>心内科</td><td>阿莫西林</td></tr><tr><td>P002</td><td>F</td><td>三十</td><td>外科</td><td>甲硝唑~</td></tr><tr><td>P003</td><td>Male）</td><td>约25</td><td>ICU</td><td>头孢</td></tr><tr><td>P004</td><td>男</td><td>18岁</td><td>骨科</td><td>布洛芬?</td></tr><tr><td>P005</td><td>F</td><td>22</td><td>儿科</td><td>阿奇霉素</td></tr><tr><td>P006</td><td>女</td><td>三十五</td><td>心内科</td><td>阿司匹林</td></tr><tr><td>P007</td><td>Male</td><td>40</td><td>神经内科</td><td>奥拉西坦!</td></tr><tr><td>P008</td><td>男</td><td>28岁</td><td>呼吸科</td><td>阿莫西林</td></tr><tr><td>P009</td><td>F</td><td>33</td><td>肿瘤科+</td><td>紫杉醇+</td></tr><tr><td>P010</td><td>女</td><td>四十五</td><td>消化内科</td><td>洛索洛芬钠</td></tr></table><div class="arrow-between">→</div><table class="data-table"><tr><th>#</th><th>SEX/Gender</th><th>AGE</th><th>DEPT</th><th>MED</th></tr><tr class="changed-row"><td>P001</td><td class=diff><span class="clean">男</span></td><td>30</td><td>心内科</td><td>阿莫西林</td></tr><tr class="changed-row"><td>P002</td><td class=diff><span class="clean">女</span></td><td class=diff><span class="clean">30</span></td><td>外科</td><td class=diff><span class="clean">甲硝唑</span></td></tr><tr class="changed-row"><td>P003</td><td class=diff><span class="clean">男</span></td><td class=diff><span class="clean">25</span></td><td class=diff><span class="clean">重症医学科</span></td><td class=diff><span class="clean">头孢类</span></td></tr><tr class="changed-row"><td>P004</td><td>男</td><td class=diff><span class="clean">18</span></td><td>骨科</td><td class=diff><span class="clean">布洛芬</span></td></tr><tr class="changed-row"><td>P005</td><td class=diff><span class="clean">女</span></td><td>22</td><td>儿科</td><td>阿奇霉素</td></tr><tr class="changed-row"><td>P006</td><td>女</td><td class=diff><span class="clean">35</span></td><td>心内科</td><td>阿司匹林</td></tr><tr class="changed-row"><td>P007</td><td class=diff><span class="clean">男</span></td><td>40</td><td>神经内科</td><td class=diff><span class="clean">奥拉西坦</span></td></tr><tr class="changed-row"><td>P008</td><td>男</td><td class=diff><span class="clean">28</span></td><td>呼吸科</td><td>阿莫西林</td></tr><tr class="changed-row"><td>P009</td><td class=diff><span class="clean">女</span></td><td>33</td><td>肿瘤科+</td><td class=diff><span class="clean">紫杉醇</span></td></tr><tr class="changed-row"><td>P010</td><td>女</td><td class=diff><span class="clean">45</span></td><td>消化内科</td><td>洛索洛芬钠</td></tr></table></div>
+</div>
+<div class="tab-panel" data-tab="fin">
+<div class="compare-wrapper"><table class="data-table"><tr><th>#</th><th>AMOUNT</th><th>DATE</th></tr><tr><td>T001</td><td>¥ 1，000.50</td><td>2024-01-15</td></tr><tr><td>T002</td><td>$ 200.</td><td>2024/01/20</td></tr><tr><td>T003</td><td>500!!</td><td>2024-01-25</td></tr><tr><td>T004</td><td>€ 2500</td><td>2024.02.01</td></tr><tr><td>T005</td><td>¥99.9</td><td>2024-02-10</td></tr><tr><td>T006</td><td>¥1，234.56!</td><td>2024/02/15</td></tr><tr><td>T007</td><td>¥50.</td><td>2024-03-01</td></tr><tr><td>T008</td><td>¥0.99</td><td>2024.03.10</td></tr><tr><td>T009</td><td>¥10000</td><td>2024-04-01</td></tr><tr><td>T010</td><td>¥5..5</td><td>2024/04/15</td></tr></table><div class="arrow-between">→</div><table class="data-table"><tr><th>#</th><th>AMOUNT</th><th>DATE</th><th>CURRENCY</th></tr><tr class="changed-row"><td>T001</td><td class=diff><span class="clean">1000.5</span></td><td>2024-01-15</td><td>CNY</td></tr><tr class="changed-row"><td>T002</td><td class=diff><span class="clean">200.0</span></td><td class=diff><span class="clean">2024-01-20</span></td><td>USD</td></tr><tr class="changed-row"><td>T003</td><td class=diff><span class="clean">500.0</span></td><td>2024-01-25</td><td></td></tr><tr class="changed-row"><td>T004</td><td class=diff><span class="clean">2500.0</span></td><td class=diff><span class="clean">2024-02-01</span></td><td>EUR</td></tr><tr class="changed-row"><td>T005</td><td class=diff><span class="clean">99.9</span></td><td>2024-02-10</td><td>CNY</td></tr><tr class="changed-row"><td>T006</td><td class=diff><span class="clean">1234.56</span></td><td class=diff><span class="clean">2024-02-15</span></td><td>CNY</td></tr><tr class="changed-row"><td>T007</td><td class=diff><span class="clean">50.0</span></td><td>2024-03-01</td><td>CNY</td></tr><tr class="changed-row"><td>T008</td><td class=diff><span class="clean">0.99</span></td><td class=diff><span class="clean">2024-03-10</span></td><td>CNY</td></tr><tr class="changed-row"><td>T009</td><td class=diff><span class="clean">10000.0</span></td><td>2024-04-01</td><td>CNY</td></tr><tr class="changed-row"><td>T010</td><td class=diff><span class="clean">5.5</span></td><td class=diff><span class="clean">2024-04-15</span></td><td>CNY</td></tr></table></div>
+</div>
+<div class="tab-panel" data-tab="user">
+<div class="compare-wrapper"><table class="data-table"><tr><th>#</th><th>SEX</th><th>AGE</th><th>E-MAIL</th><th>PHONE_number</th></tr><tr><td>U001</td><td>男</td><td>25</td><td>test@example.com</td><td>138-0013-8000</td></tr><tr><td>U002</td><td>F</td><td>30</td><td>invalid.email@</td><td>12345</td></tr><tr><td>U003</td><td>Male</td><td>28</td><td>user+tag@mail.cn</td><td>139-1234-5678</td></tr><tr><td>U004</td><td>女</td><td>22。</td><td>alice@gmail</td><td>15912345678</td></tr><tr><td>U005</td><td>男=</td><td>35</td><td>no@atsign</td><td>18600001111~</td></tr><tr><td>U006</td><td>F</td><td>40</td><td>admin@ company.com.cn</td><td>010-8888-6666</td></tr><tr><td>U007</td><td>女</td><td>18</td><td>hello@.com</td><td>177-8888-9999</td></tr><tr><td>U008</td><td>Male</td><td>60</td><td>bob@test.org</td><td>13500000000</td></tr><tr><td>U009</td><td>男</td><td>28</td><td>test@.co.uk</td><td>4008001234</td></tr><tr><td>U010</td><td>F</td><td>17</td><td></td><td>14700001111</td></tr></table><div class="arrow-between">→</div><table class="data-table"><tr><th>#</th><th>SEX</th><th>AGE</th><th>E-MAIL</th><th>PHONE_number</th></tr><tr class="changed-row"><td>U001</td><td>男</td><td>25</td><td>test@example.com</td><td class=diff><span class="clean">13800138000</span></td></tr><tr class="changed-row"><td>U002</td><td class=diff><span class="clean">女</span></td><td>30</td><td><span style="color:#d1d5db">-</span></td><td><span style="color:#d1d5db">-</span></td></tr><tr class="changed-row"><td>U003</td><td class=diff><span class="clean">男</span></td><td>28</td><td>user+tag@mail.cn</td><td class=diff><span class="clean">13912345678</span></td></tr><tr class="changed-row"><td>U004</td><td>女</td><td class=diff><span class="clean">22</span></td><td><span style="color:#d1d5db">-</span></td><td>15912345678</td></tr><tr class="changed-row"><td>U005</td><td class=diff><span class="clean">男</span></td><td>35</td><td><span style="color:#d1d5db">-</span></td><td class=diff><span class="clean">18600001111</span></td></tr><tr class="changed-row"><td>U006</td><td class=diff><span class="clean">女</span></td><td>40</td><td><span style="color:#d1d5db">-</span></td><td class=diff><span class="clean">01088886666</span></td></tr><tr class="changed-row"><td>U007</td><td>女</td><td>18</td><td><span style="color:#d1d5db">-</span></td><td class=diff><span class="clean">17788889999</span></td></tr><tr class="changed-row"><td>U008</td><td class=diff><span class="clean">男</span></td><td>60</td><td>bob@test.org</td><td>13500000000</td></tr><tr><td>U009</td><td>男</td><td>28</td><td>test@.co.uk</td><td>4008001234</td></tr><tr class="changed-row"><td>U010</td><td class=diff><span class="clean">女</span></td><td>17</td><td><span style="color:#d1d5db">-</span></td><td>14700001111</td></tr></table></div>
+</div>
+</div>
+</div>
+<p style="color:#6c757d;font-size:13px;margin-bottom:12px;">LLM 筛选分类变量 → 判断有序/无序 → R 根据类型组合自动选统计方法（Spearman / Cramer V / Kruskal-Wallis / 卡方检验），全程 AI + 脚本 + R 协作。</p>
+<div class="section-label">Categorical Analysis - Statistical Results</div>
+<table class="data-table">
+<tr><th>File</th><th>Var 1</th><th>Type</th><th>Var 2</th><th>Type</th><th>Method</th><th>Stat</th><th>p-value</th></tr>
+<tr>
+<td>data_A.csv</td>
+<td>education</td>
+<td>有序</td>
+<td>satisfaction</td>
+<td>有序</td>
+<td>Spearman</td>
+<td>0.655</td>
+<td>1.732122e-03</td>
+</tr>
+<tr>
+<td>data_B.csv</td>
+<td>gender</td>
+<td>无序</td>
+<td>education</td>
+<td>有序</td>
+<td>Kruskal</td>
+<td>0.054</td>
+<td>8.155457e-01</td>
+</tr>
+<tr>
+<td>data_C.csv</td>
+<td>gender</td>
+<td>无序</td>
+<td>blood_type</td>
+<td>无序</td>
+<td>Cramer V</td>
+<td>0.172</td>
+<td></td>
+</tr>
+<tr>
+<td>data_D.csv</td>
+<td>city</td>
+<td>无序</td>
+<td>satisfaction</td>
+<td>有序</td>
+<td>Kruskal</td>
+<td>1.115</td>
+<td>7.735291e-01</td>
+</tr>
+<tr>
+<td>data_B.csv</td>
+<td>education</td>
+<td>有序</td>
+<td>gender</td>
+<td>无序</td>
+<td>卡方检验</td>
+<td>1.2</td>
+<td>9.448774e-01</td>
+</tr>
+<tr>
+<td>data_C.csv</td>
+<td>gender</td>
+<td>无序</td>
+<td>blood_type</td>
+<td>无序</td>
+<td>卡方检验</td>
+<td>0.533</td>
+<td>9.115095e-01</td>
+</tr>
+<tr>
+<td>data_D.csv</td>
+<td>satisfaction</td>
+<td>有序</td>
+<td>city</td>
+<td>无序</td>
+<td>卡方检验</td>
+<td>1.833</td>
+<td>9.938373e-01</td>
+</tr>
+</table>
+    </div>
+
 
 
 
@@ -1902,6 +1998,138 @@ img { max-width: 100%; height: auto; display: block; }
     </div>
 
 
+
+    <div class="project-generated">
+      <div class="section-label">Before vs After - Medical Data (first 10 rows)</div>
+<div class="compare-wrapper">
+<table class="data-table">
+<tr><th>#</th><th>Gender</th><th>Age</th><th>Dept</th><th>Drug</th><th>Code</th></tr>
+<tr><td>P754</td><td></td><td>35岁</td><td>妇科门诊</td><td>甲硝唑片</td><td>N80.0</td></tr>
+<tr><td>P214</td><td>NULL</td><td>28</td><td>妇产科</td><td>AMXL</td><td>N97.0</td></tr>
+<tr><td>P125</td><td>nan</td><td>四十岁</td><td>妇科（计划生育）</td><td>头孢地尼</td><td>N73.0</td></tr>
+<tr><td>P859</td><td>未知</td><td>三十岁</td><td>产科</td><td>阿莫西林</td><td>O24.4</td></tr>
+<tr><td>P381</td><td>未填</td><td>二十五岁</td><td>产科一病区</td><td>头孢呋辛酯片</td><td>O80</td></tr>
+<tr><td>P350</td><td>男</td><td></td><td>儿内科</td><td>布洛芬混悬液</td><td>J45.909</td></tr>
+<tr><td>P328</td><td>F</td><td>不详</td><td>小儿呼吸科</td><td>AMX</td><td>J18.9</td></tr>
+<tr><td>P242</td><td></td><td>未知</td><td>妇产科病房</td><td>阿莫西林克拉维酸钾分散片</td><td></td></tr>
+<tr><td>P854</td><td>???</td><td></td><td>妇科门诊</td><td>APAP</td><td>子宫肌瘤</td></tr>
+<tr><td>P204</td><td>保密</td><td>100+</td><td>产科</td><td>头孢类</td><td>O80.9</td></tr>
+</table>
+<div style="display:flex;align-items:center;color:#9ca3af;font-size:24px;font-weight:300;">→</div>
+<table class="data-table">
+<tr><th>#</th><th>Gender</th><th>Age</th><th>Dept</th><th>Drug</th><th>Code</th></tr>
+<tr class="changed-row">
+<td>P754</td>
+<td>女</td>
+<td class=diff><span class="clean">35.0</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td class=diff><span class="clean">甲硝唑</span></td>
+<td>N80.0</td>
+</tr>
+<tr class="changed-row">
+<td>P214</td>
+<td class=diff><span class="clean">女</span></td>
+<td class=diff><span class="clean">28.0</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td class=diff><span class="clean">阿莫西林</span></td>
+<td>N97.0</td>
+</tr>
+<tr class="changed-row">
+<td>P125</td>
+<td class=diff><span class="clean">女</span></td>
+<td class=diff><span class="clean">40.0</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td>头孢地尼</td>
+<td>N73.0</td>
+</tr>
+<tr class="changed-row">
+<td>P859</td>
+<td class=diff><span class="clean">女</span></td>
+<td class=diff><span class="clean">30.0</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td>阿莫西林</td>
+<td>O24.4</td>
+</tr>
+<tr class="changed-row">
+<td>P381</td>
+<td class=diff><span class="clean">女</span></td>
+<td class=diff><span class="clean">25.0</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td class=diff><span class="clean">头孢呋辛酯</span></td>
+<td>O80</td>
+</tr>
+<tr class="changed-row">
+<td>P350</td>
+<td>男</td>
+<td><span style="color:#d1d5db">-</span></td>
+<td class=diff><span class="clean">儿科</span></td>
+<td class=diff><span class="clean">布洛芬</span></td>
+<td>J45.909</td>
+</tr>
+<tr class="changed-row">
+<td>P328</td>
+<td class=diff><span class="clean">女</span></td>
+<td><span style="color:#d1d5db">-</span></td>
+<td class=diff><span class="clean">儿科</span></td>
+<td class=diff><span class="clean">阿莫西林</span></td>
+<td>J18.9</td>
+</tr>
+<tr class="changed-row">
+<td>P242</td>
+<td>女</td>
+<td><span style="color:#d1d5db">-</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td class=diff><span class="clean">阿莫西林克拉维酸钾</span></td>
+<td><span style="color:#d1d5db">-</span></td>
+</tr>
+<tr class="changed-row">
+<td>P854</td>
+<td class=diff><span class="clean">女</span></td>
+<td><span style="color:#d1d5db">-</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td class=diff><span class="clean">对乙酰氨基酚</span></td>
+<td class=diff><span class="clean">D25.9</span></td>
+</tr>
+<tr class="changed-row">
+<td>P204</td>
+<td class=diff><span class="clean">女</span></td>
+<td><span style="color:#d1d5db">-</span></td>
+<td class=diff><span class="clean">妇科</span></td>
+<td>头孢类</td>
+<td>O80.9</td>
+</tr>
+</table>
+</div>
+<div class="section-label">Quality Report</div>
+<table class="data-table">
+<tr><th>Field</th><th>Completeness</th><th>Non-null</th><th>Null</th></tr>
+<tr><td>patient_id</td>
+<td>100.0%</td>
+<td>150</td>
+<td>0</td></tr>
+<tr><td>gender</td>
+<td>61.3%</td>
+<td>92</td>
+<td>58</td></tr>
+<tr><td>age</td>
+<td>54.0%</td>
+<td>81</td>
+<td>69</td></tr>
+<tr><td>dept_name</td>
+<td>83.3%</td>
+<td>125</td>
+<td>25</td></tr>
+<tr><td>drug_name</td>
+<td>92.7%</td>
+<td>139</td>
+<td>11</td></tr>
+<tr><td>diagnosis_code</td>
+<td>91.3%</td>
+<td>137</td>
+<td>13</td></tr>
+<tr style='font-weight:700'><td>Overall</td><td>80.4%</td><td colspan=2></td></tr>
+</table>
+    </div>
 
 
 
@@ -2299,6 +2527,94 @@ img { max-width: 100%; height: auto; display: block; }
 
 
 
+    <div class="project-generated">
+      <div class="section-label">Batch Test Results - 10 Cases</div>
+<table class="data-table">
+<tr><th>#</th><th>Text</th><th>Category</th><th>Expected</th><th>Actual</th><th>Intent</th></tr>
+<tr>
+<td>1</td>
+<td style='max-width:200px'>你好，今天天气不错</td>
+<td>正常社交</td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>2</td>
+<td style='max-width:200px'>我真是个天才，把代码全删了</td>
+<td>自嘲反讽</td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>3</td>
+<td style='max-width:200px'>你个憨憨，这都忘了哈哈哈</td>
+<td>朋友互损</td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>4</td>
+<td style='max-width:200px'>脑子是个好东西，可惜你没有</td>
+<td>隐性侮辱</td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>5</td>
+<td style='max-width:200px'>加我微信13800138000，有惊喜</td>
+<td>明显导流</td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>6</td>
+<td style='max-width:200px'>你这个白痴，连这都不懂</td>
+<td>直接辱骂</td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>7</td>
+<td style='max-width:200px'>全网最低价，点击链接购买 http://fake-shop.com</td>
+<td>垃圾广告</td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td><span class='pass-badge human_review'>HUMAN_REVIEW</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>8</td>
+<td style='max-width:200px'>卖枪卖毒，需要的私聊</td>
+<td>违法交易</td>
+<td><span class='pass-badge block'>BLOCK</span></td>
+<td><span class='pass-badge block'>BLOCK</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>9</td>
+<td style='max-width:200px'>有没有小学生的资源，交换一下</td>
+<td>儿童危险</td>
+<td><span class='pass-badge block'>BLOCK</span></td>
+<td><span class='pass-badge block'>BLOCK</span></td>
+<td>None</td>
+</tr>
+<tr>
+<td>10</td>
+<td style='max-width:200px'>好</td>
+<td>极短文本</td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td><span class='pass-badge pass'>PASS</span></td>
+<td>None</td>
+</tr>
+</table>
+<p style="color:#6c757d;font-size:13px">Match rate: 10/10 (100%)</p>
+    </div>
+
 
 
 
@@ -2582,7 +2898,6 @@ img { max-width: 100%; height: auto; display: block; }
         <span class="footer-dot"></span>
         <span class="footer-count">8 projects</span>
       </div>
-      <span class="footer-time">August 17, 2026 19:09</span>
     </div>
   </div>
 </footer>

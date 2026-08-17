@@ -839,11 +839,6 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--color-text-muted);
 }
 
-.footer-time {
-  font-size: 0.75rem;
-  color: var(--color-border-light);
-}
-
 @media (max-width: 768px) {
   .footer-row {
     flex-direction: column;

@@ -2,7 +2,7 @@
 
 <https://zlzayn.github.io/AI-portfolio/>
 
-Static portfolio site generated from YAML project data, editorial SVG diagrams, and Jinja2 templates. See [ARCHITECTURE.md](ARCHITECTURE.md) for the build and diagram design rules.
+Static portfolio site generated from versioned project data, editorial SVG diagrams, and Jinja2 templates. The build is self-contained and does not read sibling repositories. See [ARCHITECTURE.md](ARCHITECTURE.md) for the build and diagram design rules.
 
 ## Requirements
 
