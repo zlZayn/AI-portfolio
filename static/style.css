@@ -709,11 +709,17 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* === Diagram === */
 .project-diagram {
+  width: 100%;
   margin-bottom: 36px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-light) transparent;
 }
 
 .project-diagram svg {
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  min-width: 680px;
   height: auto;
 }
 

@@ -46,6 +46,15 @@ class DiagramTests(unittest.TestCase):
         self.assertIn("SCHEMA CONTRACT", guide)
         self.assertIn("OFFLINE H5", guide)
 
+    def test_every_svg_has_accessible_metadata_and_no_mermaid_artifacts(self):
+        for project_id, svg in self.diagrams.items():
+            self.assertTrue(svg.startswith("<svg"), project_id)
+            self.assertIn('role="img"', svg)
+            self.assertIn(f'id="{project_id}-title"', svg)
+            self.assertIn(f'id="{project_id}-desc"', svg)
+            self.assertNotIn("mermaid", svg.lower())
+            self.assertNotIn("foreignObject", svg)
+
 
 if __name__ == "__main__":
     unittest.main()

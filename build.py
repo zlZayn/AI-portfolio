@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Assemble all sources into a single self-contained HTML page.
-Orchestrates: YAML data --> inline images --> data tables --> Mermaid diagrams --> Jinja2 render
+Orchestrates: YAML data --> inline images --> data tables --> editorial SVG diagrams --> Jinja2 render
 """
 
 import yaml
@@ -47,6 +47,12 @@ def _stack_key(name: str) -> int:
     if name.endswith("-middle"):
         return 1
     return 0
+
+
+def _normalize_html(text: str) -> str:
+    """Use stable LF endings and remove template indentation on blank lines."""
+    lines = text.replace("\r\n", "\n").split("\n")
+    return "\n".join(line.rstrip() for line in lines)
 
 
 def _inline_images(projects: list) -> None:
@@ -122,8 +128,8 @@ def assemble() -> None:
         build_time=datetime.now().strftime("%B %d, %Y %H:%M"),
     )
 
-    with open(str(OUTPUT_PATH), "w", encoding="utf-8") as f:
-        f.write(full_html)
+    with open(str(OUTPUT_PATH), "w", encoding="utf-8", newline="\n") as f:
+        f.write(_normalize_html(full_html))
     print(f"Built: {OUTPUT_PATH} ({OUTPUT_PATH.stat().st_size / 1024:.0f} KB)")
 
 
