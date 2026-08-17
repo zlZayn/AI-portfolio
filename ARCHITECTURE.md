@@ -59,20 +59,18 @@ Diagram types follow `cathrynlavery/diagram-design` 2.4. Type selection reflects
 | Type | Projects | Why |
 | --- | --- | --- |
 | Flowchart | `decision-maker`, `tier-guardian` | Cache and arbitration decisions create real branches |
-| Architecture | `rag-embed`, `schema-mapper`, `tool-calling`, `tablesnap` | Components, shared cores, boundaries, and bypass paths carry the meaning |
-| Process | `collaborate` | Actor ownership changes across ordered stages |
-| Data flow | `raw-to-guide` | Payload shape changes across Author, AI, Build System, and Reader roles |
+| Architecture | `rag-embed`, `schema-mapper`, `tool-calling`, `collaborate`, `tablesnap`, `raw-to-guide` | Components, control planes, shared contracts, boundaries, and bypass paths carry the meaning |
 
 Each diagram emphasizes one architectural claim:
 
-- `decision-maker`: cache hits bypass AI; code validates and executes every write.
+- `decision-maker`: cache hits reuse semantic signals; misses request compact AI codes; code still validates, assembles, and executes every write.
 - `rag-embed`: enhanced queries retrieve context while the original question reaches the answer model.
-- `schema-mapper`: AI cost scales with unique values, then local code applies reusable rules to all rows.
+- `schema-mapper`: only unique values reach AI; full rows bypass AI and follow a local mapping, inference, polishing, validation, and reporting path.
 - `tool-calling`: MCP and Function Calling share one tool registry and guarded runtime.
-- `collaborate`: stages are sequential; colleagues inside a stage run in parallel; bridge context connects stages.
+- `collaborate`: a validated dynamic plan controls variable-width parallel stages; bridges, failure isolation, synthesis, durable state, SSE recovery, and follow-up form one orchestration architecture.
 - `tier-guardian`: two zero-token code gates own release, block, and review decisions.
 - `tablesnap`: screen and file inputs share one local VLM call without an OCR reconstruction pipeline.
-- `raw-to-guide`: one Schema contract governs AI output and generator input.
+- `raw-to-guide`: one Schema contract governs both reference validation and generation; invalid AI-authored links loop back before maps, indexes, or the offline app are built.
 
 ## Rendering Rules
 
@@ -81,6 +79,7 @@ Each diagram emphasizes one architectural claim:
 - Connectors render before nodes so opaque node masks keep paths readable.
 - Orange is editorial focus, limited to one or two primary mechanisms per diagram.
 - Human-readable names use the site sans-serif stack; technical tags use monospace.
+- Standard labels remain readable at the 960 px mobile canvas; dense architectures can opt into the shared expanded typography mode and a project-specific minimum width.
 - Every SVG has a project-prefixed `<title>`, `<desc>`, marker IDs, `role="img"`, and resolving `aria-labelledby`.
 - XML text is escaped before insertion.
 - Diagrams are static. No browser JavaScript, remote assets, or animation are required.

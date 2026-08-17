@@ -1,4 +1,4 @@
-"""Decision flow for AI-decision-maker."""
+"""Cache-aware decision architecture for AI-decision-maker."""
 
 from ..svg import Canvas
 
@@ -6,29 +6,42 @@ from ..svg import Canvas
 def render() -> str:
     canvas = Canvas(
         "decision-maker",
-        "AI-decision-maker signal chain",
-        "A cache branch bypasses AI calls while misses use constrained AI signals followed by code validation and local execution.",
-        height=520,
+        "AI-decision-maker cache-aware signal architecture",
+        "A deterministic profile and fingerprint either reuse cached semantic signals or request two constrained AI codes. Code validates, assembles registered operations, and executes every data write locally.",
+        height=600,
     )
-    canvas.label(32, 32, "SIGNAL CHAIN / COLD PATH + CACHE BYPASS")
+    canvas.label(32, 32, "AI PROPOSES COMPACT SIGNALS / CODE OWNS EVERY WRITE")
+    canvas.zone(32, 64, 896, 472, "DETERMINISTIC PIPELINE WITH CONSTRAINED AI")
 
-    canvas.connector(((176, 240), (192, 240)))
-    canvas.connector(((256, 192), (256, 112), (384, 112)), "HIT / 0 TOKEN", "accent", (316, 96))
-    canvas.connector(((256, 288), (256, 368), (328, 368)), "MISS", "default", (284, 352))
-    canvas.connector(((544, 112), (672, 112), (672, 208)))
-    canvas.connector(((472, 368), (504, 368)))
-    canvas.connector(((648, 368), (680, 368)))
-    canvas.connector(((752, 336), (752, 304), (672, 304), (672, 272)))
-    canvas.connector(((752, 240), (792, 240)), style="accent")
+    canvas.node(48, 232, 160, 80, "CSV profile", "fields + samples", "CODE", "muted")
+    canvas.decision(280, 272, 128, 104, "Fingerprint", "cached?", focal=True)
 
-    canvas.node(32, 208, 144, 64, "CSV profile", "fields + samples", "INPUT", "muted")
-    canvas.decision(256, 240, 128, 96, "Fingerprint", "cached?", focal=True)
-    canvas.node(384, 80, 160, 64, "Operation plan", "cached signals", "CODE")
-    canvas.node(328, 336, 144, 64, "Scene code", "one code", "AI")
-    canvas.node(504, 336, 144, 64, "Signal sequence", "one char / field", "AI")
-    canvas.node(680, 336, 144, 64, "Validate signals", "whitelist + fallback", "CODE")
-    canvas.node(592, 208, 160, 64, "Local execution", "registered operations", "CODE", "focal")
-    canvas.node(792, 208, 136, 64, "Clean data", "deterministic", "OUTPUT", "success")
+    canvas.node(376, 104, 168, 80, "Cached signals", "scene + field codes", "0 TOKEN", "store")
+    canvas.node(360, 376, 144, 80, "Scene code", "one constrained code", "AI")
+    canvas.node(536, 376, 144, 80, "Prompt router", "scene allowlist", "CODE")
+    canvas.node(712, 376, 160, 80, "Field signals", "one char / field", "AI")
 
-    canvas.annotation(40, 468, "AI proposes compact signals. Code validates and owns every write.", 560)
+    canvas.node(
+        536,
+        216,
+        184,
+        104,
+        ("VALIDATE", "+ ASSEMBLE"),
+        "operation registry",
+        "CODE",
+        "focal",
+    )
+    canvas.node(768, 216, 144, 80, "Local execute", "quality report", "CODE")
+    canvas.node(768, 96, 144, 72, "Clean data", "deterministic", "OUTPUT", "success")
+
+    canvas.connector(((208, 272), (216, 272)))
+    canvas.connector(((280, 220), (280, 144), (376, 144)), "HIT / 0 TOKEN", "accent", (312, 128))
+    canvas.connector(((280, 324), (280, 416), (360, 416)), "MISS", label_at=(312, 400))
+    canvas.connector(((504, 416), (536, 416)))
+    canvas.connector(((680, 416), (712, 416)))
+    canvas.connector(((544, 144), (628, 144), (628, 216)), style="accent")
+    canvas.connector(((792, 376), (792, 344), (628, 344), (628, 320)))
+    canvas.connector(((720, 268), (768, 268)), style="accent")
+    canvas.connector(((840, 216), (840, 168)), style="success")
+    canvas.annotation(48, 568, "Full rows never go to AI; invalid signals fall back before execution.", 640)
     return canvas.render()

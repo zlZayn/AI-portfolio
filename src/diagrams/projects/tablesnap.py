@@ -21,7 +21,7 @@ def render() -> str:
     canvas.node(48, 128, 176, 72, "Hotkey capture", "drag screen region", "GUI", "muted")
     canvas.node(48, 288, 176, 72, "Batch images", "PNG / JPG / WEBP", "FILES", "muted")
     canvas.node(368, 192, 192, 80, "ONE VLM CALL", "Qwen3-VL via Ollama", "LOCAL AI", "focal")
-    canvas.node(624, 196, 144, 72, "PSV rows", "equal columns", "TEXT", "store")
+    canvas.node(624, 196, 144, 72, "PSV rows", "pipe-separated", "TEXT", "store")
     canvas.node(816, 196, 112, 72, "XLSX", "openpyxl", "OUTPUT", "success")
     canvas.annotation(360, 400, "NO OCR PIPELINE / NO LAYOUT RECONSTRUCTION", 520)
     return canvas.render()

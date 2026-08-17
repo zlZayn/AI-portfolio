@@ -723,6 +723,10 @@ img { max-width: 100%; height: auto; display: block; }
   height: auto;
 }
 
+.project-diagram .editorial-diagram-collaborate {
+  min-width: 1120px;
+}
+
 /* === Screenshots === */
 .project-screenshots {
   display: flex;

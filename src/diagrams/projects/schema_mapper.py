@@ -1,4 +1,4 @@
-"""Rule-generation architecture for AI-schema-mapper."""
+"""Rule-authoring and local-execution architecture for AI-schema-mapper."""
 
 from ..svg import Canvas
 
@@ -6,28 +6,34 @@ from ..svg import Canvas
 def render() -> str:
     canvas = Canvas(
         "schema-mapper",
-        "AI-schema-mapper rule reuse architecture",
-        "A large table contracts to its unique values, AI writes a reusable rule asset, and local code applies it to every row.",
-        height=500,
+        "AI-schema-mapper rule authoring and local execution",
+        "Only unique values reach AI to create a reusable rule asset. The untouched full table follows a local execution path through mapping, cross-field inference, final polishing, schema validation, and quality reporting.",
+        height=620,
     )
-    canvas.label(32, 32, "COMPLEXITY SHIFTS FROM ROW COUNT TO UNIQUE VALUES")
+    canvas.label(32, 32, "AI UNDERSTANDS PATTERNS ONCE / CODE EXECUTES N ROWS")
+    canvas.zone(32, 64, 896, 216, "RULE AUTHORING / SMALL DATA")
+    canvas.zone(32, 320, 896, 236, "LOCAL EXECUTION / FULL DATA")
 
-    canvas.connector(((224, 228), (288, 228)), "DEDUPLICATE", "accent", (256, 160))
-    canvas.connector(((440, 228), (504, 228)), "ONE AI READ", "accent", (472, 160))
-    canvas.connector(((672, 228), (736, 228)), "APPLY TO ALL ROWS", "default", (704, 160))
-    canvas.connector(((824, 264), (824, 348), (672, 348)), "RESIDUALS", "dashed", (756, 332))
-    canvas.connector(
-        ((504, 380), (468, 380), (468, 304), (588, 304), (588, 280)),
-        "OPTIONAL REFINE",
-        "dashed",
-        (416, 364),
-    )
+    canvas.node(56, 128, 160, 80, "Dirty table", "1,500,000 rows", "SOURCE", "muted")
+    canvas.node(288, 112, 168, 112, "UNIQUE VALUES", "about 100 patterns", "DEDUP", "focal")
+    canvas.node(528, 112, 168, 112, "Rule generator", "mapping + inference", "AI")
+    canvas.node(768, 128, 144, 80, "RULE ASSET", "auto_rules.json", "REUSE", "store")
 
-    canvas.node(40, 176, 184, 104, "1,500,000 rows", "full dirty table", "DATA", "muted")
-    canvas.node(288, 192, 152, 72, "UNIQUE VALUES", "about 100 patterns", "CODE", "focal")
-    canvas.node(504, 176, 168, 104, "Reusable rules", "map + inference", "AI ASSET", "store")
-    canvas.node(736, 192, 176, 72, "APPLY TO ALL ROWS", "local bulk replace", "CODE")
-    canvas.node(504, 344, 168, 72, "Residual detector", "unmapped values only", "CODE", "optional")
+    canvas.node(264, 372, 168, 88, "Local mapper", "lookup over all rows", "CODE")
+    canvas.node(488, 372, 176, 88, ("Inference", "+ final polish"), "deterministic rules", "CODE")
+    canvas.node(720, 372, 176, 88, "Schema check", "completeness + types", "CODE")
+    canvas.node(608, 492, 136, 64, "Clean CSV", "final data", "OUTPUT", "success")
+    canvas.node(776, 492, 136, 64, "Quality report", "compliance", "REPORT", "store")
 
-    canvas.annotation(40, 456, "AI cost is O(unique values). Local execution absorbs row scale.", 520)
+    canvas.connector(((216, 168), (288, 168)), "DEDUP", "accent", (252, 152))
+    canvas.connector(((456, 168), (528, 168)), "ONE AI READ", "accent", (492, 96))
+    canvas.connector(((696, 168), (768, 168)))
+    canvas.connector(((136, 208), (136, 348), (348, 348), (348, 372)), "FULL ROWS BYPASS AI", "dashed", (220, 304))
+    canvas.connector(((840, 208), (840, 304), (400, 304), (400, 372)), "REUSABLE RULES", "accent", (620, 288))
+    canvas.connector(((432, 416), (488, 416)))
+    canvas.connector(((664, 416), (720, 416)))
+    canvas.connector(((808, 460), (808, 476), (676, 476), (676, 492)), style="success")
+    canvas.connector(((840, 460), (840, 492)))
+    canvas.connector(((896, 400), (920, 400), (920, 256), (612, 256), (612, 224)), "OPTIONAL REFINE", "dashed", (792, 240))
+    canvas.annotation(48, 592, "Token cost follows unique values; row scale stays entirely local.", 600)
     return canvas.render()

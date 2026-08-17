@@ -1,4 +1,4 @@
-"""Role-scoped data flow for ai-batch-raw-to-offline-guide."""
+"""Schema-governed authoring and build architecture for raw-to-guide."""
 
 from ..svg import Canvas
 
@@ -6,30 +6,32 @@ from ..svg import Canvas
 def render() -> str:
     canvas = Canvas(
         "raw-to-guide",
-        "Raw research to offline guide data flow",
-        "Authors, AI, the build system, and readers exchange increasingly structured artifacts governed by one Schema contract.",
-        height=520,
+        "Raw research to offline guide schema architecture",
+        "AI turns raw research into thirteen linked JSON datasets. One Schema contract governs validation and generation; valid data becomes lookup maps, bidirectional indexes, and a self-contained offline application.",
+        height=620,
     )
-    canvas.label(32, 32, "ONE CONTRACT / FOUR OWNERS / FIVE DATA SHAPES")
-    for index, (label, y) in enumerate(
-        (("AUTHOR", 96), ("AI", 184), ("BUILD SYSTEM", 272), ("READER", 360))
-    ):
-        canvas.lane(32, y, 896, 88, label, tinted=index % 2 == 0)
+    canvas.label(32, 32, "ONE SCHEMA GOVERNS AUTHORING, VALIDATION, AND GENERATION")
+    canvas.zone(32, 64, 896, 240, "AUTHORING + VALIDATION")
+    canvas.zone(32, 344, 896, 212, "BUILD + OFFLINE DELIVERY")
 
-    steps = ((240, "01", "COLLECT"), (384, "02", "ORGANIZE"), (528, "03", "CONTRACT"),
-             (672, "04", "BUILD"), (816, "05", "USE"))
-    for x, number, label in steps:
-        canvas.step_header(x, 56, number, label, focal=number == "03")
+    canvas.node(48, 120, 144, 80, "Raw research", "notes + screenshots", "HUMAN", "muted")
+    canvas.node(240, 120, 144, 80, "AI authoring", "normalize entities", "AI")
+    canvas.node(432, 112, 160, 96, "13 JSON files", "IDs + typed refs", "DATA", "store")
+    canvas.node(672, 112, 176, 96, "Reference validator", "integrity + symmetry", "CODE")
+    canvas.node(432, 228, 160, 72, "SCHEMA CONTRACT", "entities + relations", "TRUST", "focal")
 
-    canvas.connector(((304, 136), (384, 136), (384, 192)))
-    canvas.connector(((448, 224), (524, 224), (524, 280)), style="accent")
-    canvas.connector(((600, 316), (624, 316)), style="accent")
-    canvas.connector(((752, 316), (832, 316), (832, 368)))
+    canvas.node(264, 396, 192, 88, "Schema generator", "load + Jinja2 render", "CODE")
+    canvas.node(520, 396, 176, 88, ("Maps + indexes", "+ backrefs"), "O(1) linked lookup", "BUILD", "store")
+    canvas.node(760, 396, 152, 88, "OFFLINE H5", "23 routes / one file", "DELIVER", "success")
 
-    canvas.node(176, 104, 128, 64, "Raw sources", "notes + screenshots", "FILES", "muted")
-    canvas.node(320, 192, 128, 64, "Markdown", "deduped topics", "AI / FL")
-    canvas.node(448, 280, 152, 72, "SCHEMA CONTRACT", "JSON + ID refs", "AI / JSON", "focal")
-    canvas.node(624, 280, 128, 72, "Indexes + SPA", "Jinja2 build", "CODE / TB")
-    canvas.node(768, 368, 128, 64, "OFFLINE H5", "23 routes", "WEB", "success")
-    canvas.annotation(40, 488, "Schema constrains AI output and defines what the generator may consume.", 680)
+    canvas.connector(((192, 160), (240, 160)))
+    canvas.connector(((384, 160), (432, 160)), style="accent")
+    canvas.connector(((592, 160), (672, 160)))
+    canvas.connector(((512, 228), (512, 216), (760, 216), (760, 208)), "VALIDATES", "accent", (640, 216))
+    canvas.connector(((672, 128), (640, 128), (640, 88), (312, 88), (312, 120)), "FIX INVALID REFS", "dashed", (476, 88))
+    canvas.connector(((760, 208), (760, 328), (360, 328), (360, 396)), "VALID DATA", "success", (560, 312))
+    canvas.connector(((512, 300), (512, 360), (408, 360), (408, 396)), "DRIVES BUILD", "accent", (460, 344))
+    canvas.connector(((456, 440), (520, 440)))
+    canvas.connector(((696, 440), (760, 440)))
+    canvas.annotation(48, 592, "AI output is provisional; only Schema-valid references reach the generator.", 680)
     return canvas.render()

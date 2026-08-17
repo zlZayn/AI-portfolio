@@ -31,7 +31,7 @@ class DiagramTests(unittest.TestCase):
     def test_architecture_diagrams_preserve_their_distinguishing_mechanisms(self):
         expected = {
             "rag-embed": ("ENHANCED QUERY", "ORIGINAL QUESTION"),
-            "schema-mapper": ("UNIQUE VALUES", "APPLY TO ALL ROWS"),
+            "schema-mapper": ("UNIQUE VALUES", "FULL ROWS BYPASS AI", "Schema check"),
             "tool-calling": ("ONE REGISTRY", "TWO PROTOCOLS"),
             "tablesnap": ("ONE VLM CALL", "NO OCR PIPELINE"),
         }
@@ -39,10 +39,23 @@ class DiagramTests(unittest.TestCase):
             for phrase in phrases:
                 self.assertIn(phrase, self.diagrams[project_id])
 
-    def test_role_based_diagrams_show_ownership_and_handoffs(self):
+    def test_collaborate_shows_adaptive_orchestration_architecture(self):
         collaborate = self.diagrams["collaborate"]
-        self.assertIn("PARALLEL WITHIN", collaborate)
-        self.assertIn("BRIDGE CONTEXT", collaborate)
+        for phrase in (
+            "CONTROL PLANE",
+            "DYNAMIC PLAN",
+            "STAGE 1 / PARALLEL",
+            "STAGE N / PARALLEL",
+            "FOCUSED",
+            "BRIDGE",
+            "FAILURE ISOLATION",
+            "STATE.JSON",
+            "CONTINUE LOOP",
+        ):
+            self.assertIn(phrase, collaborate)
+        self.assertIn("diagram-typography-expanded", collaborate)
+
+    def test_schema_governed_delivery_shows_contract_and_output(self):
         guide = self.diagrams["raw-to-guide"]
         self.assertIn("SCHEMA CONTRACT", guide)
         self.assertIn("OFFLINE H5", guide)
@@ -59,6 +72,8 @@ class DiagramTests(unittest.TestCase):
     def test_mobile_diagrams_keep_the_native_canvas_width(self):
         stylesheet = Path("static/style.css").read_text(encoding="utf-8")
         self.assertIn("min-width: 960px;", stylesheet)
+        self.assertIn("editorial-diagram-collaborate", stylesheet)
+        self.assertIn("min-width: 1120px;", stylesheet)
 
 
 if __name__ == "__main__":

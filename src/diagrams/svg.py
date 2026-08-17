@@ -26,13 +26,17 @@ class Canvas:
         width: int = 960,
         height: int = 520,
         theme: Theme = THEME,
+        typography: str = "standard",
     ) -> None:
+        if typography not in {"standard", "expanded"}:
+            raise ValueError(f"Unsupported typography mode: {typography}")
         self.slug = slug
         self.title = title
         self.description = description
         self.width = width
         self.height = height
         self.theme = theme
+        self.typography = typography
         self._layers: dict[str, list[str]] = {
             "zones": [],
             "connectors": [],
@@ -97,10 +101,17 @@ class Canvas:
                     f'text-anchor="middle">{escape(tag.upper())}</text>',
                 )
             )
-        title_y = y + (36 if tag else 28)
+        if tag:
+            if _line_count(title) > 1:
+                title_y = y + (48 if self.typography == "expanded" else 44)
+            else:
+                title_y = y + 40
+        else:
+            title_y = y + 28
         parts.append(self._multiline_text(x + width // 2, title_y, title, "node-title", 16))
         if subtitle:
-            sub_y = title_y + 20
+            expanded_spacing = 4 * (_line_count(title) - 1) if self.typography == "expanded" else 0
+            sub_y = title_y + 20 + expanded_spacing
             parts.append(self._multiline_text(x + width // 2, sub_y, subtitle, "node-subtitle", 12))
         parts.append("</g>")
         self._layers["nodes"].append("".join(parts))
@@ -190,7 +201,8 @@ class Canvas:
             for element in self._layers[name]
         )
         return (
-            f'<svg class="editorial-diagram" xmlns="http://www.w3.org/2000/svg" '
+            f'<svg class="editorial-diagram editorial-diagram-{self.slug} '
+            f'diagram-typography-{self.typography}" xmlns="http://www.w3.org/2000/svg" '
             f'viewBox="0 0 {self.width} {self.height}" width="100%" role="img" '
             f'aria-labelledby="{self.slug}-title {self.slug}-desc" preserveAspectRatio="xMidYMid meet">'
             f'<title id="{self.slug}-title">{title}</title>'
@@ -222,9 +234,9 @@ class Canvas:
 .editorial-diagram text{{font-family:{_SANS};fill:{t.ink};letter-spacing:0}}
 .zone>rect:first-child{{fill:{t.ink};fill-opacity:.018;stroke:{t.rule};stroke-width:1}}
 .zone-label-mask,.connector-label rect{{fill:{t.paper}}}
-.zone-label,.node-tag,.connector-label text,.label-eyebrow{{font-family:{_MONO};font-size:10px;font-weight:600;letter-spacing:.08em;fill:{t.muted}}}
+.zone-label,.node-tag,.connector-label text,.label-eyebrow{{font-family:{_MONO};font-size:11px;font-weight:600;letter-spacing:.08em;fill:{t.muted}}}
 .lane rect{{fill:{t.paper};stroke:{t.rule_soft};stroke-width:1}}.lane-tinted rect{{fill:{t.ink};fill-opacity:.018}}
-.lane line{{stroke:{t.rule};stroke-width:1}}.lane-label{{font-family:{_MONO};font-size:10px;font-weight:600;fill:{t.muted};letter-spacing:.06em}}
+.lane line{{stroke:{t.rule};stroke-width:1}}.lane-label{{font-family:{_MONO};font-size:11px;font-weight:600;fill:{t.muted};letter-spacing:.06em}}
 .connector{{fill:none;stroke:{t.muted};stroke-width:1.5}}
 .connector-accent{{stroke:{t.accent_strong};stroke-width:2}}
 .connector-success{{stroke:{t.success}}}.connector-danger{{stroke:{t.danger}}}
@@ -239,15 +251,19 @@ class Canvas:
 .node-danger .node-box{{fill:{t.danger_tint};stroke:{t.danger}}}
 .node-tag-box{{fill:none;stroke:{t.muted};stroke-opacity:.5}}
 .node-focal .node-tag-box{{stroke:{t.accent_strong}}}.node-focal .node-tag{{fill:{t.accent_strong}}}
-.node-title,.decision-title{{font-size:12px;font-weight:650}}
-.node-subtitle,.decision-subtitle{{font-family:{_MONO};font-size:9px;fill:{t.muted}}}
+.node-title,.decision-title{{font-size:13px;font-weight:650}}
+.node-subtitle,.decision-subtitle{{font-family:{_MONO};font-size:10px;fill:{t.muted}}}
 .decision-box{{fill:{t.surface};stroke:{t.ink};stroke-width:1.25}}
 .decision-focal .decision-box{{fill:{t.accent_tint};stroke:{t.accent_strong};stroke-width:2}}
 .connector-label rect{{stroke:{t.rule_soft};stroke-width:.5}}
 .annotation line{{stroke:{t.accent_strong};stroke-width:2}}.annotation text{{font-size:12px;font-style:italic}}
 .label-metric{{font-family:{_MONO};font-size:12px;font-weight:600;fill:{t.accent_strong}}}
-.step-header rect{{fill:{t.ink};fill-opacity:.1}}.step-header text{{font-family:{_MONO};font-size:10px;font-weight:600;fill:{t.muted}}}
+.step-header rect{{fill:{t.ink};fill-opacity:.1}}.step-header text{{font-family:{_MONO};font-size:11px;font-weight:600;fill:{t.muted}}}
 .step-header .step-label{{letter-spacing:.06em}}.step-focal rect{{fill:{t.accent};fill-opacity:.16}}.step-focal text{{fill:{t.accent_strong}}}
+.diagram-typography-expanded .zone-label,.diagram-typography-expanded .node-tag,.diagram-typography-expanded .connector-label text,.diagram-typography-expanded .label-eyebrow{{font-size:12px}}
+.diagram-typography-expanded .node-title,.diagram-typography-expanded .decision-title{{font-size:14px}}
+.diagram-typography-expanded .node-subtitle,.diagram-typography-expanded .decision-subtitle{{font-size:10px}}
+.diagram-typography-expanded .annotation text{{font-size:13px}}
 </style>"""
 
     @staticmethod
@@ -271,6 +287,10 @@ class Canvas:
 
 def _grid_ceil(value: int) -> int:
     return int(ceil(value / 4) * 4)
+
+
+def _line_count(lines: TextLines) -> int:
+    return 1 if isinstance(lines, str) else len(lines)
 
 
 def _marker_style(style: str) -> str:
