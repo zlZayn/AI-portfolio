@@ -12,11 +12,16 @@ def render() -> str:
     )
     canvas.label(32, 32, "COMPLEXITY SHIFTS FROM ROW COUNT TO UNIQUE VALUES")
 
-    canvas.connector(((224, 228), (288, 228)), "DEDUPLICATE", "accent", (256, 212))
-    canvas.connector(((440, 228), (504, 228)), "ONE AI READ", "accent", (472, 212))
-    canvas.connector(((672, 228), (736, 228)), "APPLY TO ALL ROWS", "default", (704, 212))
+    canvas.connector(((224, 228), (288, 228)), "DEDUPLICATE", "accent", (256, 160))
+    canvas.connector(((440, 228), (504, 228)), "ONE AI READ", "accent", (472, 160))
+    canvas.connector(((672, 228), (736, 228)), "APPLY TO ALL ROWS", "default", (704, 160))
     canvas.connector(((824, 264), (824, 348), (672, 348)), "RESIDUALS", "dashed", (756, 332))
-    canvas.connector(((504, 380), (468, 380), (468, 264), (588, 264)), "OPTIONAL REFINE", "dashed", (416, 364))
+    canvas.connector(
+        ((504, 380), (468, 380), (468, 304), (588, 304), (588, 280)),
+        "OPTIONAL REFINE",
+        "dashed",
+        (416, 364),
+    )
 
     canvas.node(40, 176, 184, 104, "1,500,000 rows", "full dirty table", "DATA", "muted")
     canvas.node(288, 192, 152, 72, "UNIQUE VALUES", "about 100 patterns", "CODE", "focal")

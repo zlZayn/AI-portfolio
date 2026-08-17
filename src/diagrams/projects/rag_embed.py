@@ -17,7 +17,12 @@ def render() -> str:
     canvas.connector(((224, 148), (288, 148)))
     canvas.connector(((448, 148), (560, 148)), style="accent")
     canvas.connector(((224, 388), (252, 388), (252, 340), (280, 340)))
-    canvas.connector(((440, 340), (488, 340)), "ENHANCED QUERY", "accent", (464, 324))
+    canvas.connector(
+        ((440, 340), (464, 340), (464, 288), (536, 288), (536, 304)),
+        "ENHANCED QUERY",
+        "accent",
+        (516, 272),
+    )
     canvas.connector(((656, 184), (656, 260), (572, 260), (572, 304)), "HYBRID INDEX", "default", (716, 244))
     canvas.connector(((656, 340), (704, 340)))
     canvas.connector(((784, 376), (784, 416)))

@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 
 from src.diagrams import render_all
 
@@ -54,6 +55,10 @@ class DiagramTests(unittest.TestCase):
             self.assertIn(f'id="{project_id}-desc"', svg)
             self.assertNotIn("mermaid", svg.lower())
             self.assertNotIn("foreignObject", svg)
+
+    def test_mobile_diagrams_keep_the_native_canvas_width(self):
+        stylesheet = Path("static/style.css").read_text(encoding="utf-8")
+        self.assertIn("min-width: 960px;", stylesheet)
 
 
 if __name__ == "__main__":
