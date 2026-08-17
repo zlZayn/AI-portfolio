@@ -112,6 +112,7 @@ The tests verify:
 - SVG metadata and project-prefixed IDs are present;
 - text escaping works;
 - diagonal connectors are rejected;
+- connector labels match validated path semantics and render above nodes;
 - no Mermaid or `foreignObject` artifacts enter output.
 
 Then rebuild and inspect desktop and mobile layouts:

@@ -4,15 +4,25 @@ from __future__ import annotations
 
 from html import escape
 from math import ceil
-from typing import Sequence
+from typing import Literal, Sequence
 
 from .theme import THEME, Theme
 
 Point = tuple[int, int]
 TextLines = str | Sequence[str]
+ConnectorStyle = Literal["default", "accent", "success", "danger", "dashed"]
+TypographyMode = Literal["standard", "expanded"]
 
 _SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif"
 _MONO = "'SFMono-Regular',Consolas,'Liberation Mono','Noto Sans Mono CJK SC',monospace"
+_MARKER_STYLE_BY_CONNECTOR: dict[ConnectorStyle, str] = {
+    "default": "default",
+    "accent": "accent",
+    "success": "success",
+    "danger": "danger",
+    "dashed": "default",
+}
+_TYPOGRAPHY_MODES: frozenset[str] = frozenset({"standard", "expanded"})
 
 
 class Canvas:
@@ -26,9 +36,9 @@ class Canvas:
         width: int = 960,
         height: int = 520,
         theme: Theme = THEME,
-        typography: str = "standard",
+        typography: TypographyMode = "standard",
     ) -> None:
-        if typography not in {"standard", "expanded"}:
+        if typography not in _TYPOGRAPHY_MODES:
             raise ValueError(f"Unsupported typography mode: {typography}")
         self.slug = slug
         self.title = title
@@ -144,9 +154,11 @@ class Canvas:
         self,
         points: tuple[Point, ...],
         label: str = "",
-        style: str = "default",
+        style: ConnectorStyle = "default",
         label_at: Point | None = None,
     ) -> None:
+        if style not in _MARKER_STYLE_BY_CONNECTOR:
+            raise ValueError(f"Unsupported connector style: {style}")
         if len(points) < 2:
             raise ValueError("A connector needs at least two points")
         for point in points:
@@ -163,9 +175,8 @@ class Canvas:
             x, y = label_at or _label_position(points)
             self._check_grid(x, y)
             mask_width = max(40, _grid_ceil(len(label) * 7 + 16))
-            label_style = _label_style(style)
             self._layers["annotations"].append(
-                f'<g class="connector-label connector-label-{label_style}">'
+                f'<g class="connector-label connector-label-{style}">'
                 f'<rect x="{x - mask_width // 2}" y="{y - 16}" '
                 f'width="{mask_width}" height="16" rx="4"/><text x="{x}" y="{y - 4}" '
                 f'text-anchor="middle">{escape(label.upper())}</text></g>'
@@ -299,12 +310,8 @@ def _line_count(lines: TextLines) -> int:
     return 1 if isinstance(lines, str) else len(lines)
 
 
-def _marker_style(style: str) -> str:
-    return style if style in {"accent", "success", "danger"} else "default"
-
-
-def _label_style(style: str) -> str:
-    return style if style in {"accent", "success", "danger", "dashed"} else "default"
+def _marker_style(style: ConnectorStyle) -> str:
+    return _MARKER_STYLE_BY_CONNECTOR[style]
 
 
 def _label_position(points: Sequence[Point]) -> Point:

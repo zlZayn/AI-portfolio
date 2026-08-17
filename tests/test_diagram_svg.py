@@ -35,6 +35,12 @@ class CanvasTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             canvas.connector(((40, 40), (80, 60)))
 
+    def test_connector_rejects_unknown_style(self):
+        canvas = Canvas("sample", "Sample", "Sample description.")
+
+        with self.assertRaises(ValueError):
+            canvas.connector(((40, 40), (80, 40)), style="unknown")
+
     def test_connector_labels_render_above_nodes(self):
         canvas = Canvas("sample", "Sample", "Sample description.")
         canvas.connector(((40, 80), (240, 80)), "handoff")

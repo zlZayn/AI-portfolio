@@ -236,7 +236,7 @@ git add src/diagrams tests/test_diagrams.py
 git commit -m "feat: add project architecture diagrams"
 ```
 
-### Task 4: Process And Data-Flow Diagrams
+### Task 4: Complex Architecture Diagrams
 
 **Files:**
 - Create: `src/diagrams/projects/collaborate.py`
@@ -244,13 +244,16 @@ git commit -m "feat: add project architecture diagrams"
 - Modify: `src/diagrams/__init__.py`
 - Modify: `tests/test_diagrams.py`
 
-- [ ] **Step 1: Add failing role-and-payload tests**
+- [ ] **Step 1: Add failing architecture-story tests**
 
 ```python
-def test_role_based_diagrams_show_ownership_and_handoffs(self):
+def test_collaborate_shows_adaptive_orchestration_architecture(self):
     collaborate = self.diagrams["collaborate"]
-    self.assertIn("PARALLEL WITHIN", collaborate)
-    self.assertIn("BRIDGE CONTEXT", collaborate)
+    self.assertIn("CONTROL PLANE", collaborate)
+    self.assertIn("FAILURE ISOLATION", collaborate)
+    self.assertIn("STATE.JSON", collaborate)
+
+def test_schema_governed_delivery_shows_contract_and_output(self):
     guide = self.diagrams["raw-to-guide"]
     self.assertIn("SCHEMA CONTRACT", guide)
     self.assertIn("OFFLINE H5", guide)
@@ -258,15 +261,15 @@ def test_role_based_diagrams_show_ownership_and_handoffs(self):
 
 - [ ] **Step 2: Run the new test and verify failure**
 
-Run: `uv run python -m unittest tests.test_diagrams.DiagramTests.test_role_based_diagrams_show_ownership_and_handoffs -v`
+Run: `uv run python -m unittest tests.test_diagrams.DiagramTests.test_collaborate_shows_adaptive_orchestration_architecture -v`
 
 Expected: missing project key or phrase.
 
-- [ ] **Step 3: Implement role-based layouts**
+- [ ] **Step 3: Implement architecture layouts**
 
-`collaborate` uses actor lanes for User, Planner, Agent Pool, Bridge, and Summarizer across Plan, Stage 1, Bridge, Stage N, and Deliver steps. The Agent Pool nodes show parallel workers inside sequential stage columns; Bridge Context is the focal handoff.
+`collaborate` uses control, execution, and durable interaction planes. It shows a validated dynamic plan, sequential stage barriers with parallel workers, focused bridge context, failure isolation, synthesis, state recovery, SSE observation, and the continue loop.
 
-`raw_to_guide` uses four lanes: Author, AI, Build System, Reader. Payloads progress through raw notes/screenshots, structured Markdown, Schema JSON, indexes, and Offline H5. The Schema Contract is focal because it governs both upstream AI output and downstream generation.
+`raw_to_guide` shows AI authoring, a Schema-governed reference validation loop, and the build path from valid JSON through maps, indexes, backrefs, Jinja2, and the Offline H5. The Schema Contract is focal because it governs both trust and generation.
 
 - [ ] **Step 4: Run all diagram tests**
 
@@ -274,11 +277,11 @@ Run: `uv run python -m unittest tests.test_diagram_svg tests.test_diagrams -v`
 
 Expected: all tests pass and `render_all()` returns eight SVG strings.
 
-- [ ] **Step 5: Commit role-based diagrams**
+- [ ] **Step 5: Commit complex architecture diagrams**
 
 ```bash
 git add src/diagrams tests/test_diagrams.py
-git commit -m "feat: add role based editorial diagrams"
+git commit -m "feat: add complex editorial architecture diagrams"
 ```
 
 ### Task 5: Replace Mermaid In The Build
