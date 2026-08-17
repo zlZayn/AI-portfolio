@@ -52,6 +52,23 @@ class Canvas:
             f'x="{x + 24}" y="{y + 8}">{safe_label}</text></g>'
         )
 
+    def lane(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        label: TextLines,
+        tinted: bool = False,
+    ) -> None:
+        self._check_grid(x, y, width, height)
+        tint_class = " lane-tinted" if tinted else ""
+        self._layers["zones"].append(
+            f'<g class="lane{tint_class}"><rect x="{x}" y="{y}" width="{width}" height="{height}"/>'
+            f'<line x1="{x + 128}" y1="{y}" x2="{x + 128}" y2="{y + height}"/>'
+            f'{self._multiline_text(x + 64, y + height // 2 + 4, label, "lane-label", 12)}</g>'
+        )
+
     def node(
         self,
         x: int,
@@ -155,6 +172,15 @@ class Canvas:
             f'text-anchor="{escape(anchor)}">{escape(text)}</text>'
         )
 
+    def step_header(self, x: int, y: int, number: str, label: str, focal: bool = False) -> None:
+        self._check_grid(x, y)
+        focal_class = " step-focal" if focal else ""
+        self._layers["annotations"].append(
+            f'<g class="step-header{focal_class}"><rect x="{x - 16}" y="{y}" width="32" height="16" rx="8"/>'
+            f'<text class="step-number" x="{x}" y="{y + 12}" text-anchor="middle">{escape(number)}</text>'
+            f'<text class="step-label" x="{x}" y="{y + 32}" text-anchor="middle">{escape(label.upper())}</text></g>'
+        )
+
     def render(self) -> str:
         title = escape(self.title)
         description = escape(self.description)
@@ -197,6 +223,8 @@ class Canvas:
 .zone>rect:first-child{{fill:{t.ink};fill-opacity:.018;stroke:{t.rule};stroke-width:1}}
 .zone-label-mask,.connector-label rect{{fill:{t.paper}}}
 .zone-label,.node-tag,.connector-label text,.label-eyebrow{{font-family:{_MONO};font-size:8px;font-weight:600;letter-spacing:.08em;fill:{t.muted}}}
+.lane rect{{fill:{t.paper};stroke:{t.rule_soft};stroke-width:1}}.lane-tinted rect{{fill:{t.ink};fill-opacity:.018}}
+.lane line{{stroke:{t.rule};stroke-width:1}}.lane-label{{font-family:{_MONO};font-size:8px;font-weight:600;fill:{t.muted};letter-spacing:.06em}}
 .connector{{fill:none;stroke:{t.muted};stroke-width:1.5}}
 .connector-accent{{stroke:{t.accent};stroke-width:2}}
 .connector-success{{stroke:{t.success}}}.connector-danger{{stroke:{t.danger}}}
@@ -218,6 +246,8 @@ class Canvas:
 .connector-label rect{{stroke:{t.rule_soft};stroke-width:.5}}
 .annotation line{{stroke:{t.accent};stroke-width:2}}.annotation text{{font-size:12px;font-style:italic}}
 .label-metric{{font-family:{_MONO};font-size:12px;font-weight:600;fill:{t.accent}}}
+.step-header rect{{fill:{t.ink};fill-opacity:.1}}.step-header text{{font-family:{_MONO};font-size:8px;font-weight:600;fill:{t.muted}}}
+.step-header .step-label{{letter-spacing:.06em}}.step-focal rect{{fill:{t.accent};fill-opacity:.16}}.step-focal text{{fill:{t.accent}}}
 </style>"""
 
     @staticmethod

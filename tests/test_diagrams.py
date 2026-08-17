@@ -38,6 +38,14 @@ class DiagramTests(unittest.TestCase):
             for phrase in phrases:
                 self.assertIn(phrase, self.diagrams[project_id])
 
+    def test_role_based_diagrams_show_ownership_and_handoffs(self):
+        collaborate = self.diagrams["collaborate"]
+        self.assertIn("PARALLEL WITHIN", collaborate)
+        self.assertIn("BRIDGE CONTEXT", collaborate)
+        guide = self.diagrams["raw-to-guide"]
+        self.assertIn("SCHEMA CONTRACT", guide)
+        self.assertIn("OFFLINE H5", guide)
+
 
 if __name__ == "__main__":
     unittest.main()

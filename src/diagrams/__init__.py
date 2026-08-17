@@ -3,8 +3,10 @@
 from collections.abc import Callable
 
 from .projects import (
+    collaborate,
     decision_maker,
     rag_embed,
+    raw_to_guide,
     schema_mapper,
     tablesnap,
     tier_guardian,
@@ -18,8 +20,10 @@ DIAGRAMS: dict[str, Renderer] = {
     "rag-embed": rag_embed.render,
     "schema-mapper": schema_mapper.render,
     "tool-calling": tool_calling.render,
+    "collaborate": collaborate.render,
     "tier-guardian": tier_guardian.render,
     "tablesnap": tablesnap.render,
+    "raw-to-guide": raw_to_guide.render,
 }
 
 
