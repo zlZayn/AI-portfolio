@@ -42,11 +42,25 @@ class CanvasTests(unittest.TestCase):
 
         svg = canvas.render()
 
-        self.assertLess(svg.index('class="node-box"'), svg.index('class="connector-label"'))
+        self.assertLess(svg.index('class="node-box"'), svg.index('class="connector-label '))
+
+    def test_connector_labels_match_connector_semantics(self):
+        canvas = Canvas("sample", "Sample", "Sample description.")
+        canvas.connector(((40, 40), (240, 40)), "focus", "accent")
+        canvas.connector(((40, 80), (240, 80)), "pass", "success")
+        canvas.connector(((40, 120), (240, 120)), "block", "danger")
+        canvas.connector(((40, 160), (240, 160)), "optional", "dashed")
+
+        svg = canvas.render()
+
+        for style in ("accent", "success", "danger", "dashed"):
+            self.assertIn(f'connector-label-{style}', svg)
 
     def test_small_text_tokens_meet_normal_text_contrast(self):
         self.assertGreaterEqual(contrast_ratio(THEME.muted, THEME.paper), 4.5)
         self.assertGreaterEqual(contrast_ratio(THEME.accent_strong, THEME.paper), 4.5)
+        self.assertGreaterEqual(contrast_ratio(THEME.success, THEME.paper), 4.5)
+        self.assertGreaterEqual(contrast_ratio(THEME.danger, THEME.paper), 4.5)
 
 
 if __name__ == "__main__":

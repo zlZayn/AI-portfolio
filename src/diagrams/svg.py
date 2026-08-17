@@ -163,8 +163,10 @@ class Canvas:
             x, y = label_at or _label_position(points)
             self._check_grid(x, y)
             mask_width = max(40, _grid_ceil(len(label) * 7 + 16))
+            label_style = _label_style(style)
             self._layers["annotations"].append(
-                f'<g class="connector-label"><rect x="{x - mask_width // 2}" y="{y - 16}" '
+                f'<g class="connector-label connector-label-{label_style}">'
+                f'<rect x="{x - mask_width // 2}" y="{y - 16}" '
                 f'width="{mask_width}" height="16" rx="4"/><text x="{x}" y="{y - 4}" '
                 f'text-anchor="middle">{escape(label.upper())}</text></g>'
             )
@@ -256,6 +258,10 @@ class Canvas:
 .decision-box{{fill:{t.surface};stroke:{t.ink};stroke-width:1.25}}
 .decision-focal .decision-box{{fill:{t.accent_tint};stroke:{t.accent_strong};stroke-width:2}}
 .connector-label rect{{stroke:{t.rule_soft};stroke-width:.5}}
+.connector-label-accent rect{{stroke:{t.accent_strong};stroke-opacity:.45}}.connector-label-accent text{{fill:{t.accent_strong}}}
+.connector-label-success rect{{stroke:{t.success};stroke-opacity:.45}}.connector-label-success text{{fill:{t.success}}}
+.connector-label-danger rect{{stroke:{t.danger};stroke-opacity:.45}}.connector-label-danger text{{fill:{t.danger}}}
+.connector-label-dashed rect{{stroke:{t.muted};stroke-dasharray:3 2}}.connector-label-dashed text{{fill:{t.muted}}}
 .annotation line{{stroke:{t.accent_strong};stroke-width:2}}.annotation text{{font-size:12px;font-style:italic}}
 .label-metric{{font-family:{_MONO};font-size:12px;font-weight:600;fill:{t.accent_strong}}}
 .step-header rect{{fill:{t.ink};fill-opacity:.1}}.step-header text{{font-family:{_MONO};font-size:11px;font-weight:600;fill:{t.muted}}}
@@ -295,6 +301,10 @@ def _line_count(lines: TextLines) -> int:
 
 def _marker_style(style: str) -> str:
     return style if style in {"accent", "success", "danger"} else "default"
+
+
+def _label_style(style: str) -> str:
+    return style if style in {"accent", "success", "danger", "dashed"} else "default"
 
 
 def _label_position(points: Sequence[Point]) -> Point:

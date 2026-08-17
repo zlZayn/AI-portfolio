@@ -77,6 +77,7 @@ Each diagram emphasizes one architectural claim:
 - Canvas geometry uses a 4 px grid and a fixed responsive `viewBox`.
 - Non-axis-aligned relationships use rounded orthogonal paths; diagonal segments raise `ValueError`.
 - Connector paths render before nodes so opaque node masks keep paths readable; connector labels render after nodes so cards cannot hide their text.
+- Connector labels inherit their path semantics: orange for focus, green for success, red for danger, and dashed borders for optional or fallback paths.
 - Orange is editorial focus, limited to one or two primary mechanisms per diagram.
 - Human-readable names use the site sans-serif stack; technical tags use monospace.
 - Standard labels remain readable at the 960 px mobile canvas; dense architectures can opt into the shared expanded typography mode and a project-specific minimum width.
