@@ -27,6 +27,17 @@ class DiagramTests(unittest.TestCase):
         self.assertIn("0 TOKEN", self.diagrams["decision-maker"])
         self.assertIn("CODE ARBITRATION", self.diagrams["tier-guardian"])
 
+    def test_architecture_diagrams_preserve_their_distinguishing_mechanisms(self):
+        expected = {
+            "rag-embed": ("ENHANCED QUERY", "ORIGINAL QUESTION"),
+            "schema-mapper": ("UNIQUE VALUES", "APPLY TO ALL ROWS"),
+            "tool-calling": ("ONE REGISTRY", "TWO PROTOCOLS"),
+            "tablesnap": ("ONE VLM CALL", "NO OCR PIPELINE"),
+        }
+        for project_id, phrases in expected.items():
+            for phrase in phrases:
+                self.assertIn(phrase, self.diagrams[project_id])
+
 
 if __name__ == "__main__":
     unittest.main()
