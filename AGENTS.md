@@ -11,7 +11,7 @@
 - `uv run pytest` — 跑测试（等价 `uv run python -m unittest discover -s tests`）
 
 ## 验证快照（2026-08-24 实测）
-- pytest: 15 passed / 0 failed
+- pytest: 15 passed / 0 failed（pytest 9.1.1，dev 依赖组 [dependency-groups]）
 - 构建: 连续两次构建字节一致（由测试覆盖）
 
 ## 待办
