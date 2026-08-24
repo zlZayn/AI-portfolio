@@ -1,4 +1,4 @@
-# Architecture
+# AI Portfolio — Architecture
 
 ## Overview
 
