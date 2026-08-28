@@ -10,10 +10,10 @@ The build has no runtime diagram engine. Python renders deterministic SVG string
 
 `uv run python build.py` performs six steps:
 
-1. Load `content/profile.yaml` and the eight entries in `content/projects.yaml`.
+1. Load `content/profile.yaml` and the nine entries in `content/projects.yaml`.
 2. Encode screenshots from `images/{project_id}/` as inline data URIs.
 3. Generate comparison tables from versioned snapshots in `content/data-tables/`.
-4. Render the eight accessible SVG diagrams through `src.diagrams.render_all()`.
+4. Render the nine accessible SVG diagrams through `src.diagrams.render_all()`.
 5. Render the page sections with Jinja2 and inline CSS/JavaScript.
 6. Normalize line endings and trailing whitespace, then write `index.html`.
 
@@ -22,7 +22,7 @@ The build has no runtime diagram engine. Python renders deterministic SVG string
 | Path | Responsibility |
 | --- | --- |
 | `build.py` | Single build entry point and source assembly |
-| `content/` | Profile, project copy, and versioned data-table snapshots |
+| `content/` | Profile, traits, project copy, and versioned data-table snapshots |
 | `images/` | Project screenshots |
 | `src/data_tables.py` | Generated project comparison tables |
 | `src/diagrams/` | Editorial SVG rendering package |
@@ -59,7 +59,7 @@ Diagram types follow `cathrynlavery/diagram-design` 2.4. Type selection reflects
 | Type | Projects | Why |
 | --- | --- | --- |
 | Flowchart | `decision-maker`, `tier-guardian` | Cache and arbitration decisions create real branches |
-| Architecture | `rag-embed`, `schema-mapper`, `tool-calling`, `collaborate`, `tablesnap`, `raw-to-guide` | Components, control planes, shared contracts, boundaries, and bypass paths carry the meaning |
+| Architecture | `rag-embed`, `schema-mapper`, `tool-calling`, `collaborate`, `tablesnap`, `raw-to-guide`, `imagora` | Components, control planes, shared contracts, boundaries, and bypass paths carry the meaning |
 
 Each diagram emphasizes one architectural claim:
 
@@ -71,6 +71,7 @@ Each diagram emphasizes one architectural claim:
 - `tier-guardian`: two zero-token code gates own release, block, and review decisions.
 - `tablesnap`: screen and file inputs share one local VLM call without an OCR reconstruction pipeline.
 - `raw-to-guide`: one Schema contract governs both reference validation and generation; invalid AI-authored links loop back before maps, indexes, or the offline app are built.
+- `imagora`: two frontends share one task pipeline; results are stored by content hash in the asset registry and rebound as canvas nodes for chained iteration.
 
 ## Rendering Rules
 
@@ -107,7 +108,8 @@ The tests verify:
 
 - data-table snapshots produce all three showcase sections;
 - repeated builds are byte-identical;
-- all eight project IDs are registered;
+- all nine project IDs are registered;
+- content-contract fields, domains, and trait coverage rules hold;
 - required architectural phrases remain visible;
 - SVG metadata and project-prefixed IDs are present;
 - text escaping works;
