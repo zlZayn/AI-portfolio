@@ -71,7 +71,7 @@ Each diagram emphasizes one architectural claim:
 - `tier-guardian`: two zero-token code gates own release, block, and review decisions.
 - `tablesnap`: screen and file inputs share one local VLM call without an OCR reconstruction pipeline.
 - `raw-to-guide`: one Schema contract governs both reference validation and generation; invalid AI-authored links loop back before maps, indexes, or the offline app are built.
-- `imagora`: two frontends share one task pipeline; results are stored by content hash in the asset registry and rebound as canvas nodes for chained iteration.
+- `imagora`: contract-formatted prompts import as batch cards; two frontends share one task pipeline; results are stored by content hash in the asset registry and rebound as canvas nodes for chained iteration.
 
 ## Rendering Rules
 

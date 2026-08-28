@@ -7,40 +7,45 @@ def render() -> str:
     canvas = Canvas(
         "imagora",
         "Imagora dual-mode image generation workbench",
-        "Classic form and infinite canvas share one task pipeline. "
-        "Results are stored in the asset registry by content hash and "
-        "rebound as new canvas nodes for chained iteration.",
-        height=720,
+        "Contract-formatted prompts import as batch cards; classic form and "
+        "infinite canvas share one task pipeline; generated results are stored "
+        "by content hash and rebound as canvas nodes for chained iteration.",
+        height=780,
         typography="expanded",
     )
-    canvas.label(32, 32, "DUAL FRONTENDS / ONE PIPELINE / ASSETS BY CONTENT HASH")
+    canvas.label(32, 32, "DUAL FRONTENDS / ONE PIPELINE / CONTRACT-DRIVEN PROMPTS")
 
-    # Zone 1: two interaction surfaces; results rebound into the canvas.
-    canvas.zone(32, 64, 896, 200, "INTERACTION / DUAL MODE")
-    canvas.node(56, 112, 168, 84, "Classic form", "instant submit", "FORM", "muted")
-    canvas.node(240, 96, 240, 100, "Infinite canvas", "nodes + edges, typed constraints", "CANVAS", "focal")
-    canvas.node(500, 104, 136, 76, "Prompt node", "step in the chain", "NODE")
-    canvas.node(680, 104, 136, 76, "Result node", "auto-image-node", "REBOUND", "success")
-    canvas.connector(((636, 144), (680, 144)))
-    canvas.connector(((804, 180), (804, 216), (568, 216), (568, 180)), "RELINK", "dashed")
+    # Zone A: contract-driven prompt import above the interaction surfaces.
+    canvas.zone(32, 64, 896, 180, "PROMPT CONTRACT")
+    canvas.node(56, 108, 208, 100, "Multi-modal LLM", "contract output", "LLM", "optional")
+    canvas.node(360, 108, 224, 100, "Prompt Import", "paste → batch cards", "CONTRACT", "focal")
+    canvas.connector(((264, 156), (360, 156)), "FORMATTED", "accent")
+    canvas.annotation(620, 136, "5 CAROUSEL + 8 DETAIL TEMPLATES", 240)
+    canvas.annotation(620, 176, "ERRORS MARKED RED / NEVER GUESSED", 240)
 
-    # Zone 2: one unified backend pipeline behind both frontends.
-    canvas.zone(32, 296, 896, 168, "UNIFIED BACKEND / ONE TASK PIPELINE")
-    canvas.node(56, 336, 168, 96, "TaskManager", "one queue / max 10 workers", "QUEUE", "focal")
-    canvas.node(252, 336, 176, 96, "Asset Registry", "content hash -> .assets", "SHA-1", "store")
-    canvas.node(468, 336, 168, 96, "History ledger", "generation.jsonl", "JSONL", "store")
-    canvas.node(664, 336, 192, 96, "Window allocator", "server-side ids / netstat truth", "MULTI")
+    # Zone B: two interaction surfaces plus the compact rebound chain.
+    canvas.zone(32, 276, 896, 220, "DUAL-MODE INTERACTION")
+    canvas.node(56, 328, 156, 88, "Classic form", "instant submit", "FORM", "muted")
+    canvas.node(232, 320, 208, 104, "Infinite canvas", "nodes + edges, typed constraints", "CANVAS", "focal")
+    canvas.node(492, 336, 120, 72, "Prompt node", "chain step", "NODE")
+    canvas.node(648, 336, 120, 72, "Result node", "auto-image-node", "REBOUND", "success")
+    canvas.connector(((612, 372), (648, 372)))
+    canvas.connector(((708, 408), (708, 444), (552, 444), (552, 408)), "RELINK", "dashed")
+    canvas.connector(((180, 416), (180, 452), (336, 452), (336, 424)), "ONE-CLICK RESTORE", "dashed")
 
-    # Zone 3: the only external dependency, wrapped in one module.
-    canvas.zone(32, 500, 896, 164, "ONLY EXTERNAL DEPENDENCY")
-    canvas.node(368, 548, 184, 88, "OpenAI-compatible API", "image edits endpoint", "UPSTREAM", "optional")
+    # Zone C: one pipeline, the asset registry, and the only upstream.
+    canvas.zone(32, 528, 896, 188, "ONE PIPELINE / ASSETS / UPSTREAM")
+    canvas.node(56, 576, 136, 88, "TaskManager", "one queue / max 10", "QUEUE", "focal")
+    canvas.node(272, 576, 176, 88, "OpenAI-compatible API", "only external dependency", "UPSTREAM", "optional")
+    canvas.node(480, 576, 120, 88, "Image output", "generated image", "OUTPUT", "store")
+    canvas.node(664, 576, 176, 88, "Asset Registry", "content hash → .assets", "SHA-1", "store")
 
-    canvas.connector(((140, 196), (140, 336)), "submit")
-    canvas.connector(((360, 196), (360, 284), (152, 284), (152, 336)), "run")
-    canvas.connector(((140, 432), (140, 492), (460, 492), (460, 548)), "generate", "accent")
-    canvas.connector(((552, 592), (880, 592), (880, 104), (748, 104)), "image", "success", (688, 592))
-    canvas.connector(((748, 180), (748, 268), (340, 268), (340, 336)), "store by sha1")
-    canvas.connector(((296, 336), (296, 244), (360, 244), (360, 196)), "ref by id", "dashed")
+    canvas.connector(((132, 416), (132, 576)), "submit")
+    canvas.connector(((336, 424), (336, 512), (124, 512), (124, 576)), "run")
+    canvas.connector(((192, 620), (272, 620)), "GENERATE", "accent")
+    canvas.connector(((448, 620), (480, 620)), "IMAGE", "success")
+    canvas.connector(((540, 576), (540, 516), (880, 516), (880, 372), (768, 372)), "REBOUND", "dashed")
+    canvas.connector(((540, 664), (540, 696), (752, 696), (752, 664)), "STORE BY SHA1")
 
-    canvas.annotation(32, 688, "WORKFLOW FILES STORE REGISTRY IDS / NEVER FILE PATHS", 640)
+    canvas.annotation(32, 748, "WORKFLOW FILES STORE REGISTRY IDS / NEVER PATHS", 640)
     return canvas.render()

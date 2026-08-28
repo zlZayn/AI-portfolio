@@ -65,9 +65,14 @@ class DiagramTests(unittest.TestCase):
         imagora = self.diagrams["imagora"]
         for phrase in (
             "DUAL FRONTENDS",
+            "PROMPT CONTRACT",
+            "Prompt Import",
+            "FORMATTED",
             "Classic form",
             "Infinite canvas",
+            "ONE-CLICK RESTORE",
             "TaskManager",
+            "GENERATE",
             "Asset Registry",
             "SHA-1",
             "RELINK",
