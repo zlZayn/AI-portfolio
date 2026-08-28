@@ -1,4 +1,13 @@
 title: "AI 项目作品集"
 subtitle: "Harness 全栈自建 · 零框架 AI 工程"
-description: "八个项目覆盖数据处理、知识检索、Agent 编排、内容审核、本地视觉识别、离线内容生成。每一条管线从 Prompt 工程到运行时沙箱全部自建——协议层、工具层、编排层、安全与权限控制，不依赖 LangChain 等任何框架。"
+description: "九个项目覆盖数据处理、知识检索、Agent 编排、内容审核、本地视觉识别、离线内容生成与 AIGC 创作。没有封装套路：协议层、工具层、编排层、安全与权限控制全部自建——AI 只做语义判断，执行归代码。"
 github_url: "https://github.com/zlZayn"
+traits:
+  - name: Prompt Engineering
+    note: 全部项目统一收敛交互契约
+  - name: Atomic Tool
+    note: 全部项目最小工具面
+  - name: Business / Third-Party API
+    note: 上游外部依赖统一收敛、密钥与配置分离
+  - name: Permission & Security Control
+    note: 执行侧统一权限与安全边界

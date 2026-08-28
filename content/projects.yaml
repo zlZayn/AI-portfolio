@@ -1,6 +1,7 @@
 projects:
 - id: decision-maker
   name: AI-decision-maker
+  domain: 数据处理
   tagline: AI 驱动的数据分析框架，AI 决策 + 程序执行
   quote: AI 输出是'建议'，验证层决定最终值。
   description: >-
@@ -23,11 +24,7 @@ projects:
   github_url: "https://github.com/zlZayn/AI-decision-maker"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - Structured Output Parser
-      - Atomic Tool
-      - Permission & Security Control
-      - Business / Third-Party API
     technology:
       - Python
       - pandas
@@ -48,6 +45,7 @@ projects:
 
 - id: rag-embed
   name: AI-RAG-embed
+  domain: RAG 检索
   tagline: 本地 RAG 检索增强系统，专注"怎么切"和"怎么问"
   quote: RAG 失败在两个边界：怎么切，怎么问。其余都是边际收益的复合。
   description: >-
@@ -67,12 +65,9 @@ projects:
   github_url: "https://github.com/zlZayn/AI-RAG-embed"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - RAG
       - Long / Short Memory
       - MCP
-      - Atomic Tool
-      - Business / Third-Party API
     technology:
       - Python
       - Sentence-Transformer
@@ -93,6 +88,7 @@ projects:
 
 - id: schema-mapper
   name: AI-schema-mapper
+  domain: 数据处理
   tagline: 医疗数据智能清洗，AI 生成规则一次，代码执行 N 次
   quote: AI 看一次，代码执行 N 次。AI 不看完整数据，只看有多少个唯一值。
   description: >-
@@ -111,11 +107,7 @@ projects:
   github_url: "https://github.com/zlZayn/AI-schema-mapper"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - Structured Output Parser
-      - Atomic Tool
-      - Permission & Security Control
-      - Business / Third-Party API
     technology:
       - Python
       - pandas
@@ -134,6 +126,7 @@ projects:
 
 - id: tool-calling
   name: AI-tool-calling
+  domain: Agent 基础设施
   tagline: 极简 Tool Calling + MCP 双模式框架
   quote: 框架提供工具，客户端提供智能。
   description: >-
@@ -157,12 +150,9 @@ projects:
       - MCP
       - Function Calling
       - Tool Calling
-      - Atomic Tool
       - Single Agent
       - Sandbox
       - Timeout & Retry
-      - Permission & Security Control
-      - Business / Third-Party API
     technology:
       - TypeScript
       - Zod
@@ -181,6 +171,7 @@ projects:
 
 - id: collaborate
   name: AI-collaborate
+  domain: Agent 基础设施
   tagline: 多 Agent 编排框架，自动规划、并行分发、桥接上下文
   quote: 所有 prompt 使用人的称谓——同事，不是 AI Agent。Agent 收到任务时不知道发送者是另一个模型。
   description: >-
@@ -201,11 +192,9 @@ projects:
   github_url: "https://github.com/zlZayn/AI-collaborate"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - Task Planner
       - Structured Output Parser
       - Multi-Agent
-      - Business / Third-Party API
     technology:
       - Python
       - SSE
@@ -224,6 +213,7 @@ projects:
 
 - id: tier-guardian
   name: AI-tier-guardian
+  domain: 内容安全
   tagline: 三庭二审 AI 内容审核引擎
   quote: AI 只做极窄的语义判断；程序做所有仲裁和执行。
   description: >-
@@ -244,12 +234,8 @@ projects:
   github_url: "https://github.com/zlZayn/AI-tier-guardian"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - Chain-of-Thought (CoT)
       - Structured Output Parser
-      - Atomic Tool
-      - Permission & Security Control
-      - Business / Third-Party API
     technology:
       - Python
       - pytest
@@ -269,6 +255,7 @@ projects:
 
 - id: tablesnap
   name: tablesnap
+  domain: 视觉识别
   tagline: 截图 → XLSX，本地 4B VLM 秒级识别，视觉转表格的极简闭环
   quote: VLM 直出，而不是 OCR 流水线。视觉识别本应只有一个环节。
   description: >-
@@ -289,11 +276,8 @@ projects:
   github_url: "https://github.com/zlZayn/tablesnap"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - Local-First
       - Lightweight Model
-      - Atomic Tool
-      - Permission & Security Control
     technology:
       - Python
       - Ollama (qwen3-vl)
@@ -314,6 +298,7 @@ projects:
 
 - id: raw-to-guide
   name: ai-batch-raw-to-offline-guide
+  domain: 离线内容生成
   tagline: 素材丢给 AI，自动炼成规范数据 → 单文件离线攻略，不用写代码
   quote: AI 生成内容不可信，但 Schema 校验后的内容可以。信任交给验证层，不是模型。
   description: >-
@@ -335,11 +320,9 @@ projects:
   github_url: "https://github.com/zlZayn/ai-batch-raw-to-offline-guide"
   tech_stack:
     architecture:
-      - Prompt Engineering
       - Schema-Driven Design
       - Data Normalization
       - Structured Output Parser
-      - Business / Third-Party API
     technology:
       - Python
       - JSON Schema
@@ -356,3 +339,52 @@ projects:
     text: 全部 CSS/JS/JSON 内嵌一个 HTML（350KB），无网络无服务器，微信/AirDrop 即开即用。23 个 hash 路由 SPA，Vanilla JS 零框架。
   - title: 换主题不改代码
     text: 数据与模板解耦，换主题只换素材。上海迪士尼攻略验证了复用性；docs/usage.md 提供"AI 工作规范"可直接复制给 AI，非技术用户也能生成新主题。
+
+- id: imagora
+  name: Imagora
+  domain: AIGC 创作
+  tagline: AI 生图工作台：无限画布编排 + 结果回流迭代，面向网店商品图批量出图
+  quote: 生图的瓶颈不在生成，而在工作流。
+  description: >-
+    资产注册表：图片内容哈希做唯一 ID，工作流只存 ID 不存路径，
+    项目改名 / 移动 / 换电脑后旧工作流可恢复，同图自动去重。<br><br>
+    无限画布：图片 / 图片组 / 提示词三类节点，连线即参考关系，
+    结果自动回流为新节点支持链式迭代，类型硬约束防错误连线。
+    经典表单与画布共享同一后端与任务队列，表单结果一键导入画布整图还原。<br><br>
+    提示词批量导入：多模态模型按契约格式输出整段提示词，粘贴即批量建卡。
+    服务端多窗口并行，自动编号不撞号，日志带窗口号可溯源。
+  ai_role: 生成图片 + 按契约批量生成提示词
+  code_role: 资产注册表、画布工作流、任务管线、并发窗口、布局算法、LOD 渲染
+  metric: 工作流搬家 100% 可恢复
+  grid_overview: >-
+    把 AI 生图从单次调用升级为可迁移、可迭代、可编排的工作流。
+    资产注册表 + 结果回流 + 双模式统一后端 + 提示词批量导入。
+  github_url: "https://github.com/zlZayn/imagora"
+  tech_stack:
+    architecture:
+      - Schema-Driven Design
+      - Workflow Canvas
+      - Asset Registry
+      - Result Rebinding
+      - Dual-Mode Unified Backend
+      - Prompt Contract
+    technology:
+      - Python
+      - FastAPI
+      - React
+      - TypeScript
+      - React Flow
+    delivery:
+      - Web
+      - CLI
+      - Desktop
+  highlights:
+  - title: 资产注册表：工作流搬家永不失效
+    text: 图片内容 sha1 哈希做唯一 ID，同一张图自动去重；工作流文件只存 registryId 不存路径，打开时按 ID 找回。注册表损坏可扫描 .assets 重建。
+    metric: 100% 可恢复
+  - title: 结果回流：链式迭代零手动上传
+    text: 生成结果自动变新图片节点并连好线，"草图→白底图→场景图→详情页"整条链在一张画布上完成，结果自然流向下一步。
+  - title: 表单 + 画布双模式统一后端
+    text: 两套前端共享同一 TaskManager 与资产库；表单每次生成自动存连线快照，一键导入画布整图还原，易用与专业不割裂。后端 pytest 205 + 前端 vitest 120 用例锁定契约，全部不调上游。
+  - title: 提示词批量导入：人写变人审
+    text: 契约格式 + 电商专用模板，多模态 LLM 整段输出提示词粘贴即批量建卡，格式错误标红提示，不静默猜测。
