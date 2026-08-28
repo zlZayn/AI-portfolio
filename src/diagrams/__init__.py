@@ -5,6 +5,7 @@ from collections.abc import Callable
 from .projects import (
     collaborate,
     decision_maker,
+    imagora,
     rag_embed,
     raw_to_guide,
     schema_mapper,
@@ -24,6 +25,7 @@ DIAGRAMS: dict[str, Renderer] = {
     "tier-guardian": tier_guardian.render,
     "tablesnap": tablesnap.render,
     "raw-to-guide": raw_to_guide.render,
+    "imagora": imagora.render,
 }
 
 

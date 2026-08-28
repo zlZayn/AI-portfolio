@@ -13,6 +13,7 @@ EXPECTED_IDS = {
     "tier-guardian",
     "tablesnap",
     "raw-to-guide",
+    "imagora",
 }
 
 
@@ -59,6 +60,20 @@ class DiagramTests(unittest.TestCase):
         guide = self.diagrams["raw-to-guide"]
         self.assertIn("SCHEMA CONTRACT", guide)
         self.assertIn("OFFLINE H5", guide)
+
+    def test_imagora_shows_dual_mode_workbench_architecture(self):
+        imagora = self.diagrams["imagora"]
+        for phrase in (
+            "DUAL FRONTENDS",
+            "Classic form",
+            "Infinite canvas",
+            "TaskManager",
+            "Asset Registry",
+            "SHA-1",
+            "RELINK",
+        ):
+            self.assertIn(phrase, imagora)
+        self.assertIn("diagram-typography-expanded", imagora)
 
     def test_every_svg_has_accessible_metadata_and_no_mermaid_artifacts(self):
         for project_id, svg in self.diagrams.items():
