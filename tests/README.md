@@ -10,3 +10,4 @@
 - 测试里的 build.assemble() 只写临时目录，不覆盖根 index.html
 - 增删用例后 → 同步根 [AGENTS.md](../AGENTS.md) 验证快照数字
 - 设计背景 → 见 [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md)
+- 使用约束与工作偏好 → 见 [AGENTS.md](AGENTS.md)

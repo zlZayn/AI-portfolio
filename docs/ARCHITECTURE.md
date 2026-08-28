@@ -31,6 +31,13 @@ The build has no runtime diagram engine. Python renders deterministic SVG string
 | `tests/` | SVG primitive and project-story contract tests |
 | `index.html` | Generated, self-contained site |
 
+## Content Model
+
+- `content/projects.yaml` is the single data source; every project carries a `domain` from a fixed seven-type enumeration, so the nine cards sort into one of seven categories at a glance and new projects must land in an existing type.
+- Shared architecture traits are rule-driven: any tag reaching 6/9 coverage is promoted to `profile.traits` (single source of truth), the project layer keeps only differentiating tags, and tests enforce both directions so drift fails.
+- Contract tests machine-check required fields, domain enumeration, URL ownership, and trait coverage; the five-step onboarding for new projects is backed by tests instead of memory.
+- Field-level contract details (enumeration, trait rule, onboarding) live in [content/README.md](../content/README.md).
+
 ## Diagram Package
 
 The public interface remains small:
