@@ -2,7 +2,8 @@
 
 - 测试与源码对应关系：
 - test_build.py：数据表快照 + 重复构建字节一致 → 对应 src/data_tables.py 与 build.py
-- test_diagrams.py：8 图注册、架构表述、无障碍元数据、移动端画布 → 对应 src/diagrams/
+- test_diagrams.py：9 图注册、架构表述、无障碍元数据、移动端画布 → 对应 src/diagrams/
+- test_content_contract.py：内容契约（必填字段 / id 唯一 / domain 枚举 / github_url 前缀 / traits 覆盖率规则）→ 对应 content/projects.yaml 与 profile.yaml
 - test_diagram_svg.py：Canvas 基元、对角线拒绝、连线标签层级与语义、对比度 → 对应 src/diagrams/svg.py 与 theme.py
 - 运行：`uv run pytest`（等价 `uv run python -m unittest discover -s tests`）
 - 特殊坑：
