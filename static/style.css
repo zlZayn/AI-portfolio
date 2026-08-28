@@ -608,6 +608,60 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid var(--color-border);
 }
 
+/* Domain tags — one tint per category, readable on paper background */
+.tag-domain {
+  font-weight: 600;
+  border: 1px solid transparent;
+  background: var(--color-indigo-bg);
+  color: var(--color-indigo);
+}
+.tag-domain[data-domain="数据处理"] { background: #eef2ff; color: #4f46e5; }
+.tag-domain[data-domain="RAG 检索"] { background: #f0fdfa; color: #0f766e; }
+.tag-domain[data-domain="Agent 基础设施"] { background: #f5f3ff; color: #6d28d9; }
+.tag-domain[data-domain="内容安全"] { background: #fef2f2; color: #b91c1c; }
+.tag-domain[data-domain="视觉识别"] { background: #f0f9ff; color: #0369a1; }
+.tag-domain[data-domain="离线内容生成"] { background: #ecfdf5; color: #047857; }
+.tag-domain[data-domain="AIGC 创作"] { background: #fff7ed; color: #c2410c; }
+
+/* === Shared traits band (hero) === */
+.traits-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  animation: hero-fade-in 0.8s ease both;
+  animation-delay: 0.8s;
+}
+.traits-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.trait-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 2px var(--shadow-sm);
+}
+.trait-chip-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+.trait-chip-note {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
 /* === Project Section (each as a card) === */
 .project-section {
   padding: 30px 20px;
@@ -858,6 +912,7 @@ img { max-width: 100%; height: auto; display: block; }
   .hero-bar { margin: 24px auto; }
   .hero-desc { margin-left: auto; margin-right: auto; }
   .hero-footer { justify-content: center; }
+  .traits-band { justify-content: center; }
   .hero-phrase-ai { font-size: 3.5rem; }
   .hero-phrase-code { font-size: 3.5rem; }
   .hero-deco { border-left: none; padding: 20px 0; }

@@ -37,5 +37,16 @@
         </svg>
       </div>
     </div>
+    {% if profile.traits %}
+    <div class="traits-band">
+      <span class="traits-label">共同特征</span>
+      {% for t in profile.traits %}
+      <span class="trait-chip" title="{{ t.note }}">
+        <span class="trait-chip-name">{{ t.name }}</span>
+        <span class="trait-chip-note">{{ t.note }}</span>
+      </span>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
 </section>

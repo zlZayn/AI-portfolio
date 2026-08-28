@@ -30,6 +30,9 @@
         <p class="card-overview">{{ p.grid_overview }}</p>
         {% endif %}
         <div class="card-tags">
+          {% if p.domain %}
+          <span class="tag tag-domain" data-domain="{{ p.domain }}">{{ p.domain }}</span>
+          {% endif %}
           {% if p.tech_stack.architecture %}
             {% for item in p.tech_stack.architecture %}
             <span class="tag tag-arch">{{ item }}</span>

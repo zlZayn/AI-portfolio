@@ -14,6 +14,9 @@
     {% endif %}
 
     <div class="project-tags">
+      {% if project.domain %}
+      <span class="tag tag-domain" data-domain="{{ project.domain }}">{{ project.domain }}</span>
+      {% endif %}
       {% if project.tech_stack.architecture %}
         {% for item in project.tech_stack.architecture %}
         <span class="tag tag-arch">{{ item }}</span>
