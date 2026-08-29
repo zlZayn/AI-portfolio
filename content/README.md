@@ -12,7 +12,7 @@
 | description / grid_overview | 详情与卡片摘要 | 是 |
 | ai_role / code_role | AI 与代码分工说明 | 是 |
 | metric | 一句话指标 | 是 |
-| github_url | 仓库链接，必须以 https://github.com/zlZayn/ 开头 | 是 |
+| github_url | 作品链接：https://github.com/zlZayn/ 或 https://zlzayn.github.io/ 开头（仓库或在线站点） | 是 |
 | tech_stack.architecture / technology / delivery | 标签三组，均不许为空 | 是 |
 | highlights[] | title + text；metric 可选 | 是 |
 

@@ -100,7 +100,8 @@ class ContentContractTests(unittest.TestCase):
     def test_github_url_owned_by_zlzayn(self):
         for project in self.projects:
             self.assertTrue(
-                project["github_url"].startswith("https://github.com/zlZayn/"),
+                project["github_url"].startswith("https://github.com/zlZayn/")
+                or project["github_url"].startswith("https://zlzayn.github.io/"),
                 project["id"],
             )
 

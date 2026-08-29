@@ -297,7 +297,7 @@ projects:
     text: Ctrl+Alt+S 拖拽框选即时导出，同时间戳截图与 XLSX 并存；main.py file a.png 批量转换多张图片。配置三优先级：环境变量 > config.json > 默认值。
 
 - id: raw-to-guide
-  name: ai-batch-raw-to-offline-guide
+  name: AI-batch-raw-to-offline-guide
   domain: 离线内容生成
   tagline: 素材丢给 AI，自动炼成规范数据 → 单文件离线攻略，不用写代码
   quote: AI 生成内容不可信，但 Schema 校验后的内容可以。信任交给验证层，不是模型。
@@ -317,7 +317,7 @@ projects:
     素材 → AI 炼制结构化数据 → Schema 校验引用完整性 → 单文件离线 HTML。
     不用写代码，换主题只换素材。数据与模板解耦，规范数据驱动一切。
     北京环球影城真实落地，350KB 微信可发。
-  github_url: "https://github.com/zlZayn/ai-batch-raw-to-offline-guide"
+  github_url: "https://zlzayn.github.io/AI-batch-raw-to-offline-guide/"
   tech_stack:
     architecture:
       - Schema-Driven Design
