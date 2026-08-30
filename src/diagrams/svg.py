@@ -184,13 +184,18 @@ class Canvas:
             raise ValueError(
                 f"Connector has {len(points) - 2} bends (points={len(points)}); keep <= 2 bends (points<=4)"
             )
-        # 结构守卫 3：末段 >= 28px，保证 marker 末端到前一弯角间有足够直线
+        # 结构守卫 3：末段 >= 28px。绘制时会从路径终点沿末段前退 7px 放 marker，
+        # 所以 28 末段 → 剩余 21px 可视直线，足够清楚地显示箭头方向。
         last_len = segs[-1][2]
         if last_len < 28:
             raise ValueError(
                 f"Connector last segment ({segs[-1][0]} -> {segs[-1][1]}) = {last_len}px < 28px"
             )
-        path = _rounded_path(points)
+        # 关键：把 connector 路径终点沿末段方向"前退 7px"，使 marker 的 refX=9 顶点
+        # 正好落在原 points[-1]（node 边界坐标）。这样即使 node-mask 画在 connector 之前，
+        # marker 仍"刚好贴着边界显示"，不会伸入节点内部被 mask 吃掉一半。
+        draw_points = _retract_last_point(points, 7)
+        path = _rounded_path(draw_points)
         marker = f"url(#{self.slug}-arrow-{_marker_style(style)})"
         self._layers["connectors"].append(
             f'<path class="connector connector-{escape(style)}" d="{path}" marker-end="{marker}"/>'
@@ -232,9 +237,13 @@ class Canvas:
     def render(self) -> str:
         title = escape(self.title)
         description = escape(self.description)
+        # 图层：zone 背景 → 节点（含不透明 mask，画在连线下方接住"溢出线"但不遮挡末端箭头）
+        #     → connector 线 → connector 末端文字标签（带半透明底盖线）
+        # nodes 在 connectors 前：避免盒子盖掉进入盒边的箭头，但 node-mask 需要配合"箭头
+        # 终点前退"来避免线被 mask 切断后看不见。
         body = "".join(
             element
-            for name in ("zones", "connectors", "nodes", "annotations")
+            for name in ("zones", "nodes", "connectors", "annotations")
             for element in self._layers[name]
         )
         return (
@@ -260,10 +269,14 @@ class Canvas:
         )
 
     def _marker(self, name: str, color: str) -> str:
+        # marker: 箭头">"，箭头顶点 (9,5) 对齐 refX=9，刚好命中 connector 路径终点
+        # （即 node 边界坐标），顶点之后留 1px 余量，markerWidth=10 避免被裁。
+        # 线宽 1.6 与 connector 主线 1.6 对齐，箭头视觉更锐利。
         return (
-            f'<marker id="{self.slug}-arrow-{name}" markerWidth="8" markerHeight="8" '
-            f'refX="7" refY="4" orient="auto"><path d="M0,0.5 L7,4 L0,7.5" fill="none" '
-            f'stroke="{color}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></marker>'
+            f'<marker id="{self.slug}-arrow-{name}" markerWidth="10" markerHeight="10" '
+            f'refX="9" refY="5" orient="auto-start-reverse">'
+            f'<path d="M0.5,0.5 L9,5 L0.5,9.5" fill="none" stroke="{color}" '
+            f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>'
         )
 
     def _styles(self) -> str:
@@ -276,7 +289,7 @@ class Canvas:
 .zone-label,.node-tag,.connector-label text,.label-eyebrow{{font-family:{_MONO};font-size:11px;font-weight:600;letter-spacing:.08em;fill:{t.muted}}}
 .lane rect{{fill:{t.paper};stroke:{t.rule_soft};stroke-width:1}}.lane-tinted rect{{fill:{t.ink};fill-opacity:.018}}
 .lane line{{stroke:{t.rule};stroke-width:1}}.lane-label{{font-family:{_MONO};font-size:11px;font-weight:600;fill:{t.muted};letter-spacing:.06em}}
-.connector{{fill:none;stroke:{t.muted};stroke-width:1.5}}
+.connector{{fill:none;stroke:{t.muted};stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}}
 .connector-accent{{stroke:{t.accent_strong};stroke-width:2}}
 .connector-success{{stroke:{t.success}}}.connector-danger{{stroke:{t.danger}}}
 .connector-dashed{{stroke-dasharray:6 4}}
@@ -429,3 +442,19 @@ def _toward(start: Point, target: Point, distance: int) -> Point:
         return start[0], start[1] + direction * distance
     direction = 1 if target[0] > start[0] else -1
     return start[0] + direction * distance, start[1]
+
+
+def _retract_last_point(points: Sequence[Point], amount: int) -> tuple[Point, ...]:
+    """将 points 最后一点沿末段方向退回 amount px（使 marker 顶点落在原终点）。"""
+    if len(points) < 2:
+        return tuple(points)
+    head = list(points[:-2])
+    prev = points[-2]
+    last = points[-1]
+    length = abs(last[0] - prev[0]) + abs(last[1] - prev[1])
+    if length > amount:
+        new_last = _toward(last, prev, amount)
+        head.append(prev)
+        head.append(new_last)
+        return tuple(head)
+    return tuple(points[:-1] + (prev,))
