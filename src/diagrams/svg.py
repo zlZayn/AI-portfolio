@@ -242,8 +242,9 @@ class Canvas:
 
     def _marker(self, name: str, color: str) -> str:
         return (
-            f'<marker id="{self.slug}-arrow-{name}" markerWidth="8" markerHeight="8" '
-            f'refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="{color}"/></marker>'
+            f'<marker id="{self.slug}-arrow-{name}" markerWidth="10" markerHeight="10" '
+            f'refX="9" refY="5" orient="auto"><path d="M0,0 L9,5 L0,10" fill="none" '
+            f'stroke="{color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>'
         )
 
     def _styles(self) -> str:
