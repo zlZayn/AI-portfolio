@@ -49,9 +49,8 @@ def render() -> str:
     canvas.zone(52, 308, 312, 220, "STAGE 1 / PARALLEL")
     canvas.node(68, 340, 136, 80, "Agent 1", "independent role", "THREAD", fit=True)
     canvas.node(216, 340, 136, 80, "Agent K", "independent role", "THREAD", fit=True)
-    canvas.node(104, 448, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
-    # Agent1 B → Stage1 outputs L (exit at B center then around, horizontal approach into L face)
-    canvas.connector(((136, 420), (72, 420), (72, 484), (104, 484)))
+    canvas.node(104, 456, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
+    canvas.connector(((136, 420), (136, 456)))
     canvas.connector(((300, 420), (300, 480), (264, 480)))
 
     canvas.node(
@@ -80,13 +79,13 @@ def render() -> str:
     canvas.zone(624, 308, 304, 220, "STAGE N / PARALLEL")
     canvas.node(648, 340, 128, 80, "Agent 1", "bridged context", "THREAD", fit=True)
     canvas.node(792, 340, 128, 80, "Agent M", "bridged context", "THREAD", fit=True)
-    canvas.node(704, 448, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
-    canvas.connector(((776, 380), (776, 416), (820, 416), (820, 448)))
-    canvas.connector(((920, 380), (920, 412), (828, 412), (828, 448)))
+    canvas.node(704, 456, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
+    canvas.connector(((712, 420), (712, 456)))
+    canvas.connector(((856, 420), (856, 456)))
 
     canvas.connector(((824, 192), (824, 248), (184, 248), (184, 340)), "launch S1", label_at=(248, 248))
     canvas.connector(((264, 480), (348, 480), (348, 452), (384, 452)), "completed", "accent", (312, 472))
-    canvas.connector(((612, 396), (660, 396), (660, 340), (720, 340)), style="accent")
+    canvas.connector(((612, 396), (648, 396)), style="accent")
 
     # Durable state makes the same engine observable and resumable from CLI or Web.
     canvas.zone(32, 604, 896, 156, "SYNTHESIS / STATE / INTERACTION")
@@ -95,8 +94,8 @@ def render() -> str:
     canvas.node(528, 644, 168, 80, "Web / SSE", "live view / recovery", "OBSERVE", fit=True)
     canvas.node(744, 644, 168, 80, "CONTINUE LOOP", "stored full context", "FOLLOW-UP", fit=True)
 
-    canvas.connector(((184, 524), (184, 576), (112, 576), (112, 644)))
-    canvas.connector(((776, 524), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
+    canvas.connector(((184, 540), (184, 576), (112, 576), (112, 644)))
+    canvas.connector(((776, 540), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
     canvas.connector(((224, 684), (272, 684)))
     canvas.connector(((480, 684), (528, 684)), "recover", label_at=(504, 676))
     canvas.connector(((696, 684), (744, 684)))

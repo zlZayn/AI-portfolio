@@ -40,9 +40,10 @@ def render() -> str:
     canvas.connector(((300, 324), (300, 416), (360, 416)), "MISS", label_at=(328, 408))
     canvas.connector(((440, 456), (440, 492), (608, 492), (608, 456)))
     canvas.connector(((680, 416), (712, 416)))
-    # Cached → VALIDATE：末段从下往上到 B=320（direction=UP，箭头向上进入 B face），保证箭头空腔在 BOX 下方（外部）
-    canvas.connector(((544, 144), (628, 144), (628, 356), (628, 320)), style="accent")
-    canvas.connector(((768, 264), (628, 264), (628, 356), (628, 320)))
+    # Cached → VALIDATE：从右走线到 VALIDATE 顶 face（T=216），垂直末段朝下进入，不绕到 box 下方
+    canvas.connector(((544, 144), (628, 144), (628, 216)), style="accent")
+    # Local execute → VALIDATE：水平直连两 node 间空白，箭头朝左进入右 face
+    canvas.connector(((768, 264), (720, 264)))
     canvas.connector(((720, 268), (768, 268)), style="accent")
     canvas.connector(((840, 216), (840, 172)), style="success")
     canvas.annotation(48, 568, "Full rows never go to AI; invalid signals fall back before execution.", 640)

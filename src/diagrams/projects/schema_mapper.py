@@ -32,7 +32,7 @@ def render() -> str:
     canvas.connector(((840, 208), (840, 304), (400, 304), (400, 372)), "REUSABLE RULES", "accent", (620, 288))
     canvas.connector(((432, 416), (488, 416)))
     canvas.connector(((664, 416), (720, 416)))
-    canvas.connector(((808, 460), (808, 528), (744, 528)), style="success")
+    canvas.connector(((720, 460), (676, 460), (676, 492)), style="success")
     canvas.connector(((840, 460), (840, 492)))
     canvas.connector(((896, 400), (896, 256), (612, 256), (612, 224)), "OPTIONAL REFINE", "dashed", (752, 240))
     canvas.annotation(48, 592, "Token cost follows unique values; row scale stays entirely local.", 600)
