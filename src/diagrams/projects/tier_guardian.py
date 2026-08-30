@@ -13,7 +13,7 @@ def render() -> str:
     canvas.label(32, 32, "THREE LAYERS / TWO CODE-OWNED GATES")
     canvas.zone(152, 64, 232, 344, "Layer 1 / parallel")
 
-    canvas.connector(((112, 220), (136, 220), (136, 132), (176, 132)))
+    canvas.connector(((112, 220), (140, 220), (140, 132), (176, 132)))
     canvas.connector(((112, 236), (148, 236), (148, 340), (176, 340)))
     canvas.connector(((352, 132), (400, 132), (400, 220), (448, 220)))
     canvas.connector(((352, 340), (412, 340), (412, 284), (448, 284)))

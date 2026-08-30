@@ -18,15 +18,15 @@ def render() -> str:
     canvas.connector(((456, 148), (560, 148)), style="accent")
     canvas.connector(((224, 388), (252, 388), (252, 340), (280, 340)))
     canvas.connector(
-        ((440, 340), (464, 340), (464, 288), (536, 288), (536, 304)),
+        ((440, 340), (440, 276), (536, 276), (536, 304)),
         "ENHANCED QUERY",
         "accent",
-        (516, 272),
+        (488, 292),
     )
-    canvas.connector(((656, 188), (656, 260), (572, 260), (572, 304)), "HYBRID INDEX", "default", (716, 244))
+    canvas.connector(((656, 188), (656, 260), (572, 260), (572, 304)), "HYBRID INDEX", "default", (612, 244))
     canvas.connector(((656, 340), (704, 340)))
     canvas.connector(((784, 380), (784, 416)))
-    canvas.connector(((144, 428), (144, 500), (784, 500), (784, 492)), "ORIGINAL QUESTION", "dashed", (464, 484))
+    canvas.connector(((144, 428), (144, 456), (704, 456)), "ORIGINAL QUESTION", "dashed", (424, 440))
 
     canvas.node(64, 112, 160, 72, "Documents", ".md / .txt / .typ", "SOURCE", "muted", fit=True)
     canvas.node(288, 112, 160, 72, "Semantic chunker", "headings keep meaning", "CODE", "focal", fit=True)

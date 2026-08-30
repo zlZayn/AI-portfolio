@@ -47,11 +47,11 @@ def render() -> str:
     # Execution plane: stages are barriers; colleagues inside each stage are parallel.
     canvas.zone(32, 268, 896, 292, "EXECUTION PLANE")
     canvas.zone(52, 308, 312, 220, "STAGE 1 / PARALLEL")
-    canvas.node(68, 348, 136, 80, "Agent 1", "independent role", "THREAD", fit=True)
-    canvas.node(216, 348, 136, 80, "Agent K", "independent role", "THREAD", fit=True)
+    canvas.node(68, 340, 136, 80, "Agent 1", "independent role", "THREAD", fit=True)
+    canvas.node(216, 340, 136, 80, "Agent K", "independent role", "THREAD", fit=True)
     canvas.node(104, 448, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
-    canvas.connector(((136, 428), (136, 448)))
-    canvas.connector(((284, 428), (284, 436), (256, 436), (256, 448)))
+    canvas.connector(((136, 420), (136, 448)))
+    canvas.connector(((300, 420), (264, 420), (264, 448)))
 
     canvas.node(
         384,
@@ -77,15 +77,15 @@ def render() -> str:
     )
 
     canvas.zone(624, 308, 304, 220, "STAGE N / PARALLEL")
-    canvas.node(648, 348, 128, 80, "Agent 1", "bridged context", "THREAD", fit=True)
-    canvas.node(792, 348, 128, 80, "Agent M", "bridged context", "THREAD", fit=True)
+    canvas.node(648, 340, 128, 80, "Agent 1", "bridged context", "THREAD", fit=True)
+    canvas.node(792, 340, 128, 80, "Agent M", "bridged context", "THREAD", fit=True)
     canvas.node(704, 448, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
-    canvas.connector(((712, 428), (712, 448)))
-    canvas.connector(((856, 428), (856, 436), (824, 436), (824, 448)))
+    canvas.connector(((712, 420), (712, 448)))
+    canvas.connector(((832, 420), (864, 420), (864, 448)))
 
-    canvas.connector(((824, 192), (824, 248), (184, 248), (184, 348)), "launch S1", label_at=(248, 248))
-    canvas.connector(((264, 480), (368, 480), (368, 452), (384, 452)), "completed", "accent", (364, 468))
-    canvas.connector(((612, 396), (620, 396), (620, 332), (720, 332), (720, 348)), style="accent")
+    canvas.connector(((824, 192), (824, 248), (184, 248), (184, 340)), "launch S1", label_at=(248, 248))
+    canvas.connector(((264, 480), (356, 480), (356, 452), (384, 452)), "completed", "accent", (312, 472))
+    canvas.connector(((612, 396), (660, 396), (660, 340), (720, 340)), style="accent")
 
     # Durable state makes the same engine observable and resumable from CLI or Web.
     canvas.zone(32, 604, 896, 156, "SYNTHESIS / STATE / INTERACTION")
@@ -94,10 +94,10 @@ def render() -> str:
     canvas.node(528, 644, 168, 80, "Web / SSE", "live view / recovery", "OBSERVE", fit=True)
     canvas.node(744, 644, 168, 80, "CONTINUE LOOP", "stored full context", "FOLLOW-UP", fit=True)
 
-    canvas.connector(((184, 524), (184, 576), (112, 576), (112, 644)))
-    canvas.connector(((776, 524), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
+    canvas.connector(((184, 516), (184, 576), (112, 576), (112, 644)))
+    canvas.connector(((776, 516), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
     canvas.connector(((224, 684), (272, 684)))
     canvas.connector(((480, 684), (528, 684)), "recover", label_at=(504, 676))
     canvas.connector(((696, 684), (744, 684)))
-    canvas.connector(((828, 724), (828, 748), (376, 748), (376, 740)), "read + persist", "dashed", (604, 748))
+    canvas.connector(((828, 724), (828, 760), (380, 760), (380, 732)), "read + persist", "dashed", (604, 752))
     return canvas.render()

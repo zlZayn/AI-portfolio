@@ -44,7 +44,7 @@ def render() -> str:
     canvas.connector(((336, 424), (336, 512), (124, 512), (124, 576)), "run")
     canvas.connector(((192, 620), (272, 620)), "GENERATE", "accent")
     canvas.connector(((448, 620), (480, 620)), "IMAGE", "success")
-    canvas.connector(((540, 576), (540, 516), (880, 516), (880, 372), (768, 372)), "REBOUND", "dashed")
+    canvas.connector(((540, 576), (648, 576), (648, 372)), "REBOUND", "dashed")
     canvas.connector(((540, 664), (540, 696), (752, 696), (752, 664)), "STORE BY SHA1")
 
     canvas.annotation(32, 748, "WORKFLOW FILES STORE REGISTRY IDS / NEVER PATHS", 640)

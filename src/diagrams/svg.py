@@ -168,9 +168,28 @@ class Canvas:
             raise ValueError("A connector needs at least two points")
         for point in points:
             self._check_grid(*point)
-        for start, end in zip(points, points[1:]):
+        segs: list[tuple[Point, Point, int]] = []
+        for idx, (start, end) in enumerate(zip(points, points[1:])):
             if start[0] != end[0] and start[1] != end[1]:
                 raise ValueError(f"Connector segment is diagonal: {start} -> {end}")
+            length = abs(end[0] - start[0]) + abs(end[1] - start[1])
+            segs.append((start, end, length))
+            # 结构守卫 1：每段 >= 28px（圆角 radius=8 占两端各 8，剩 >=12px 直线；且箭头不挤压）
+            if length < 28:
+                raise ValueError(
+                    f"Connector segment #{idx + 1} {start} -> {end} too short ({length}px < 28px)"
+                )
+        # 结构守卫 2：弯折次数 (len(points)-2) <= 2，即 points <= 4
+        if len(points) > 4:
+            raise ValueError(
+                f"Connector has {len(points) - 2} bends (points={len(points)}); keep <= 2 bends (points<=4)"
+            )
+        # 结构守卫 3：末段 >= 28px，保证 marker 末端到前一弯角间有足够直线
+        last_len = segs[-1][2]
+        if last_len < 28:
+            raise ValueError(
+                f"Connector last segment ({segs[-1][0]} -> {segs[-1][1]}) = {last_len}px < 28px"
+            )
         path = _rounded_path(points)
         marker = f"url(#{self.slug}-arrow-{_marker_style(style)})"
         self._layers["connectors"].append(
@@ -242,9 +261,9 @@ class Canvas:
 
     def _marker(self, name: str, color: str) -> str:
         return (
-            f'<marker id="{self.slug}-arrow-{name}" markerWidth="10" markerHeight="10" '
-            f'refX="9" refY="5" orient="auto"><path d="M0,0 L9,5 L0,10" fill="none" '
-            f'stroke="{color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>'
+            f'<marker id="{self.slug}-arrow-{name}" markerWidth="8" markerHeight="8" '
+            f'refX="7" refY="4" orient="auto"><path d="M0,0.5 L7,4 L0,7.5" fill="none" '
+            f'stroke="{color}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></marker>'
         )
 
     def _styles(self) -> str:
