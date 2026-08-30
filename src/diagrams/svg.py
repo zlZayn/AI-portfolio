@@ -93,8 +93,13 @@ class Canvas:
         subtitle: TextLines = "",
         tag: str = "",
         kind: str = "default",
+        fit: bool = False,
     ) -> None:
+        # 健壮性：fit=True 时按标题/副标题/角标内容自适应宽高，文字天然不超框。
+        if fit:
+            width, height = self._fit_node_size(width, height, title, subtitle, tag)
         self._check_grid(x, y, width, height)
+        self._guard_node_fit(width, height, title, subtitle, tag)
         classes = f"node node-{escape(kind)}"
         parts = [
             f'<g class="{classes}">',
@@ -289,6 +294,46 @@ class Canvas:
             if value % 4:
                 raise ValueError(f"Value {value} is outside the 4 px grid")
 
+    def _fit_node_size(self, width: int, height: int, title, subtitle, tag: str) -> tuple[int, int]:
+        """按标题/副标题/角标内容自适应节点宽高，保证文本落在框内（可缩可放）。"""
+        title_size = 14 if self.typography == "expanded" else 13
+        lines = title if isinstance(title, (tuple, list)) else (title,)
+        line_count = len(lines)
+        title_width = max((_text_width(line, title_size) for line in lines), default=0)
+        subtitle_width = _text_width(subtitle, 10, mono=True) if subtitle else 0
+        tag_width = len(tag) * 7 + 12 if tag else 0
+        inner = max(title_width, subtitle_width, tag_width)
+        # 水平：左右各 14px 内边距，再留 6px 防字宽测量误差。
+        width = max(width, _grid_ceil(inner + 2 * 14 + 6))
+
+        if tag:
+            title_y = (48 if self.typography == "expanded" else 44) if line_count > 1 else 40
+        else:
+            title_y = 28
+        title_bottom = _tspan_bottom(title_y, line_count, 16)
+        if subtitle:
+            expanded_spacing = 4 * (line_count - 1) if self.typography == "expanded" else 0
+            body_bottom = _tspan_bottom(title_bottom + 20 + expanded_spacing, 1, 12)
+        else:
+            body_bottom = title_bottom + 6
+        height = max(height, _grid_ceil(body_bottom + 14))
+        return width, height
+
+    def _guard_node_fit(self, width: int, height: int, title, subtitle, tag: str) -> None:
+        """渲染期溢出守卫：任何一行文本超出容器即报错，而不是渲染后才被肉眼发现。"""
+        title_size = 14 if self.typography == "expanded" else 13
+        lines = title if isinstance(title, (tuple, list)) else (title,)
+        inner_width = width - 28
+        for line in lines:
+            if _text_width(line, title_size) > inner_width:
+                trunced = line if len(line) <= 24 else line[:21] + "..."
+                raise ValueError(f"node title '{trunced}' (est. {_text_width(line, title_size):.0f}px) "
+                                 f"exceeds box width {inner_width}px")
+        if subtitle and _text_width(subtitle, 10, mono=True) > inner_width:
+            raise ValueError(f"node subtitle '{subtitle}' exceeds box width {inner_width}px")
+        if tag and len(tag) * 7 + 12 > inner_width:
+            raise ValueError(f"node tag '{tag}' exceeds box width {inner_width}px")
+
     @staticmethod
     def _multiline_text(x: int, y: int, lines: TextLines, css_class: str, gap: int) -> str:
         values = (lines,) if isinstance(lines, str) else tuple(lines)
@@ -308,6 +353,28 @@ def _grid_ceil(value: int) -> int:
 
 def _line_count(lines: TextLines) -> int:
     return 1 if isinstance(lines, str) else len(lines)
+
+
+# --- 健壮性：按内容测量文本宽度，避免文字超框位第 1 位。
+
+# 全角 / CJK 范围及其常用标点按整字宽计，ASCII 按比例计，形成保守的像素估计。
+_WIDE_MARKS = set("，。！？；：、（）《》「」『』—…·‘’“”：")
+
+
+def _char_width(ch: str, size: int, mono: bool) -> float:
+    if ord(ch) > 0x2E80 or ch in _WIDE_MARKS:
+        return float(size)
+    return size * (0.62 if mono else 0.55)
+
+
+def _text_width(text: str, size: int, mono: bool = False) -> float:
+    """估算单行文本像素宽度，CJK 感知且偏保守（宁大勿小）。"""
+    return sum(_char_width(c, size, mono) for c in text)
+
+
+def _tspan_bottom(title_y: int, line_count: int, gap: int) -> int:
+    """多行 tspans 以首行中线 title_y 为基准、向下以 gap 步进，返回最后一行基线。"""
+    return title_y + (line_count - 1) * gap
 
 
 def _marker_style(style: ConnectorStyle) -> str:
