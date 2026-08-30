@@ -27,7 +27,7 @@ def render() -> str:
     canvas.connector(((200, 160), (240, 160)))
     canvas.connector(((388, 160), (432, 160)), style="accent")
     canvas.connector(((592, 160), (672, 160)))
-    canvas.connector(((512, 228), (512, 180), (760, 180), (760, 208)), "VALIDATES", "accent", (636, 196))
+    canvas.connector(((592, 264), (800, 264), (800, 208)), "VALIDATES", "accent", (700, 252))
     canvas.connector(((672, 128), (672, 88), (312, 88), (312, 120)), "FIX INVALID REFS", "dashed", (492, 72))
     canvas.connector(((760, 208), (760, 328), (360, 328), (360, 396)), "VALID DATA", "success", (560, 312))
     canvas.connector(((512, 304), (512, 360), (408, 360), (408, 396)), "DRIVES BUILD", "accent", (460, 344))

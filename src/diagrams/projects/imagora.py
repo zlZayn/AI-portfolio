@@ -30,8 +30,8 @@ def render() -> str:
     canvas.node(492, 336, 120, 72, "Prompt node", "chain step", "NODE", fit=True)
     canvas.node(648, 336, 120, 72, "Result node", "auto-image-node", "REBOUND", "success", fit=True)
     canvas.connector(((612, 372), (648, 372)))
-    canvas.connector(((708, 408), (708, 444), (552, 444), (552, 408)), "RELINK", "dashed")
-    canvas.connector(((180, 416), (180, 452), (336, 452), (336, 424)), "ONE-CLICK RESTORE", "dashed")
+    canvas.connector(((648, 372), (612, 372)), "RELINK", "dashed")
+    canvas.connector(((180, 416), (180, 456), (232, 456), (232, 388)), "ONE-CLICK RESTORE", "dashed")
 
     # Zone C: one pipeline, the asset registry, and the only upstream.
     canvas.zone(32, 528, 896, 188, "ONE PIPELINE / ASSETS / UPSTREAM")
@@ -42,8 +42,8 @@ def render() -> str:
 
     canvas.connector(((132, 416), (132, 576)), "submit")
     canvas.connector(((336, 424), (336, 512), (124, 512), (124, 576)), "run")
-    canvas.connector(((192, 620), (272, 620)), "GENERATE", "accent")
-    canvas.connector(((448, 620), (480, 620)), "IMAGE", "success")
+    canvas.connector(((204, 620), (272, 620)), "GENERATE", "accent")
+    canvas.connector(((368, 576), (368, 540), (544, 540), (544, 576)), "IMAGE", "success")
     canvas.connector(((540, 576), (648, 576), (648, 372)), "REBOUND", "dashed")
     canvas.connector(((540, 664), (540, 696), (752, 696), (752, 664)), "STORE BY SHA1")
 

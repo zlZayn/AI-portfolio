@@ -18,10 +18,10 @@ def render() -> str:
     canvas.connector(((176, 148), (240, 148)))
     canvas.connector(((176, 340), (240, 340)))
     canvas.connector(((368, 148), (400, 148), (400, 212), (440, 212)))
-    canvas.connector(((368, 340), (412, 340), (412, 260), (440, 260)))
+    canvas.connector(((368, 340), (408, 340), (408, 260), (440, 260)))
     canvas.connector(((616, 236), (664, 236), (664, 148)), style="accent")
     canvas.connector(((736, 188), (736, 320)), "CODE TOOLS", "default", (776, 252))
-    canvas.connector(((812, 356), (876, 356), (876, 288)), style="default")
+    canvas.connector(((812, 356), (876, 356), (876, 292)), style="default")
     canvas.connector(((808, 148), (876, 148), (876, 216)), "READ ONLY", "dashed", (848, 132))
 
     canvas.node(48, 112, 128, 72, "MCP host", "JSON-RPC", "CLIENT", "muted", fit=True)

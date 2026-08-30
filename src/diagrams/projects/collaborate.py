@@ -50,8 +50,9 @@ def render() -> str:
     canvas.node(68, 340, 136, 80, "Agent 1", "independent role", "THREAD", fit=True)
     canvas.node(216, 340, 136, 80, "Agent K", "independent role", "THREAD", fit=True)
     canvas.node(104, 448, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
-    canvas.connector(((136, 420), (136, 448)))
-    canvas.connector(((300, 420), (264, 420), (264, 448)))
+    # Agent1 B → Stage1 outputs L (exit at B center then around, horizontal approach into L face)
+    canvas.connector(((136, 420), (72, 420), (72, 484), (104, 484)))
+    canvas.connector(((300, 420), (300, 480), (264, 480)))
 
     canvas.node(
         384,
@@ -80,11 +81,11 @@ def render() -> str:
     canvas.node(648, 340, 128, 80, "Agent 1", "bridged context", "THREAD", fit=True)
     canvas.node(792, 340, 128, 80, "Agent M", "bridged context", "THREAD", fit=True)
     canvas.node(704, 448, 160, 68, "Stage outputs", "successful only", "FILES", "store", fit=True)
-    canvas.connector(((712, 420), (712, 448)))
-    canvas.connector(((832, 420), (864, 420), (864, 448)))
+    canvas.connector(((776, 380), (776, 416), (820, 416), (820, 448)))
+    canvas.connector(((920, 380), (920, 412), (828, 412), (828, 448)))
 
     canvas.connector(((824, 192), (824, 248), (184, 248), (184, 340)), "launch S1", label_at=(248, 248))
-    canvas.connector(((264, 480), (356, 480), (356, 452), (384, 452)), "completed", "accent", (312, 472))
+    canvas.connector(((264, 480), (348, 480), (348, 452), (384, 452)), "completed", "accent", (312, 472))
     canvas.connector(((612, 396), (660, 396), (660, 340), (720, 340)), style="accent")
 
     # Durable state makes the same engine observable and resumable from CLI or Web.
@@ -94,10 +95,10 @@ def render() -> str:
     canvas.node(528, 644, 168, 80, "Web / SSE", "live view / recovery", "OBSERVE", fit=True)
     canvas.node(744, 644, 168, 80, "CONTINUE LOOP", "stored full context", "FOLLOW-UP", fit=True)
 
-    canvas.connector(((184, 516), (184, 576), (112, 576), (112, 644)))
-    canvas.connector(((776, 516), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
+    canvas.connector(((184, 524), (184, 576), (112, 576), (112, 644)))
+    canvas.connector(((776, 524), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
     canvas.connector(((224, 684), (272, 684)))
     canvas.connector(((480, 684), (528, 684)), "recover", label_at=(504, 676))
     canvas.connector(((696, 684), (744, 684)))
-    canvas.connector(((828, 724), (828, 760), (380, 760), (380, 732)), "read + persist", "dashed", (604, 752))
+    canvas.connector(((828, 644), (828, 600), (380, 600), (380, 636)), "read + persist", "dashed", (604, 596))
     return canvas.render()

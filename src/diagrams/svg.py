@@ -142,10 +142,13 @@ class Canvas:
         focal: bool = False,
     ) -> None:
         self._check_grid(cx, cy, width, height)
+        x, y = cx - width // 2, cy - height // 2
         points = f"{cx},{cy - height // 2} {cx + width // 2},{cy} {cx},{cy + height // 2} {cx - width // 2},{cy}"
         kind = " decision-focal" if focal else ""
         parts = [
             f'<g class="decision{kind}">',
+            # Bounding rect mask (配合 connector 气隙自检；视觉透明不画内容)
+            f'<rect class="decision-mask-rect" x="{x}" y="{y}" width="{width}" height="{height}" fill="none" stroke="none"/>',
             f'<polygon class="decision-mask" points="{points}"/>',
             f'<polygon class="decision-box" points="{points}"/>',
             self._multiline_text(cx, cy - (4 if subtitle else 0), title, "decision-title", 16),
@@ -184,30 +187,66 @@ class Canvas:
             raise ValueError(
                 f"Connector has {len(points) - 2} bends (points={len(points)}); keep <= 2 bends (points<=4)"
             )
-        # 结构守卫 3：末段 >= 28px。绘制时会从路径终点沿末段前退 7px 放 marker，
-        # 所以 28 末段 → 剩余 21px 可视直线，足够清楚地显示箭头方向。
+        # 结构守卫 3：末段 >= 32px（推 4 + 缩 4 + 箭头两笔占 9px 空腔 + 末段直线余量）
         last_len = segs[-1][2]
-        if last_len < 28:
+        if last_len < 32:
             raise ValueError(
-                f"Connector last segment ({segs[-1][0]} -> {segs[-1][1]}) = {last_len}px < 28px"
+                f"Connector last segment ({segs[-1][0]} -> {segs[-1][1]}) = {last_len}px < 32px"
             )
-        # 关键：渲染前把 connector 两端从节点边界"抽出来"避免与节点描边重叠。
-        #   - 起点沿首段方向"远离节点" 4px：线起端与源节点边框之间留 4px 气隙
-        #   - 终点从末段方向"回退 9px"：marker refX=9 顶点恰好落在原 points[-1]（节点边界），
-        #     这样 connector 线末端到节点边框之间留 9px 的箭头空腔 + 气隙，不再贴。
+        # 守卫 4：末段纯轴对齐（保证手画箭头的方向正确）
+        prev = points[-2]
+        last = points[-1]
+        if not (
+            (prev[0] == last[0] and prev[1] != last[1])
+            or (prev[1] == last[1] and prev[0] != last[0])
+        ):
+            raise ValueError(f"Connector last segment not orthogonal: {prev} -> {last}")
+
+        # 布局气隙与"箭头不歪"策略（draw.io / Lucidchart 正交渲染标准做法）：
+        #   1. 起点沿首段方向推出 4px → 源端留 4px 气隙，不贴 node 描边抗锯齿糊
+        #   2. 主 path 终点缩回 4px → 终点留 4px 气隙，箭头两笔 V 形放这 4×9px 空腔
+        #   3. 放弃 SVG marker，手算轴向"V"两笔 → 绝对不被圆角末端切线方向拐歪
+        #   4. _rounded_path(keep_last_straight=True) 让最后一段全直线、不走圆弧
         render_points = _push_first_point(points, 4)
-        render_points = _retract_last_point(render_points, 9)
-        path = _rounded_path(render_points)
-        marker = f"url(#{self.slug}-arrow-{_marker_style(style)})"
+        render_points = _retract_last_point(render_points, 4)
+        path = _rounded_path(render_points, keep_last_straight=True)
+        style_esc = escape(style)
         self._layers["connectors"].append(
-            f'<path class="connector connector-{escape(style)}" d="{path}" marker-end="{marker}"/>'
+            f'<path class="connector connector-{style_esc}" d="{path}"/>'
+        )
+        # 手画箭头 ">"：顶点 head 精确落在用户给的 points[-1]（node 边界坐标）
+        last_dx = last[0] - prev[0]
+        last_dy = last[1] - prev[1]
+        if last_dx != 0:  # 水平末段
+            sign = 1 if last_dx > 0 else -1
+            back_x = last[0] - 9 * sign
+            Lp = (back_x, last[1] - 4.5)
+            Rp = (back_x, last[1] + 4.5)
+            arrow_d = f"M {Lp[0]} {Lp[1]} L {last[0]} {last[1]} L {Rp[0]} {Rp[1]}"
+        else:  # 垂直末段
+            sign = 1 if last_dy > 0 else -1
+            back_y = last[1] - 9 * sign
+            Lp = (last[0] - 4.5, back_y)
+            Rp = (last[0] + 4.5, back_y)
+            arrow_d = f"M {Lp[0]} {Lp[1]} L {last[0]} {last[1]} L {Rp[0]} {Rp[1]}"
+        # accent 线宽用 2，其他 1.6
+        sw = "2" if style == "accent" else "1.6"
+        accent_class = " connector-accent" if style == "accent" else ""
+        success_class = " connector-success" if style == "success" else ""
+        danger_class = " connector-danger" if style == "danger" else ""
+        arrow_class = f"{accent_class}{success_class}{danger_class}".strip()
+        if arrow_class:
+            arrow_class = f" {arrow_class}"
+        self._layers["connectors"].append(
+            f'<path class="connector{arrow_class}" d="{arrow_d}" fill="none" '
+            f'stroke-linecap="round" stroke-linejoin="round" stroke-width="{sw}"/>'
         )
         if label:
             x, y = label_at or _label_position(points)
             self._check_grid(x, y)
             mask_width = max(40, _grid_ceil(len(label) * 7 + 16))
             self._layers["annotations"].append(
-                f'<g class="connector-label connector-label-{style}">'
+                f'<g class="connector-label connector-label-{style_esc}">'
                 f'<rect x="{x - mask_width // 2}" y="{y - 16}" '
                 f'width="{mask_width}" height="16" rx="4"/><text x="{x}" y="{y - 4}" '
                 f'text-anchor="middle">{escape(label.upper())}</text></g>'
@@ -423,13 +462,26 @@ def _label_position(points: Sequence[Point]) -> Point:
     return _grid_ceil((start[0] + end[0]) // 2), _grid_ceil((start[1] + end[1]) // 2)
 
 
-def _rounded_path(points: Sequence[Point], radius: int = 8) -> str:
+def _rounded_path(points: Sequence[Point], radius: int = 8, keep_last_straight: bool = False) -> str:
     commands = [f"M {points[0][0]} {points[0][1]}"]
-    for index in range(1, len(points) - 1):
+    # keep_last_straight：保证最后一段 (points[-2]->points[-1]) 是纯直线段。
+    # 做法：对所有在 range(1, last_corner_to_round) 的拐角做圆角（Q），
+    # 若 keep_last_straight 且至少有 2 个拐角（len>=4），则最后拐角（index = len-2）
+    # 不做圆角，用直 L 到拐角再 L 到终点；否则会把最后拐角直接"切掉"变斜线。
+    if keep_last_straight and len(points) >= 4:
+        last_corner_to_round = len(points) - 3  # index (len-2) = 最后拐角留直线
+        skipped_last_corner = True
+    else:
+        last_corner_to_round = len(points) - 2
+        skipped_last_corner = False
+    for index in range(1, last_corner_to_round + 1):
         previous, corner, following = points[index - 1], points[index], points[index + 1]
         before = _toward(corner, previous, min(radius, _distance(previous, corner) // 2))
         after = _toward(corner, following, min(radius, _distance(corner, following) // 2))
         commands.extend((f"L {before[0]} {before[1]}", f"Q {corner[0]} {corner[1]} {after[0]} {after[1]}"))
+    if skipped_last_corner:
+        # 画出最后那个未圆角的拐角（保证末段全直线，不直接跳终点变成斜线）
+        commands.append(f"L {points[-2][0]} {points[-2][1]}")
     commands.append(f"L {points[-1][0]} {points[-1][1]}")
     return " ".join(commands)
 
