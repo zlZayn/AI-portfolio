@@ -191,11 +191,13 @@ class Canvas:
             raise ValueError(
                 f"Connector last segment ({segs[-1][0]} -> {segs[-1][1]}) = {last_len}px < 28px"
             )
-        # 关键：把 connector 路径终点沿末段方向"前退 7px"，使 marker 的 refX=9 顶点
-        # 正好落在原 points[-1]（node 边界坐标）。这样即使 node-mask 画在 connector 之前，
-        # marker 仍"刚好贴着边界显示"，不会伸入节点内部被 mask 吃掉一半。
-        draw_points = _retract_last_point(points, 7)
-        path = _rounded_path(draw_points)
+        # 关键：渲染前把 connector 两端从节点边界"抽出来"避免与节点描边重叠。
+        #   - 起点沿首段方向"远离节点" 4px：线起端与源节点边框之间留 4px 气隙
+        #   - 终点从末段方向"回退 9px"：marker refX=9 顶点恰好落在原 points[-1]（节点边界），
+        #     这样 connector 线末端到节点边框之间留 9px 的箭头空腔 + 气隙，不再贴。
+        render_points = _push_first_point(points, 4)
+        render_points = _retract_last_point(render_points, 9)
+        path = _rounded_path(render_points)
         marker = f"url(#{self.slug}-arrow-{_marker_style(style)})"
         self._layers["connectors"].append(
             f'<path class="connector connector-{escape(style)}" d="{path}" marker-end="{marker}"/>'
@@ -458,3 +460,16 @@ def _retract_last_point(points: Sequence[Point], amount: int) -> tuple[Point, ..
         head.append(new_last)
         return tuple(head)
     return tuple(points[:-1] + (prev,))
+
+
+def _push_first_point(points: Sequence[Point], amount: int) -> tuple[Point, ...]:
+    """将 points 起点沿首段方向远离 amount px（线起端不贴源节点边框）。"""
+    if len(points) < 2:
+        return tuple(points)
+    first = points[0]
+    second = points[1]
+    length = abs(second[0] - first[0]) + abs(second[1] - first[1])
+    if length > amount:
+        new_first = _toward(first, second, amount)
+        return (new_first,) + tuple(points[1:])
+    return tuple(points)
