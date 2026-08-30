@@ -251,7 +251,8 @@ class Canvas:
         return f"""<style>
 .editorial-diagram text{{font-family:{_SANS};fill:{t.ink};letter-spacing:0}}
 .zone>rect:first-child{{fill:{t.ink};fill-opacity:.018;stroke:{t.rule};stroke-width:1}}
-.zone-label-mask,.connector-label rect{{fill:{t.paper}}}
+.zone-label-mask{{fill:{t.paper}}}
+.connector-label rect{{fill:{t.paper};fill-opacity:.82}}
 .zone-label,.node-tag,.connector-label text,.label-eyebrow{{font-family:{_MONO};font-size:11px;font-weight:600;letter-spacing:.08em;fill:{t.muted}}}
 .lane rect{{fill:{t.paper};stroke:{t.rule_soft};stroke-width:1}}.lane-tinted rect{{fill:{t.ink};fill-opacity:.018}}
 .lane line{{stroke:{t.rule};stroke-width:1}}.lane-label{{font-family:{_MONO};font-size:11px;font-weight:600;fill:{t.muted};letter-spacing:.06em}}
