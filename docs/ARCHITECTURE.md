@@ -70,7 +70,7 @@ Diagram types follow `cathrynlavery/diagram-design` 2.4. Type selection reflects
 
 Each diagram emphasizes one architectural claim:
 
-- `decision-maker`: cache hits reuse semantic signals; misses request compact AI codes; code still validates, assembles, and executes every write.
+- `decision-maker`: cache hits reuse semantic signals at zero token cost; misses escalate through three engines (local lookup, probability engine, generative model), each gated by code; code still validates, assembles, and executes every write.
 - `rag-embed`: enhanced queries retrieve context while the original question reaches the answer model.
 - `schema-mapper`: only unique values reach AI; full rows bypass AI and follow a local mapping, inference, polishing, validation, and reporting path.
 - `tool-calling`: MCP and Function Calling share one tool registry and guarded runtime.

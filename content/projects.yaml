@@ -14,10 +14,14 @@ projects:
 
     校验层：场景码非法→S0，信号码非法→X，字段不存在→丢弃。每次 Prompt 末尾
     以"输出："约束格式。温度 \(t = 0\)，thinking = off（分类任务不需要深度推
-    理，省 50% 费用、4 倍速度）。
+    理，省 50% 费用、4 倍速度）。<br><br>
+
+    接入 Jev（TypeSafe System One）后验证了这条原则的普适性：闭集判断交给
+    概率引擎，输出是分布而非文本——非法值在结构上无法表示；开放生成仍留给
+    LLM。实测两条链路结论一致。
   ai_role: 识别字段类型（每字段 1 字符）
   code_role: 执行清洗操作
-  metric: < 100 tokens
+  metric: 缓存命中 0 tokens
   grid_overview: >-
     两条链路一条原则：AI 只做语义识别，输出 1 字符信号码后全部由代码执行。
     缓存命中时零 token。适合数据结构已知但字段命名不统一的 CSV 清洗场景。
@@ -34,12 +38,14 @@ projects:
   highlights:
   - title: 信号码系统 + 校验层
     text: 单字符编码（G=性别 A=年龄 D=科室），同时是类型标签和操作路由键。AI 输出经三层校验后落地。非法码回退安全默认值，防止幻觉传播。
-    metric: < 100 tokens/run
+    metric: 缓存命中 0 tokens
   - title: MD5 指纹 + 代码哈希双重缓存
-    text: 指纹 = \(\text{MD5}(\text{字段名排序} + \sum \text{样本MD5}[:8])\)。缓存附带 \(\text{code\_hash} = \text{SHA256}(\text{路由表} + \text{注册表})\)，代码变更自动全量失效。
+    text: 指纹 = \(\text{MD5}(\text{字段名排序} + \sum \text{样本MD5}[:8])\)。缓存附带 \(\text{code\_hash} = \text{SHA256}(\text{路由表} + \text{注册表})\)；缓存按引擎分区，切引擎只失效对应命名空间。
     metric: 0 tokens on hit
   - title: 可扩展 Operation 注册
     text: 新增字段类型只需创建 Operation 子类注册到 OPERATION_REGISTRY，无需改 AI prompt。支持 1:N 分列操作（CurrencySplitter 把一列金额拆为数值+币种两列）。
+  - title: 判断与生成是两种能力
+    text: 场景识别、字段打码、有序性判断——答案集合在请求时就封闭。这类判断用概率引擎（Jev）比生成模型更干净：输出是概率分布，选项即白名单，非法值不可表示。开放生成留给 LLM。实测两条链路结论一致；Jev 成本更高（清洗 1.9×、分类 3.5×），优势在延迟、失败模式、可审计。
   - title: 两层 AI + R 自动选统计方法
     text: LLM 粗筛分类变量 → 细判有序/无序 → R 根据变量组合自动选 \(\rho\) / \(V\) / \(H\) / \(\chi^2\)，输出 report.xlsx（4 Sheet）。
 

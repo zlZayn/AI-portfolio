@@ -25,7 +25,7 @@ Replace the eight Mermaid flowcharts with project-specific editorial SVG diagram
 
 | Project | Visual type | Architectural story | Focal idea |
 | --- | --- | --- | --- |
-| AI-decision-maker | Flowchart | Fingerprint cache reuses semantic signals; misses request constrained scene and field codes before validation, registry assembly, and local execution | AI proposes signals; code owns every write |
+| AI-decision-maker | Flowchart | Fingerprint cache reuses semantic signals; misses escalate through local lookup, a probability engine, and a generative model before validation, registry assembly, and local execution | AI proposes probabilities; code owns every decision |
 | AI-RAG-embed | Architecture | Build and query zones connect semantic chunks, dual indexes, enhanced retrieval, and the original-question bypass | Query enhancement never contaminates the answer prompt |
 | AI-schema-mapper | Architecture | Unique values reach AI to create a reusable rule asset while full rows bypass AI through local mapping, inference, polishing, validation, and reporting | AI cost scales with unique values, not row count |
 | AI-tool-calling | Architecture | MCP and direct Function Calling converge on one registry before entering a guarded execution boundary | One tool definition serves two protocols |
