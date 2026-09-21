@@ -3,16 +3,17 @@
 ## 全局规则
 - 架构设计 → [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - 双件分离：AGENTS.md 只写规则，README.md 只写文件职责与变更路由
-- index.html 是构建产物，只许 build.py 重新生成，禁止手动编辑
+- index.html 与 diagrams/*.svg 是构建产物，只许 build.py 重新生成，禁止手动编辑
 - 快照数据 → [content/data-tables/README.md](content/data-tables/README.md)，刷新后必须重建并跑测试
 
 ## 常用命令
-- `uv run python build.py` — 重建 index.html
+- `uv run python build.py` — 重建 index.html，并导出 diagrams/<slug>.svg
 - `uv run pytest` — 跑测试（等价 `uv run python -m unittest discover -s tests`）
 
 ## 验证快照（2026-08-24 实测）
-- pytest: 26 passed / 0 failed（pytest 9.1.1，dev 依赖组 [dependency-groups]）
+- pytest: 27 passed / 0 failed（pytest 9.1.1，dev 依赖组 [dependency-groups]）
 - 构建: 连续两次构建字节一致（由测试覆盖）
+- 图表导出: 9 个 diagrams/*.svg，与 index.html 内嵌件逐字节一致（由测试覆盖）
 
 ## 待办
 - （暂无）

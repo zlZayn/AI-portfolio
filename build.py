@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Assemble all sources into a single self-contained HTML page.
-Orchestrates: YAML data --> inline images --> data tables --> editorial SVG diagrams --> Jinja2 render
+Orchestrates: YAML data --> inline images --> data tables --> editorial SVG diagrams
+              (also exported one file per diagram) --> Jinja2 render
 """
 
 import yaml
@@ -18,6 +19,7 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
 IMAGES_DIR = BASE_DIR / "images"
 OUTPUT_PATH = BASE_DIR / "index.html"
+DIAGRAMS_DIR = BASE_DIR / "diagrams"
 
 
 def _load_yaml(filename: str) -> dict:
@@ -83,6 +85,18 @@ def _inline_images(projects: list) -> None:
         project["screenshots"] = screenshots
 
 
+def _export_diagrams(diagrams: dict, out_dir: Path = DIAGRAMS_DIR) -> None:
+    """Export every diagram as a standalone .svg alongside the single-page build.
+
+    The rendered markup is self-contained (inlined <style>, xmlns), so each file
+    opens on its own. Content is byte-identical to what index.html embeds.
+    """
+    out_dir.mkdir(exist_ok=True)
+    for slug, svg in sorted(diagrams.items()):
+        (out_dir / f"{slug}.svg").write_text(svg, encoding="utf-8", newline="\n")
+    print(f"Exported {len(diagrams)} diagrams -> {out_dir}")
+
+
 def assemble(output_path: Path = OUTPUT_PATH) -> None:
     profile = _load_yaml("profile.yaml")
     projects = _load_yaml("projects.yaml")["projects"]
@@ -97,6 +111,7 @@ def assemble(output_path: Path = OUTPUT_PATH) -> None:
 
     print("Rendering diagrams...")
     diagrams = render_diagrams()
+    _export_diagrams(diagrams)
     for p in projects:
         d = diagrams.get(p["id"])
         if d:
