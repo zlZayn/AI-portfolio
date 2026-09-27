@@ -2,7 +2,7 @@
 
 ## 全局规则
 - 架构设计 → [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- 双件分离：AGENTS.md 只写规则，README.md 只写文件职责与变更路由
+- 双件分离：AGENTS.md 只写规则，README.md 只写是什么/怎么改
 - index.html 与 diagrams/*.svg 是构建产物，只许 build.py 重新生成，禁止手动编辑
 - 快照数据 → [content/data-tables/README.md](content/data-tables/README.md)，刷新后必须重建并跑测试
 
