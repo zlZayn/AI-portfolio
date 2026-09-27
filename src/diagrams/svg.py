@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import itertools
+from collections.abc import Sequence
 from html import escape
 from math import ceil
-from typing import Literal, Sequence
+from typing import Literal
 
 from .theme import THEME, Theme
 
@@ -105,10 +107,10 @@ class Canvas:
             tag_width = max(32, _grid_ceil(len(tag) * 7 + 16))
             parts.extend(
                 (
-                    f'<rect class="node-tag-box" x="{x + 12}" y="{y + 8}" width="{tag_width}" '
-                    f'height="16" rx="4"/>',
-                    f'<text class="node-tag" x="{x + 12 + tag_width / 2:g}" y="{y + 20}" '
-                    f'text-anchor="middle">{escape(tag.upper())}</text>',
+                    (f'<rect class="node-tag-box" x="{x + 12}" y="{y + 8}" width="{tag_width}" '
+                    f'height="16" rx="4"/>'),
+                    (f'<text class="node-tag" x="{x + 12 + tag_width / 2:g}" y="{y + 20}" '
+                    f'text-anchor="middle">{escape(tag.upper())}</text>'),
                 )
             )
         if tag:
@@ -163,7 +165,7 @@ class Canvas:
             raise ValueError("A connector needs at least two points")
         for point in points:
             self._check_grid(*point)
-        for start, end in zip(points, points[1:]):
+        for start, end in itertools.pairwise(points):
             if start[0] != end[0] and start[1] != end[1]:
                 raise ValueError(f"Connector segment is diagonal: {start} -> {end}")
         path = _rounded_path(points)
@@ -315,7 +317,7 @@ def _marker_style(style: ConnectorStyle) -> str:
 
 
 def _label_position(points: Sequence[Point]) -> Point:
-    segments = list(zip(points, points[1:]))
+    segments = list(itertools.pairwise(points))
     start, end = max(segments, key=lambda pair: abs(pair[1][0] - pair[0][0]) + abs(pair[1][1] - pair[0][1]))
     return _grid_ceil((start[0] + end[0]) // 2), _grid_ceil((start[1] + end[1]) // 2)
 

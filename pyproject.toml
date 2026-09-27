@@ -6,4 +6,11 @@ requires-python = ">=3.12"
 dependencies = ["jinja2", "pyyaml"]
 
 [dependency-groups]
-dev = ["pytest>=8.0"]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.16.9",
+]
+
+[tool.ruff]
+# 不碰 Markdown 里嵌的 Python 片段：文档与笔记正文不属格式化范围
+extend-exclude = ["*.md"]

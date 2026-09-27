@@ -5,9 +5,10 @@ Orchestrates: YAML data --> inline images --> data tables --> editorial SVG diag
               (also exported one file per diagram) --> Jinja2 render
 """
 
-import yaml
 import base64
 from pathlib import Path
+
+import yaml
 from jinja2 import Environment, FileSystemLoader
 
 from src.data_tables import generate_all, table_css
@@ -67,8 +68,8 @@ def _inline_images(projects: list) -> None:
                 key = _img_key(img_file.stem)
                 items.setdefault(key, []).append(_encode_img(img_file))
 
-        for key in items:
-            items[key].sort(key=lambda x: _stack_key(x["alt"]))
+        for group in items.values():
+            group.sort(key=lambda x: _stack_key(x["alt"]))
 
         screenshots = []
         for key, group in items.items():

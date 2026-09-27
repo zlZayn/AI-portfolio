@@ -3,7 +3,6 @@ from pathlib import Path
 
 from src.diagrams import render_all
 
-
 EXPECTED_IDS = {
     "decision-maker",
     "rag-embed",

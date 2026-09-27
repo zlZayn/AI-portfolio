@@ -9,10 +9,13 @@
 ## 常用命令
 - `uv run python build.py` — 重建 index.html，并导出 diagrams/<slug>.svg
 - `uv run pytest` — 跑测试（等价 `uv run python -m unittest discover -s tests`）
+- `uv run ruff check .` — Lint（ruff 默认规则集，列宽默认 88）
+- `uv run ruff format .` — 格式化（`--check` 只看不改）
 
-## 验证快照（2026-08-24 实测）
+## 验证快照（2026-09-27 实测）
 - pytest: 27 passed / 0 failed（pytest 9.1.1，dev 依赖组 [dependency-groups]）
-- 构建: 连续两次构建字节一致（由测试覆盖）
+- Ruff: `check` 0 发现；`format --check` 全绿（全量格式化已落地）
+- 构建: 连续两次构建字节一致（由测试覆盖）；引入 Ruff 后重建 index.html 与 9 个 diagrams/*.svg 逐字节无 diff
 - 图表导出: 9 个 diagrams/*.svg，与 index.html 内嵌件逐字节一致（由测试覆盖）
 
 ## 待办
