@@ -30,7 +30,9 @@ class BuildTests(unittest.TestCase):
         )
         for slug, svg in diagrams.items():
             exported = (build.DIAGRAMS_DIR / f"{slug}.svg").read_text(encoding="utf-8")
-            self.assertEqual(exported, svg, f"{slug}.svg differs from the embedded markup")
+            self.assertEqual(
+                exported, svg, f"{slug}.svg differs from the embedded markup"
+            )
 
     def test_repeated_builds_are_byte_identical(self):
         with tempfile.TemporaryDirectory() as directory:

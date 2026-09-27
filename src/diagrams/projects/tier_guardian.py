@@ -20,17 +20,27 @@ def render() -> str:
     canvas.connector(((480, 196), (480, 108), (736, 108)), "PASS", "success", (624, 92))
     canvas.connector(((560, 252), (664, 252)), "ESCALATE", "accent", (612, 236))
     canvas.connector(((752, 288), (752, 332), (640, 332), (640, 364)))
-    canvas.connector(((552, 420), (400, 420), (400, 572), (360, 572)), "PASS", "success", (472, 404))
+    canvas.connector(
+        ((552, 420), (400, 420), (400, 572), (360, 572)), "PASS", "success", (472, 404)
+    )
     canvas.connector(((640, 476), (640, 536)), "BLOCK", "danger", (684, 520))
-    canvas.connector(((728, 420), (828, 420), (828, 536)), "REVIEW", "default", (780, 404))
+    canvas.connector(
+        ((728, 420), (828, 420), (828, 536)), "REVIEW", "default", (780, 404)
+    )
 
     canvas.label(32, 224, "INPUT TEXT", "eyebrow")
     canvas.node(176, 96, 176, 72, "Surface scanner", "patterns + risk", "AI")
     canvas.node(176, 304, 176, 72, "Intent probe", "intent + confidence", "AI")
-    canvas.decision(480, 252, 160, 112, ("pre_filter", "CODE ARBITRATION"), "0 TOKEN", focal=True)
-    canvas.node(736, 72, 160, 72, "Fast release", "shallow certainty", "PASS", "success")
+    canvas.decision(
+        480, 252, 160, 112, ("pre_filter", "CODE ARBITRATION"), "0 TOKEN", focal=True
+    )
+    canvas.node(
+        736, 72, 160, 72, "Fast release", "shallow certainty", "PASS", "success"
+    )
     canvas.node(664, 216, 176, 72, "Context judge", "culture + severity", "AI")
-    canvas.decision(640, 420, 176, 112, ("deep_judge", "CODE ARBITRATION"), "0 TOKEN", focal=True)
+    canvas.decision(
+        640, 420, 176, 112, ("deep_judge", "CODE ARBITRATION"), "0 TOKEN", focal=True
+    )
     canvas.node(216, 536, 144, 72, "Release", "low residual risk", "PASS", "success")
     canvas.node(568, 536, 144, 72, "Auto block", "high confidence", "BLOCK", "danger")
     canvas.node(744, 536, 168, 72, "Evidence to human", "D summarizes only", "REVIEW")

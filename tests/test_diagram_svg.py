@@ -13,7 +13,9 @@ def contrast_ratio(foreground: str, background: str) -> float:
         ]
         return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
 
-    lighter, darker = sorted((luminance(foreground), luminance(background)), reverse=True)
+    lighter, darker = sorted(
+        (luminance(foreground), luminance(background)), reverse=True
+    )
     return (lighter + 0.05) / (darker + 0.05)
 
 
@@ -48,7 +50,9 @@ class CanvasTests(unittest.TestCase):
 
         svg = canvas.render()
 
-        self.assertLess(svg.index('class="node-box"'), svg.index('class="connector-label '))
+        self.assertLess(
+            svg.index('class="node-box"'), svg.index('class="connector-label ')
+        )
 
     def test_connector_labels_match_connector_semantics(self):
         canvas = Canvas("sample", "Sample", "Sample description.")
@@ -60,7 +64,7 @@ class CanvasTests(unittest.TestCase):
         svg = canvas.render()
 
         for style in ("accent", "success", "danger", "dashed"):
-            self.assertIn(f'connector-label-{style}', svg)
+            self.assertIn(f"connector-label-{style}", svg)
 
     def test_small_text_tokens_meet_normal_text_contrast(self):
         self.assertGreaterEqual(contrast_ratio(THEME.muted, THEME.paper), 4.5)

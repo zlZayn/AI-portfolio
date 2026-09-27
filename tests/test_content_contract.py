@@ -124,8 +124,12 @@ class ContentContractTests(unittest.TestCase):
                 counts[tag] = counts.get(tag, 0) + 1
         for tag, count in counts.items():
             if count >= COVERAGE_THRESHOLD:
-                self.assertIn(tag, traits, f"{tag} at {count}/9 must be promoted to traits")
-        self.assertLessEqual(counts.get("Structured Output Parser", 0), COVERAGE_THRESHOLD - 1)
+                self.assertIn(
+                    tag, traits, f"{tag} at {count}/9 must be promoted to traits"
+                )
+        self.assertLessEqual(
+            counts.get("Structured Output Parser", 0), COVERAGE_THRESHOLD - 1
+        )
 
     def test_trait_entries_are_objects_with_name_and_note(self):
         traits = self.profile["traits"]
@@ -137,9 +141,15 @@ class ContentContractTests(unittest.TestCase):
     def test_traits_match_profile_and_coverage_table(self):
         traits = {item["name"] for item in self.profile["traits"]}
         documented = read_coverage_table()
-        self.assertEqual(traits, set(documented), "profile.traits must match content/README.md fact table")
+        self.assertEqual(
+            traits,
+            set(documented),
+            "profile.traits must match content/README.md fact table",
+        )
         for trait, covered in documented.items():
-            self.assertGreaterEqual(covered, COVERAGE_THRESHOLD, f"{trait} recorded coverage")
+            self.assertGreaterEqual(
+                covered, COVERAGE_THRESHOLD, f"{trait} recorded coverage"
+            )
 
     def test_every_project_has_a_registered_diagram(self):
         from src.diagrams import DIAGRAMS

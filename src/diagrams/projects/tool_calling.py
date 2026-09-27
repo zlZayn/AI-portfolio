@@ -22,15 +22,21 @@ def render() -> str:
     canvas.connector(((616, 236), (664, 236), (664, 148)), style="accent")
     canvas.connector(((736, 184), (736, 320)), "CODE TOOLS", "default", (776, 252))
     canvas.connector(((812, 356), (876, 356), (876, 288)), style="default")
-    canvas.connector(((808, 148), (876, 148), (876, 216)), "READ ONLY", "dashed", (848, 132))
+    canvas.connector(
+        ((808, 148), (876, 148), (876, 216)), "READ ONLY", "dashed", (848, 132)
+    )
 
     canvas.node(48, 112, 128, 72, "MCP host", "JSON-RPC", "CLIENT", "muted")
     canvas.node(240, 112, 128, 72, "MCP adapter", "server tools", "PROTO")
     canvas.node(48, 304, 128, 72, "Agent API", "tool_calls", "CLIENT", "muted")
     canvas.node(240, 304, 128, 72, "FC adapter", "JSON schema", "PROTO")
-    canvas.node(440, 196, 176, 80, "ONE REGISTRY", "Zod definition once", "CORE", "focal")
+    canvas.node(
+        440, 196, 176, 80, "ONE REGISTRY", "Zod definition once", "CORE", "focal"
+    )
     canvas.node(664, 112, 144, 72, "Tool handlers", "9 atomic tools", "TOOLS")
     canvas.node(660, 320, 152, 72, "Policy + timeout", "blocklist / 30s", "GUARD")
     canvas.node(824, 216, 104, 72, "Result", "string", "OUTPUT", "success")
-    canvas.annotation(48, 484, "TWO PROTOCOLS change transport, not tool ownership.", 480)
+    canvas.annotation(
+        48, 484, "TWO PROTOCOLS change transport, not tool ownership.", 480
+    )
     return canvas.render()

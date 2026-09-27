@@ -82,7 +82,7 @@ class Canvas:
         self._layers["zones"].append(
             f'<g class="lane{tint_class}"><rect x="{x}" y="{y}" width="{width}" height="{height}"/>'
             f'<line x1="{x + 128}" y1="{y}" x2="{x + 128}" y2="{y + height}"/>'
-            f'{self._multiline_text(x + 64, y + height // 2 + 4, label, "lane-label", 12)}</g>'
+            f"{self._multiline_text(x + 64, y + height // 2 + 4, label, 'lane-label', 12)}</g>"
         )
 
     def node(
@@ -107,10 +107,14 @@ class Canvas:
             tag_width = max(32, _grid_ceil(len(tag) * 7 + 16))
             parts.extend(
                 (
-                    (f'<rect class="node-tag-box" x="{x + 12}" y="{y + 8}" width="{tag_width}" '
-                    f'height="16" rx="4"/>'),
-                    (f'<text class="node-tag" x="{x + 12 + tag_width / 2:g}" y="{y + 20}" '
-                    f'text-anchor="middle">{escape(tag.upper())}</text>'),
+                    (
+                        f'<rect class="node-tag-box" x="{x + 12}" y="{y + 8}" width="{tag_width}" '
+                        f'height="16" rx="4"/>'
+                    ),
+                    (
+                        f'<text class="node-tag" x="{x + 12 + tag_width / 2:g}" y="{y + 20}" '
+                        f'text-anchor="middle">{escape(tag.upper())}</text>'
+                    ),
                 )
             )
         if tag:
@@ -120,11 +124,19 @@ class Canvas:
                 title_y = y + 40
         else:
             title_y = y + 28
-        parts.append(self._multiline_text(x + width // 2, title_y, title, "node-title", 16))
+        parts.append(
+            self._multiline_text(x + width // 2, title_y, title, "node-title", 16)
+        )
         if subtitle:
-            expanded_spacing = 4 * (_line_count(title) - 1) if self.typography == "expanded" else 0
+            expanded_spacing = (
+                4 * (_line_count(title) - 1) if self.typography == "expanded" else 0
+            )
             sub_y = title_y + 20 + expanded_spacing
-            parts.append(self._multiline_text(x + width // 2, sub_y, subtitle, "node-subtitle", 12))
+            parts.append(
+                self._multiline_text(
+                    x + width // 2, sub_y, subtitle, "node-subtitle", 12
+                )
+            )
         parts.append("</g>")
         self._layers["nodes"].append("".join(parts))
 
@@ -145,10 +157,14 @@ class Canvas:
             f'<g class="decision{kind}">',
             f'<polygon class="decision-mask" points="{points}"/>',
             f'<polygon class="decision-box" points="{points}"/>',
-            self._multiline_text(cx, cy - (4 if subtitle else 0), title, "decision-title", 16),
+            self._multiline_text(
+                cx, cy - (4 if subtitle else 0), title, "decision-title", 16
+            ),
         ]
         if subtitle:
-            parts.append(f'<text class="decision-subtitle" x="{cx}" y="{cy + 24}" text-anchor="middle">{escape(subtitle)}</text>')
+            parts.append(
+                f'<text class="decision-subtitle" x="{cx}" y="{cy + 24}" text-anchor="middle">{escape(subtitle)}</text>'
+            )
         parts.append("</g>")
         self._layers["nodes"].append("".join(parts))
 
@@ -191,14 +207,18 @@ class Canvas:
             f'<text x="{x + 36}" y="{y + 4}">{escape(text)}</text></g>'
         )
 
-    def label(self, x: int, y: int, text: str, kind: str = "eyebrow", anchor: str = "start") -> None:
+    def label(
+        self, x: int, y: int, text: str, kind: str = "eyebrow", anchor: str = "start"
+    ) -> None:
         self._check_grid(x, y)
         self._layers["annotations"].append(
             f'<text class="label label-{escape(kind)}" x="{x}" y="{y}" '
             f'text-anchor="{escape(anchor)}">{escape(text)}</text>'
         )
 
-    def step_header(self, x: int, y: int, number: str, label: str, focal: bool = False) -> None:
+    def step_header(
+        self, x: int, y: int, number: str, label: str, focal: bool = False
+    ) -> None:
         self._check_grid(x, y)
         focal_class = " step-focal" if focal else ""
         self._layers["annotations"].append(
@@ -222,9 +242,9 @@ class Canvas:
             f'aria-labelledby="{self.slug}-title {self.slug}-desc" preserveAspectRatio="xMidYMid meet">'
             f'<title id="{self.slug}-title">{title}</title>'
             f'<desc id="{self.slug}-desc">{description}</desc>'
-            f'{self._defs()}{self._styles()}'
+            f"{self._defs()}{self._styles()}"
             f'<rect width="{self.width}" height="{self.height}" fill="{self.theme.paper}"/>'
-            f'{body}</svg>'
+            f"{body}</svg>"
         )
 
     def _defs(self) -> str:
@@ -292,7 +312,9 @@ class Canvas:
                 raise ValueError(f"Value {value} is outside the 4 px grid")
 
     @staticmethod
-    def _multiline_text(x: int, y: int, lines: TextLines, css_class: str, gap: int) -> str:
+    def _multiline_text(
+        x: int, y: int, lines: TextLines, css_class: str, gap: int
+    ) -> str:
         values = (lines,) if isinstance(lines, str) else tuple(lines)
         if not values:
             return ""
@@ -318,17 +340,33 @@ def _marker_style(style: ConnectorStyle) -> str:
 
 def _label_position(points: Sequence[Point]) -> Point:
     segments = list(itertools.pairwise(points))
-    start, end = max(segments, key=lambda pair: abs(pair[1][0] - pair[0][0]) + abs(pair[1][1] - pair[0][1]))
+    start, end = max(
+        segments,
+        key=lambda pair: abs(pair[1][0] - pair[0][0]) + abs(pair[1][1] - pair[0][1]),
+    )
     return _grid_ceil((start[0] + end[0]) // 2), _grid_ceil((start[1] + end[1]) // 2)
 
 
 def _rounded_path(points: Sequence[Point], radius: int = 8) -> str:
     commands = [f"M {points[0][0]} {points[0][1]}"]
     for index in range(1, len(points) - 1):
-        previous, corner, following = points[index - 1], points[index], points[index + 1]
-        before = _toward(corner, previous, min(radius, _distance(previous, corner) // 2))
-        after = _toward(corner, following, min(radius, _distance(corner, following) // 2))
-        commands.extend((f"L {before[0]} {before[1]}", f"Q {corner[0]} {corner[1]} {after[0]} {after[1]}"))
+        previous, corner, following = (
+            points[index - 1],
+            points[index],
+            points[index + 1],
+        )
+        before = _toward(
+            corner, previous, min(radius, _distance(previous, corner) // 2)
+        )
+        after = _toward(
+            corner, following, min(radius, _distance(corner, following) // 2)
+        )
+        commands.extend(
+            (
+                f"L {before[0]} {before[1]}",
+                f"Q {corner[0]} {corner[1]} {after[0]} {after[1]}",
+            )
+        )
     commands.append(f"L {points[-1][0]} {points[-1][1]}")
     return " ".join(commands)
 

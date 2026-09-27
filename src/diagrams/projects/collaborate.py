@@ -79,21 +79,50 @@ def render() -> str:
     canvas.connector(((720, 428), (720, 448)))
     canvas.connector(((836, 428), (836, 436), (776, 436), (776, 448)))
 
-    canvas.connector(((824, 192), (824, 248), (184, 248), (184, 348)), "launch S1", label_at=(248, 248))
-    canvas.connector(((264, 480), (332, 480), (332, 396), (372, 396)), "completed", "accent", (332, 456))
-    canvas.connector(((588, 396), (620, 396), (620, 332), (720, 332), (720, 348)), style="accent")
+    canvas.connector(
+        ((824, 192), (824, 248), (184, 248), (184, 348)),
+        "launch S1",
+        label_at=(248, 248),
+    )
+    canvas.connector(
+        ((264, 480), (332, 480), (332, 396), (372, 396)),
+        "completed",
+        "accent",
+        (332, 456),
+    )
+    canvas.connector(
+        ((588, 396), (620, 396), (620, 332), (720, 332), (720, 348)), style="accent"
+    )
 
     # Durable state makes the same engine observable and resumable from CLI or Web.
     canvas.zone(32, 604, 896, 156, "SYNTHESIS / STATE / INTERACTION")
     canvas.node(56, 644, 168, 80, "Summary", "all successful runs", "LLM", "success")
-    canvas.node(272, 636, 208, 96, ("STATE.JSON", "+ OUTPUT FILES"), "plan / runs / bridges", "DURABLE", "store")
+    canvas.node(
+        272,
+        636,
+        208,
+        96,
+        ("STATE.JSON", "+ OUTPUT FILES"),
+        "plan / runs / bridges",
+        "DURABLE",
+        "store",
+    )
     canvas.node(528, 644, 168, 80, "Web / SSE", "live view / recovery", "OBSERVE")
     canvas.node(744, 644, 168, 80, "CONTINUE LOOP", "stored full context", "FOLLOW-UP")
 
     canvas.connector(((184, 516), (184, 576), (112, 576), (112, 644)))
-    canvas.connector(((776, 516), (776, 584), (168, 584), (168, 644)), "all successful runs", label_at=(472, 584))
+    canvas.connector(
+        ((776, 516), (776, 584), (168, 584), (168, 644)),
+        "all successful runs",
+        label_at=(472, 584),
+    )
     canvas.connector(((224, 684), (272, 684)))
     canvas.connector(((480, 684), (528, 684)), "recover", label_at=(504, 676))
     canvas.connector(((696, 684), (744, 684)))
-    canvas.connector(((828, 724), (828, 748), (376, 748), (376, 732)), "read + persist", "dashed", (604, 748))
+    canvas.connector(
+        ((828, 724), (828, 748), (376, 748), (376, 732)),
+        "read + persist",
+        "dashed",
+        (604, 748),
+    )
     return canvas.render()

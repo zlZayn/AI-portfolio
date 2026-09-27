@@ -23,13 +23,25 @@ def render() -> str:
         "accent",
         (516, 272),
     )
-    canvas.connector(((656, 184), (656, 260), (572, 260), (572, 304)), "HYBRID INDEX", "default", (716, 244))
+    canvas.connector(
+        ((656, 184), (656, 260), (572, 260), (572, 304)),
+        "HYBRID INDEX",
+        "default",
+        (716, 244),
+    )
     canvas.connector(((656, 340), (704, 340)))
     canvas.connector(((784, 376), (784, 416)))
-    canvas.connector(((144, 424), (144, 500), (784, 500), (784, 488)), "ORIGINAL QUESTION", "dashed", (464, 484))
+    canvas.connector(
+        ((144, 424), (144, 500), (784, 500), (784, 488)),
+        "ORIGINAL QUESTION",
+        "dashed",
+        (464, 484),
+    )
 
     canvas.node(64, 112, 160, 72, "Documents", ".md / .txt / .typ", "SOURCE", "muted")
-    canvas.node(288, 112, 160, 72, "Semantic chunker", "headings keep meaning", "CODE", "focal")
+    canvas.node(
+        288, 112, 160, 72, "Semantic chunker", "headings keep meaning", "CODE", "focal"
+    )
     canvas.node(560, 112, 192, 72, "Hybrid index", "vector + BM25", "STORE", "store")
     canvas.node(64, 352, 160, 72, "Question", "conversation-aware", "INPUT", "muted")
     canvas.node(280, 304, 160, 72, "Query enhancer", "retrieval wording", "AI", "focal")
