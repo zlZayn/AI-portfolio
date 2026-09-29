@@ -7,6 +7,8 @@
 - 快照数据 → [content/data-tables/README.md](content/data-tables/README.md)，刷新后必须重建并跑测试
 
 ## 常用命令
+
+- 本地钩子：`pre-commit install`（每个 clone 一次；本体 `uv tool install pre-commit`）——提交前自动 `ruff check --fix` + `ruff format`；CI 只读跑同一组检查（部署链仍在 static.yml）
 - `uv run python build.py` — 重建 index.html，并导出 diagrams/<slug>.svg
 - `uv run pytest` — 跑测试（等价 `uv run python -m unittest discover -s tests`）
 - `uv run ruff check .` — Lint（ruff 默认规则集，列宽默认 88）
