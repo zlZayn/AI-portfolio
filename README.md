@@ -1,5 +1,7 @@
 # AI Portfolio
 
+[![CI](https://github.com/zlZayn/AI-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/zlZayn/AI-portfolio/actions/workflows/ci.yml)
+
 <https://zlzayn.github.io/AI-portfolio/>
 
 Static portfolio site generated from versioned project data, editorial SVG diagrams, and Jinja2 templates. The build is self-contained and does not read sibling repositories. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the build and diagram design rules.
@@ -20,3 +22,15 @@ uv run python build.py   # regenerates index.html
 ## Maintainers
 
 - Rules and maintenance dashboard: [AGENTS.md](AGENTS.md)
+
+---
+
+## License
+
+- Personal showcase site: no license terms are provided (no LICENSE file in this repository); text and imagery are authored by the maintainer.
+
+## Contributing
+
+- Personal project; questions and suggestions welcome via [Issues](https://github.com/zlZayn/AI-portfolio/issues).
+
+Maintainer docs map → [AGENTS.md](AGENTS.md).
