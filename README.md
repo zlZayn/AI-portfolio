@@ -20,21 +20,3 @@ uv run python build.py   # regenerates index.html
 ## Maintainers
 
 - Rules and maintenance dashboard: [AGENTS.md](AGENTS.md)
-
----
-
-## Local commit hook (pre-commit)
-
-Auto-fixes formatting and lint before each commit (seconds only; tests stay in CI).
-Prerequisite: uv and pre-commit (`uv tool install pre-commit` puts the shim in `~/.local/bin`).
-
-```bash
-uv tool install pre-commit
-pre-commit install
-```
-
-> Restart the terminal (or reload the shell config) for PATH to take effect.
-
-- Run over everything: `pre-commit run --all-files`
-- Skip one commit: `git commit --no-verify`
-- Definition: [.pre-commit-config.yaml](.pre-commit-config.yaml) (the same ruff config the read-only CI uses)
