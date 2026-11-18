@@ -26,6 +26,7 @@
 ## 活跃坑
 - 换页面色板 → 同时改 static/style.css 与 src/diagrams/theme.py 的同语义令牌，否则图表配色脱节
 - 跑测试会打印 9 张图表的渲染日志，属正常输出
+- **改依赖后必查 uv.lock 的 registry**：本机全局 `%APPDATA%\uv\uv.toml` 配了清华镜像，优先级高于锁文件，会让 `uv lock` 把 registry 整片改写成镜像源。pyproject 已用 `[[tool.uv.index]]` 钉死官方源，改完仍要确认 `uv.lock` 里没有 `tsinghua` 字样，否则境外 CI 会 tcp 超时。细节见 [.agents/notes/2026-11-18-uv-lock-official-index.md](.agents/notes/2026-11-18-uv-lock-official-index.md)
 
 ## 文档地图
 - 架构设计 → [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
